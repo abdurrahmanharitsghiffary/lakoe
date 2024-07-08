@@ -23,7 +23,7 @@ model User {
   profile   Profile?
   cart      Cart[]
   Invoice   Invoice[]
-  Payment   Payment[] 
+  Payment   Payment[]
 
   @@map("users")
 }
@@ -66,7 +66,7 @@ model Invoice {
   invoiceNumber       Int
   cartId              Int
   cart                Cart                  @relation(fields: [cartId], references: [id])
-  paymentId           Int    @unique
+  paymentId           Int                   @unique
   payment             Payment               @relation(fields: [paymentId], references: [id])
   courierId           Int
   courier             Courier               @relation(fields: [courierId], references: [id])
@@ -81,7 +81,7 @@ model Payment {
   bank               String
   amount             String
   status             String
-  invoiceId          Int    @unique
+  invoiceId          Int     @unique
   invoice            Invoice @relation(fields: [invoiceId], references: [id])
   userId             Int
   user               User    @relation(fields: [userId], references: [id])
@@ -125,18 +125,18 @@ model Store {
   StoreOnDecoration StoreOnDecoration[]
   OperationHour     OperationHour[]
   MessageTemplate   MessageTemplate[]
-  Product           Product[] 
+  Product           Product[]
   CartItem          CartItem[]
-  Location          Location[] @relation(fields: [locationId], references: [id])
+  Location          Location[]          @relation(fields: [locationId], references: [id])
   locationId        Int?
 }
 
 model StoreOnDecoration {
-  id           Int          @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   decorationId Int
-  decoration   Decoration   @relation(fields: [decorationId], references: [id])
+  decoration   Decoration @relation(fields: [decorationId], references: [id])
   storeId      Int
-  store        Store        @relation(fields: [storeId], references: [id])
+  store        Store      @relation(fields: [storeId], references: [id])
 }
 
 model OperationHour {
@@ -158,9 +158,9 @@ model MessageTemplate {
 }
 
 model Decoration {
-  id                  Int                @id @default(autoincrement())
-  type                String
-  StoreOnDecoration   StoreOnDecoration[]
+  id                Int                 @id @default(autoincrement())
+  type              String
+  StoreOnDecoration StoreOnDecoration[]
 }
 
 model BankAcoount {
@@ -235,15 +235,16 @@ model CartItem {
 }
 
 model Location {
-  id           Int     @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   name         String
   address      String
   postalCode   String
   cityDistrict String
   latitude     String
   longitude    String
-  store        Store[] @relation(fields: [storeId], references: [id])
-  profileId    Int
-  profile Profile @relation(fields: [profileId], references: [id])
+
+  store          Store[] @relation(fields: [storeId], references: [id])
+  profileId      Int
+  profile        Profile @relation(fields: [profileId], references: [id])
   isMainLocation Boolean
 }
