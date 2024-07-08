@@ -18,10 +18,11 @@ module.exports = {
     },
     extend: {
       backgroundColor: {
-        "btn-primary": "#0086b4",
+        "btn-primary": "var(--lakoe-primary)",
       },
       colors: {
-        "txt-secondary": "#0086b4",
+        "lakoe-primary": "var(--lakoe-primary)",
+        "txt-secondary": "var(--lakoe-primary)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
