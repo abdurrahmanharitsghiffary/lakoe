@@ -1,0 +1,249 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  phone     String
+  password  String
+  cartItems CartItem[]
+  profile   Profile?
+  cart      Cart[]
+  Invoice   Invoice[]
+  Payment   Payment[] 
+
+  @@map("users")
+}
+
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model Profile {
+  id       Int    @id @default(autoincrement())
+  location String
+  userId   Int    @unique
+  user     User   @relation(fields: [userId], references: [id])
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  prices    Decimal
+  discount  Decimal
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id])
+  cartItems CartItem[]
+  storeId   Int
+  store     Store      @relation(fields: [storeId], references: [id])
+  Invoice   Invoice[]
+}
+
+model Invoice {
+  id                  Int                   @id @default(autoincrement())
+  prices              Decimal
+  serviceChange       String
+  status              String
+  receiverLongitude   String
+  receiverLatitude    String
+  receiverDistrict    String
+  receiverPhone       String
+  receiverAddress     String
+  receiverName        String
+  invoiceNumber       Int
+  cartId              Int
+  cart                Cart                  @relation(fields: [cartId], references: [id])
+  paymentId           Int    @unique
+  payment             Payment               @relation(fields: [paymentId], references: [id])
+  courierId           Int
+  courier             Courier               @relation(fields: [courierId], references: [id])
+  userId              Int
+  user                User                  @relation(fields: [userId], references: [id])
+  InvoiceHistory      InvoiceHistory[]
+  ConfirmationPayment ConfirmationPayment[]
+}
+
+model Payment {
+  id                 Int     @id @default(autoincrement())
+  bank               String
+  amount             String
+  status             String
+  invoiceId          Int    @unique
+  invoice            Invoice @relation(fields: [invoiceId], references: [id])
+  userId             Int
+  user               User    @relation(fields: [userId], references: [id])
+  mootaTransactionId Int
+}
+
+model InvoiceHistory {
+  id        Int     @id @default(autoincrement())
+  status    String
+  invoiceId Int
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+}
+
+model ConfirmationPayment {
+  id        Int     @id @default(autoincrement())
+  amount    Int
+  bank      String
+  invoiceId Int
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+}
+
+model Courier {
+  id                 Int     @id @default(autoincrement())
+  courierCode        String
+  CourierServiceCode String
+  price              Int
+  invoiceId          Int
+  invoice            Invoice @relation(fields: [invoiceId], references: [id])
+}
+
+model Store {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  slogan            String
+  description       String
+  domain            String
+  logoAttachment    String
+  bannerAttachment  String
+  bank              BankAcoount[]
+  Cart              Cart[]
+  StoreOnDecoration StoreOnDecoration[]
+  OperationHour     OperationHour[]
+  MessageTemplate   MessageTemplate[]
+  Product           Product[] 
+  CartItem          CartItem[]
+  Location          Location[] @relation(fields: [locationId], references: [id])
+  locationId        Int?
+}
+
+model StoreOnDecoration {
+  id           Int          @id @default(autoincrement())
+  decorationId Int
+  decoration   Decoration   @relation(fields: [decorationId], references: [id])
+  storeId      Int
+  store        Store        @relation(fields: [storeId], references: [id])
+}
+
+model OperationHour {
+  id      Int      @id @default(autoincrement())
+  day     String
+  openAt  DateTime
+  closeAt DateTime
+  isOff   Boolean
+  storeId Int
+  store   Store    @relation(fields: [storeId], references: [id])
+}
+
+model MessageTemplate {
+  id      Int    @id @default(autoincrement())
+  name    String
+  content String
+  storeId Int
+  store   Store  @relation(fields: [storeId], references: [id])
+}
+
+model Decoration {
+  id                  Int                @id @default(autoincrement())
+  type                String
+  StoreOnDecoration   StoreOnDecoration[]
+}
+
+model BankAcoount {
+  id        Int    @id @default(autoincrement())
+  bank      String
+  accNumber String
+  accName   String
+  StoreId   Int
+  store     Store  @relation(fields: [StoreId], references: [id])
+}
+
+model Product {
+  id            Int        @id @default(autoincrement())
+  name          String
+  description   String
+  attachments   String
+  is_active     Boolean
+  variants      String
+  size          Int
+  minimum_order Int
+  storeId       Int
+  store         Store      @relation(fields: [storeId], references: [id])
+  Category      Category[]
+  Variant       Variant[]
+}
+
+model Category {
+  id        Int     @id @default(autoincrement())
+  name      String
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Variant {
+  id            Int             @id @default(autoincrement())
+  name          String
+  isActive      Boolean
+  productId     Int
+  product       Product         @relation(fields: [productId], references: [id])
+  VariantOption VariantOption[]
+}
+
+model VariantOption {
+  id                  Int                   @id @default(autoincrement())
+  name                String
+  variantId           Int
+  variant             Variant               @relation(fields: [variantId], references: [id])
+  VariantOptionValues VariantOptionValues[]
+}
+
+model VariantOptionValues {
+  id              Int           @id @default(autoincrement())
+  sku             String
+  weight          String
+  stock           Int
+  price           Int
+  isActive        Boolean
+  variantOptionId Int
+  variantOption   VariantOption @relation(fields: [variantOptionId], references: [id])
+}
+
+model CartItem {
+  id      Int   @id @default(autoincrement())
+  qty     Int
+  price   Int
+  cartId  Int
+  cart    Cart  @relation(fields: [cartId], references: [id])
+  userId  Int
+  user    User  @relation(fields: [userId], references: [id])
+  storeId Int
+  store   Store @relation(fields: [storeId], references: [id])
+}
+
+model Location {
+  id           Int     @id @default(autoincrement())
+  name         String
+  address      String
+  postalCode   String
+  cityDistrict String
+  latitude     String
+  longitude    String
+  store        Store[] @relation(fields: [storeId], references: [id])
+  profileId    Int
+  profile Profile @relation(fields: [profileId], references: [id])
+  isMainLocation Boolean
+}
