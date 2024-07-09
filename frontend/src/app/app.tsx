@@ -1,10 +1,13 @@
 import { Outlet } from "react-router-dom";
 import AppProvider from "./app-providers";
+import RootLayout from "@/components/layout/root-layout";
 
 export default function App() {
   return (
     <AppProvider>
-      <Outlet />
+      <RootLayout>
+        <Outlet />
+      </RootLayout>
     </AppProvider>
   );
 }
