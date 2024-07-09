@@ -21,11 +21,11 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(
+  async create(
     @Body(new ZodValidationPipe(createProductSchema))
     createProductDto: CreateProductDto,
   ) {
-    return this.productService.create(createProductDto);
+    return await this.productService.create(createProductDto);
   }
 
   @Get()
