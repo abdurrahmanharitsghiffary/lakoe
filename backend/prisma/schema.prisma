@@ -271,7 +271,7 @@ model Product {
   name         String   @db.VarChar(125)
   description  String   @db.Text
   attachments  String[]
-  isActive     Boolean
+  isActive     Boolean  @default(false)
   minimumOrder Int
 
   updatedAt DateTime @updatedAt
