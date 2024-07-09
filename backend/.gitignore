@@ -12,6 +12,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+/backup
+new.prisma
 # OS
 .DS_Store
 
