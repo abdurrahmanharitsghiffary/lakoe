@@ -4,6 +4,7 @@ import { ProductsPage } from "./pages/products";
 import { FormProduct } from "@/features/products/form-product";
 import Typography from "@/components/ui/typography";
 import HomePage from "./pages/home";
+import OrdersPage from "./pages/orders";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
       {
         path: "products/create",
         element: <FormProduct />,
+      },
+      {
+        path:'orders',
+        element:<OrdersPage />
       },
       {
         path: "*",

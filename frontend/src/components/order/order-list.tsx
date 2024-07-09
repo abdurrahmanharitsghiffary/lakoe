@@ -1,8 +1,8 @@
-import { ProductComponent, status } from "./product"
+import { ProductComponent, status } from "./order"
 import { CardTitle } from "@/components/ui/card";
-import ProductTabs from "./product-tabs";
+import ProductTabs from "./order-tabs";
 
-interface Product {
+interface IOrder {
     id: number;
     name: string;
     invoice: string;
@@ -14,8 +14,8 @@ interface Product {
     totalPrice: number;
 }
 
-export function ProductList() {
-    const products: Product[] = [
+export function OrderList() {
+    const orders: IOrder[] = [
         {
             id: 1,
             name: "Basic cotton kenary",
@@ -43,17 +43,16 @@ export function ProductList() {
 
     return (
         <div>
-            <ProductTabs />
-            {products.map((product) => (
+            {orders.map((order) => (
                 <ProductComponent
-                    name={product.name}
-                    invoice={product.invoice}
-                    status={product.status}
-                    variant={product.variant}
-                    size={product.size}
-                    image={product.image}
-                    totalItem={product.totalItem}
-                    totalPrice={product.totalPrice}
+                    name={order.name}
+                    invoice={order.invoice}
+                    status={order.status}
+                    variant={order.variant}
+                    size={order.size}
+                    image={order.image}
+                    totalItem={order.totalItem}
+                    totalPrice={order.totalPrice}
                 />
             ))}
         </div>

@@ -37,7 +37,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ status: statusKey, in
 
     return (
         <div className="flex justify-center">
-            <Card className="shadow-lg rounded-lg overflow-hidden border border-gray-300 w-full h-auto">
+            <Card className="shadow-lg rounded-lg overflow-hidden border border-gray-300 w-full h-23">
                 <CardHeader className="items-left bg-gray-50">
                     <div className="flex justify-between pt-4">
                         <div className="flex-shrink-0">
