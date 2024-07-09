@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { SelectValue } from "@radix-ui/react-select";
-import { CiCirclePlus } from "react-icons/ci";
+// import { CiCirclePlus } from "react-icons/ci";
 import { RiImageAddLine } from "react-icons/ri";
-import { InputForm } from "./elements/input/input-form";
+import { InputForm } from "./components/input/input-form";
 
 export function FormProduct() {
   return (
