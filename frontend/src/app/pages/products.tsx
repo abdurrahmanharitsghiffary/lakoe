@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CardProduct } from "@/features/products/card-product";
+import { cn } from "@/lib/utils";
 import { SelectValue } from "@radix-ui/react-select";
 import { CiCirclePlus } from "react-icons/ci";
+import { Link } from "react-router-dom";
 
 const dummyProducts = Array.from({ length: 10 }, (_, i) => ({
   price: Math.floor(Math.random() * 50000) + 10000, // random price between 10000 and 60000
@@ -29,10 +31,16 @@ export function ProductsPage() {
         <Card className="w-full m-4">
           <div className="flex justify-between">
             <h1 className="text-xl m-4 font-bold">Daftar Produk</h1>
-            <Button className="m-4 bg-btn-primary rounded-full">
+            <Link
+              to="/products/create"
+              className={cn(
+                buttonVariants(),
+                "m-4 bg-btn-primary rounded-full"
+              )}
+            >
               <CiCirclePlus size={25} />
               <span className="ml-2">Tambah Produk</span>
-            </Button>
+            </Link>
           </div>
           <Tabs defaultValue="semua" className="w-[400px] m-3  ">
             <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">

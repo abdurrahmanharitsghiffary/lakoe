@@ -22,9 +22,12 @@ export const router = createBrowserRouter([
       {
         path: "*",
         element: (
-          <div className="h-[100dvh] flex justify-center items-center">
-            <Typography variant="h3">Page not found.</Typography>
-          </div>
+          <Typography
+            variant="h3"
+            className="fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
+          >
+            Page not found.
+          </Typography>
         ),
       },
     ],
