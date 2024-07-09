@@ -26,7 +26,7 @@ export function ProductsPage() {
   return (
     <>
       <div className="flex justify-center">
-        <Card className="w-full max-w-md m-10">
+        <Card className="w-full max-w-lg m-10">
           <div className="flex justify-between">
             <h1 className="text-xl m-4 font-bold">Daftar Produk</h1>
             <Button className="m-4 bg-btn-primary rounded-full">
@@ -84,9 +84,14 @@ export function ProductsPage() {
           <CardContent className="flex flex-col gap-3 px-3">
             {dummyProducts.map((product) => (
               <CardProduct
+                productVariants={[
+                  { name: "xl", price: 20000, stock: 20 },
+                  { name: "lg", price: 23000, stock: 11 },
+                  { name: "sm", price: 20000, stock: 17 },
+                ]}
                 price={product.price}
                 sku={product.sku}
-                src="https://plus.unsplash.com/premium_photo-1685082778205-8665f65e8c2c?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                src="https://images.unsplash.com/flagged/photo-1553505192-acca7d4509be?q=80&w=1490&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 stock={product.stock}
                 title={product.title}
                 key={product.key}

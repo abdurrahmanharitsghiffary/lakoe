@@ -23,14 +23,20 @@ model User {
 
   cartItems CartItem[]
   profile   Profile?
-  cart      Cart[]
-  Invoice   Invoice[]
-  Payment   Payment[]
+  carts     Cart[]
+  invoices  Invoice[]
+  payments  Payment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+enum AccountType {
+  GOOGLE
+  FACEBOOK
+  CREDENTIALS
 }
 
 // d
