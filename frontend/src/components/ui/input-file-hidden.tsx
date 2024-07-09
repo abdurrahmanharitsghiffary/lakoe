@@ -14,7 +14,12 @@ const InputFileHidden = forwardRef<
 
   return (
     <div {...divP} className={cn("relative", className)}>
-      <input {...props} ref={ref} className=" opacity-0 inset-0 absolute" />
+      <input
+        {...props}
+        ref={ref}
+        className=" opacity-0 inset-0 absolute"
+        type="file"
+      />
       {children}
     </div>
   );
