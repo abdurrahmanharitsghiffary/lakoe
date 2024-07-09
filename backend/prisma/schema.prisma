@@ -262,10 +262,9 @@ model BankAccount {
 model Product {
   id           Int        @id @default(autoincrement())
   name         String
-  description  String
-  attachments  String
+  description  String     @db.Text
+  attachments  String[]
   isActive     Boolean
-  size         Int
   minimumOrder Int
   storeId      Int
   store        Store      @relation(fields: [storeId], references: [id])
