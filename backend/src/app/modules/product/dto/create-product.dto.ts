@@ -2,10 +2,10 @@ import { z } from 'zod';
 
 export class CreateProductDto {
   name: string;
-  description?: string;
+  description: string;
   minimumOrder: number;
   categories: string[];
-  weight: string;
+  weightInGram: number;
   stock: number;
   price: number;
 }

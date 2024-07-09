@@ -287,7 +287,7 @@ model Product {
 
 model Category {
   id   Int    @id @default(autoincrement())
-  name String @db.VarChar(125)
+  name String @unique @db.VarChar(125)
 
   products Product[]
 

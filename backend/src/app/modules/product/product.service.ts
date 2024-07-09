@@ -7,25 +7,44 @@ import { PrismaService } from 'src/common/services/prisma.service';
 export class ProductService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createProductDto: CreateProductDto) {
-    return await this.prismaService.product.create({
-      data: { attachments: ['sasasas', ''], ...createProductDto },
+  create({ price, stock, weightInGram, categories, ...dto }: CreateProductDto) {
+    return this.prismaService.$transaction(async (tx) => {
+      const createdProduct = await tx.product.create({
+        data: {
+          storeId: 1,
+          ...dto,
+          variants: {
+            create: { name: dto.name, price, stock, weightInGram },
+          },
+          categories: {
+            connectOrCreate: [{ create: { name: 'lol' }, where: { id: 1 } }],
+          },
+        },
+      });
     });
   }
 
   findAll() {
-    return `This action returns all product`;
+    return this.prismaService.product.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} product`;
+    return this.prismaService.product.findUnique({ where: { id } });
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  update(
+    id: number,
+    { price, stock, weight, categories, ...dto }: UpdateProductDto,
+  ) {
+    return this.prismaService.product.update({
+      data: { ...dto },
+      where: { id },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} product`;
+    return this.prismaService.product.delete({
+      where: { id },
+    });
   }
 }
