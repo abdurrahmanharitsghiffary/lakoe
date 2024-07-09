@@ -1,4 +1,6 @@
 import ProductDialogActivation from "@/components/dialog/product-dialog-activation";
+import ProductDialogChangePrice from "@/components/dialog/product-dialog-changeprice";
+import ProductDialogChangeStock from "@/components/dialog/product-dialog-changestock";
 import { Image } from "@/components/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,7 @@ export type CardProductProps = {
   title: string;
   stock: number;
   productVariants?: ProductVariant[];
+  
 };
 
 export function CardProduct({
@@ -34,6 +37,8 @@ export function CardProduct({
   const { toast } = useToast();
   const [isChecked, setIsChecked] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isPriceChangeOpen, setIsPriceChangeOpen] = useState(false)
+  const [isStockChangeOpen, setIsStockChangeOpen] = useState(false)
 
   const handleConfirm = (isSuccess: boolean) => {
     console.log(isSuccess);
@@ -54,6 +59,9 @@ export function CardProduct({
       });
     setIsChecked((c) => !c);
   };
+
+  
+
 
   return (
     <Card className="p-2 gap-2 flex">
@@ -76,10 +84,10 @@ export function CardProduct({
         <div className="flex gap-1">
           {!isChecked ? (
             <>
-              <Button size="sm" variant="outline" className="rounded-full">
+              <Button onClick={()=>setIsPriceChangeOpen(true)}size="sm" variant="outline" className="rounded-full">
                 Ubah Harga
               </Button>
-              <Button size="sm" variant="outline" className="rounded-full">
+              <Button onClick={()=>setIsStockChangeOpen(true)}size="sm" variant="outline" className="rounded-full">
                 Ubah Stok
               </Button>
             </>
@@ -105,6 +113,16 @@ export function CardProduct({
         isOpen={isOpen}
         onOpen={setIsOpen}
         onConfirm={handleConfirm}
+      />
+      <ProductDialogChangePrice
+        product={{price,sku,src,stock,title,productVariants}}
+        isOpen={isPriceChangeOpen}
+        onOpen={setIsPriceChangeOpen}
+      />
+      <ProductDialogChangeStock
+        product={{price,sku,src,stock,title,productVariants}}
+        isOpen={isStockChangeOpen}
+        onOpen={setIsStockChangeOpen}
       />
     </Card>
   );
