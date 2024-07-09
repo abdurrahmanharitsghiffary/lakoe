@@ -6,6 +6,7 @@ interface InputFormProps {
   placeholder: string;
   startAdornment?: string;
   endAdornment?: string;
+  className?: string;
 }
 
 export function InputForm({
@@ -13,6 +14,8 @@ export function InputForm({
   placeholder,
   startAdornment,
   endAdornment,
+  className,
+  ...props
 }: InputFormProps) {
   return (
     <>
@@ -22,6 +25,8 @@ export function InputForm({
           placeholder={placeholder}
           startAdornment={startAdornment}
           endAdornment={endAdornment}
+          className={className}
+          {...props}
         />
       </div>
     </>

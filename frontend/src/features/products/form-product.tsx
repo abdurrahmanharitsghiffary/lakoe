@@ -95,7 +95,11 @@ export function FormProduct() {
         <Card className="w-full m-4">
           <h1 className="m-4 font-bold text-xl ">Pengelolaan Produk</h1>
           <div className="flex justify-between">
-            <InputForm label="Stok Produk" placeholder="Masukkan jumlah stok" />
+            <InputForm
+              label="Stok Produk"
+              placeholder="Masukkan jumlah stok"
+              className="w-full"
+            />
             <InputForm
               label="SKU (Stock Keeping Unit)"
               placeholder="Masukkan Jumlah SKU"
