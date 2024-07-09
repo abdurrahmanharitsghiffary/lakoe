@@ -38,6 +38,8 @@ model Profile {
   location String
   userId   Int    @unique
   user     User   @relation(fields: [userId], references: [id])
+
+  @@map("profiles")
 }
 
 model Cart {
@@ -50,6 +52,8 @@ model Cart {
   storeId   Int
   store     Store      @relation(fields: [storeId], references: [id])
   Invoice   Invoice[]
+
+  @@map("carts")
 }
 
 model Invoice {
@@ -74,6 +78,8 @@ model Invoice {
   user                User                  @relation(fields: [userId], references: [id])
   InvoiceHistory      InvoiceHistory[]
   ConfirmationPayment ConfirmationPayment[]
+
+  @@map("invoices")
 }
 
 model Payment {
@@ -177,7 +183,7 @@ model Product {
   name          String
   description   String
   attachments   String
-  is_active     Boolean
+  isActive     Boolean
   variants      String
   size          Int
   minimum_order Int
