@@ -8,16 +8,23 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
+import {
+  CreateProductDto,
+  createProductSchema,
+} from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  async create(
+    @Body(new ZodValidationPipe(createProductSchema))
+    createProductDto: CreateProductDto,
+  ) {
+    return await this.productService.create(createProductDto);
   }
 
   @Get()
