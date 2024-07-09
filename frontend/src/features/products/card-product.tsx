@@ -17,25 +17,33 @@ export type ProductVariant = {
 };
 
 export type CardProductProps = {
+  id: number;
   src: string;
   sku: string;
   price: number;
   title: string;
+  isActive: boolean;
   stock: number;
+  onCheckedChange?: (args: { isChecked: boolean; id: number }) => void;
+  isChecked?: boolean;
   productVariants?: ProductVariant[];
   
 };
 
 export function CardProduct({
   price,
+  isChecked,
+  onCheckedChange,
   sku,
+  isActive,
   src,
+  id,
   title,
   stock,
   productVariants = [],
 }: CardProductProps) {
   const { toast } = useToast();
-  const [isChecked, setIsChecked] = useState(false);
+  const [isSwitched, setIsSwitched] = useState(isActive);
   const [isOpen, setIsOpen] = useState(false);
   const [isPriceChangeOpen, setIsPriceChangeOpen] = useState(false)
   const [isStockChangeOpen, setIsStockChangeOpen] = useState(false)
@@ -43,21 +51,21 @@ export function CardProduct({
   const handleConfirm = (isSuccess: boolean) => {
     console.log(isSuccess);
     if (!isSuccess) return;
-    setIsChecked(true);
+    setIsSwitched(true);
   };
 
-  const handleStatusChange = (isChecked: boolean) => {
-    console.log(isChecked);
-    if (isChecked && productVariants?.length > 1) {
+  const handleStatusChange = (isSwitched: boolean) => {
+    console.log(isSwitched);
+    if (isSwitched && productVariants?.length > 1) {
       setIsOpen(true);
       return;
     }
-    if (isChecked)
+    if (isSwitched)
       toast({
         description: "Produk berhasil diaktifkan!",
         className: "bg-zinc-950 text-white py-4",
       });
-    setIsChecked((c) => !c);
+    setIsSwitched((c) => !c);
   };
 
   
@@ -82,7 +90,7 @@ export function CardProduct({
           {sku}
         </CardDescription>
         <div className="flex gap-1">
-          {!isChecked ? (
+          {!isSwitched ? (
             <>
               <Button onClick={()=>setIsPriceChangeOpen(true)}size="sm" variant="outline" className="rounded-full">
                 Ubah Harga
@@ -102,9 +110,15 @@ export function CardProduct({
         </div>
       </div>
       <div className="ml-auto flex flex-col justify-between items-end">
-        <Checkbox className="border-lakoe-primary data-[state=checked]:bg-lakoe-primary data-[state=checked]:text-white" />
-        <Switch
+        <Checkbox
+          className="border-lakoe-primary data-[state=checked]:bg-lakoe-primary data-[state=checked]:text-white"
           checked={isChecked}
+          onCheckedChange={(isChecked: boolean) => {
+            if (onCheckedChange) onCheckedChange({ isChecked, id });
+          }}
+        />
+        <Switch
+          checked={isSwitched}
           onCheckedChange={handleStatusChange}
           className="data-[state=checked]:bg-lakoe-primary"
         />

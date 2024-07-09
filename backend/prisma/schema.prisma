@@ -19,24 +19,19 @@ model User {
   email    String @unique
   phone    String
   password String
-  role     Role
+  role     Role   @default(USER)
 
-  cartItems CartItem[]
-  profile   Profile?
-  carts     Cart[]
-  invoices  Invoice[]
-  payments  Payment[]
+  // cartItems CartItem[]
+  profile  Profile?
+  carts    Cart[]
+  invoices Invoice[]
+  payments Payment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Order     Order[]
 
   @@map("users")
-}
-
-enum AccountType {
-  GOOGLE
-  FACEBOOK
-  CREDENTIALS
 }
 
 // d
@@ -47,11 +42,13 @@ enum Role {
 }
 
 model Profile {
-  id       Int        @id @default(autoincrement())
-  location String
-  userId   Int        @unique
-  user     User       @relation(fields: [userId], references: [id])
-  Location Location[]
+  id        Int        @id @default(autoincrement())
+  location  String
+  userId    Int        @unique
+  user      User       @relation(fields: [userId], references: [id])
+  locations Location[]
+
+  @@map("profiles")
 }
 
 // d
@@ -66,35 +63,42 @@ model Cart {
   store     Store      @relation(fields: [storeId], references: [id])
   cartItems CartItem[]
   Invoice   Invoice? // E: 1 to n or 1 to 1
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("carts")
 }
 
 // d
 
 model Invoice {
-  id                  Int                   @id @default(autoincrement())
-  prices              Decimal
-  serviceChange       String
-  status              String
-  receiverLongitude   String
-  receiverLatitude    String
-  receiverDistrict    String
-  receiverPhone       String
-  receiverAddress     String
-  receiverName        String
-  invoiceNumber       Int
-  cartId              Int                   @unique
-  cart                Cart                  @relation(fields: [cartId], references: [id])
-  paymentId           Int                   @unique
-  payment             Payment               @relation(fields: [paymentId], references: [id])
-  courierId           Int                   @unique
-  courier             Courier               @relation(fields: [courierId], references: [id])
-  userId              Int
-  user                User                  @relation(fields: [userId], references: [id])
-  InvoiceHistory      InvoiceHistory[]
-  ConfirmationPayment ConfirmationPayment[]
+  id                   Int                   @id @default(autoincrement())
+  prices               Decimal
+  serviceChange        String
+  status               String
+  receiverLongitude    String
+  receiverLatitude     String
+  receiverDistrict     String
+  receiverPhone        String
+  receiverAddress      String
+  receiverName         String
+  invoiceNumber        Int
+  cartId               Int                   @unique
+  cart                 Cart                  @relation(fields: [cartId], references: [id])
+  paymentId            Int                   @unique
+  payment              Payment               @relation(fields: [paymentId], references: [id])
+  // courierId            Int                   @unique
+  // courier              Courier               @relation(fields: [courierId], references: [id])
+  userId               Int
+  user                 User                  @relation(fields: [userId], references: [id])
+  invoiceHistories     InvoiceHistory[]
+  confirmationPayments ConfirmationPayment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("invoices")
 }
 
 // d?
@@ -111,6 +115,8 @@ model Payment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("payments")
 }
 
 // d
@@ -123,6 +129,8 @@ model InvoiceHistory {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("invoice_histories")
 }
 
 // d
@@ -136,20 +144,26 @@ model ConfirmationPayment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("confirmation_payments")
 }
 
 // d
 
 model Courier {
-  id                 Int      @id @default(autoincrement())
+  id                 Int    @id @default(autoincrement())
   courierCode        String
   courierServiceCode String
+  courierServiceName String
   price              Int
-  invoice            Invoice?
-  orderId            Int
+  orderId            Int    @unique
+  order              Order  @relation(fields: [orderId], references: [id])
+  // invoice            Invoice?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("couriers")
 }
 
 // d
@@ -163,18 +177,20 @@ model Store {
   logoAttachment   String
   bannerAttachment String
 
-  BankAccount       BankAccount[]
-  Cart              Cart[]
-  StoreOnDecoration StoreOnDecoration[]
-  OperationHour     OperationHour[]
-  MessageTemplate   MessageTemplate[]
-  Product           Product[]
-  CartItem          CartItem[]
-  Location          Location[]
-  locationId        Int?
+  bankAccounts       BankAccount[]
+  carts              Cart[]
+  storeOnDecorations StoreOnDecoration[]
+  messageTemplates   MessageTemplate[]
+  products           Product[]
+  // cartItems          CartItem[]
+  locations          Location[]
+  operationHour      OperationHour?
+  locationId         Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("stores")
 }
 
 // d
@@ -185,6 +201,11 @@ model StoreOnDecoration {
   decoration   Decoration @relation(fields: [decorationId], references: [id])
   storeId      Int
   store        Store      @relation(fields: [storeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("store_on_decorations")
 }
 
 // d
@@ -195,8 +216,10 @@ model OperationHour {
   openAt  DateTime
   closeAt DateTime
   isOff   Boolean
-  storeId Int
+  storeId Int      @unique
   store   Store    @relation(fields: [storeId], references: [id])
+
+  @@map("operation_hours")
 }
 
 // d
@@ -207,14 +230,18 @@ model MessageTemplate {
   content String
   storeId Int
   store   Store  @relation(fields: [storeId], references: [id])
+
+  @@map("message_templates")
 }
 
 // d
 
 model Decoration {
-  id                Int                 @id @default(autoincrement())
-  type              String
-  StoreOnDecoration StoreOnDecoration[]
+  id                 Int                 @id @default(autoincrement())
+  type               String
+  storeOnDecorations StoreOnDecoration[]
+
+  @@map("decorations")
 }
 
 // d
@@ -226,6 +253,8 @@ model BankAccount {
   accName   String
   storeId   Int
   store     Store  @relation(fields: [storeId], references: [id])
+
+  @@map("bank_accounts")
 }
 
 // d
@@ -233,83 +262,141 @@ model BankAccount {
 model Product {
   id           Int        @id @default(autoincrement())
   name         String
-  description  String
-  attachments  String
+  description  String     @db.Text
+  attachments  String[]
   isActive     Boolean
-  variants     String
-  size         Int
   minimumOrder Int
   storeId      Int
   store        Store      @relation(fields: [storeId], references: [id])
-  Category     Category[]
-  Variant      Variant[]
+  categories   Category[]
+  variants     Variant[]
+
+  @@map("products")
 }
 
 model Category {
-  id      Int       @id @default(autoincrement())
-  name    String
-  product Product[]
+  id       Int       @id @default(autoincrement())
+  name     String
+  products Product[]
+
+  @@map("categories")
 }
 
+// VARIANT THAT ARE AVAILABLE FOR SALE ARE VARIANT THAT DOES NOT HAVE SUBS-VARIANTS 
+// Variant that have parentId null is a root variant  
 model Variant {
-  id            Int             @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   name          String
-  isActive      Boolean
-  productId     Int
-  product       Product         @relation(fields: [productId], references: [id])
-  VariantOption VariantOption[]
+  // isForSale     Boolean   @default(false)
+  image         String?
+  isActive      Boolean   @default(false)
+  sku           String?
+  weight        String?
+  stock         Int?
+  price         Int?
+  parentId      Int?
+  parentVariant Variant?  @relation("Variant", fields: [parentId], references: [id], onDelete: Cascade)
+  subVariants   Variant[] @relation("Variant")
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  // VariantOption VariantOption[]
+  cartItems CartItem[]
+  Order     Order[]
+
+  @@map("product_variants")
 }
 
-model VariantOption {
-  id                  Int                   @id @default(autoincrement())
-  name                String
-  variantId           Int
-  variant             Variant               @relation(fields: [variantId], references: [id])
-  VariantOptionValues VariantOptionValues[]
-}
+// model VariantOption {
+//   id                  Int                   @id @default(autoincrement())
+//   name                String
+//   variantId           Int
+//   variant             Variant               @relation(fields: [variantId], references: [id])
+//   VariantOptionValues VariantOptionValues[]
+// }
 
-// d
+// // d
 
-model VariantOptionValues {
-  id              Int           @id @default(autoincrement())
-  sku             String
-  weight          String
-  stock           Int
-  price           Int
-  isActive        Boolean
-  variantOptionId Int
-  variantOption   VariantOption @relation(fields: [variantOptionId], references: [id])
-}
+// model VariantOptionValues {
+//   id              Int           @id @default(autoincrement())
+//   sku             String
+//   weight          String
+//   stock           Int
+//   price           Int
+//   isActive        Boolean
+//   variantOptionId Int
+//   variantOption   VariantOption @relation(fields: [variantOptionId], references: [id])
+// }
 
 // d
 
 model CartItem {
-  id      Int   @id @default(autoincrement())
-  qty     Int
-  price   Int
-  cartId  Int
-  cart    Cart  @relation(fields: [cartId], references: [id])
-  userId  Int
-  user    User  @relation(fields: [userId], references: [id])
-  storeId Int
-  store   Store @relation(fields: [storeId], references: [id])
+  // id             Int     @id @default(autoincrement())
+  qty            Int
+  price          Int
+  cartId         Int
+  cart           Cart    @relation(fields: [cartId], references: [id])
+  // userId         Int
+  // user           User    @relation(fields: [userId], references: [id])
+  variantId      Int
+  productVariant Variant @relation(fields: [variantId], references: [id])
+  // storeId Int
+  // store   Store @relation(fields: [storeId], references: [id])
+
+  @@id([cartId, variantId])
+  @@map("cart_items")
 }
 
 // d
 
 model Location {
-  id             Int     @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   name           String
-  address        String
-  postalCode     String
-  cityDistrict   String
-  latitude       String
-  longitude      String
-  storeId        Int
-  store          Store   @relation(fields: [storeId], references: [id])
-  profileId      Int
-  profile        Profile @relation(fields: [profileId], references: [id])
+  address        String?
+  postalCode     String?
+  cityDistrict   String?
+  province       String?
+  latitude       String?
+  longitude      String?
+  storeId        Int?
+  store          Store?   @relation(fields: [storeId], references: [id])
+  profileId      Int?
+  profile        Profile? @relation(fields: [profileId], references: [id])
   isMainLocation Boolean
 }
 
 // d
+
+model Order {
+  id                   Int         @id @default(autoincrement())
+  status               OrderStatus @default(NOT_PAID)
+  qty                  Int
+  pricePerProduct      Int
+  shippingRate         Int
+  discount             Int?
+  receiverAddress      String?
+  receiverPostalCode   String?
+  receiverCityDistrict String?
+  receiverProvince     String?
+  receiverLatitude     String?
+  receiverLongitude    String?
+  userId               Int?
+  user                 User?       @relation(fields: [userId], references: [id])
+  productVariantId     Int
+  productVariant       Variant     @relation(fields: [productVariantId], references: [id])
+  courier              Courier?
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  NOT_PAID
+  NEW_ORDER
+  READY_TO_DELIVER
+  ON_DELIVERY
+  SUCCESS
+  CANCELLED
+}

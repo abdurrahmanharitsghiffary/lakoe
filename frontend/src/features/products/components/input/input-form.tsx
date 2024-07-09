@@ -1,11 +1,14 @@
-import { Input } from "@/components/ui/input";
+import { Input, InputProps } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface InputFormProps {
+interface InputFormProps
+  extends InputProps,
+    React.RefAttributes<HTMLInputElement> {
   label?: string;
   placeholder: string;
   startAdornment?: string;
   endAdornment?: string;
+  className?: string;
 }
 
 export function InputForm({
@@ -13,6 +16,8 @@ export function InputForm({
   placeholder,
   startAdornment,
   endAdornment,
+  className,
+  ...props
 }: InputFormProps) {
   return (
     <>
@@ -22,6 +27,8 @@ export function InputForm({
           placeholder={placeholder}
           startAdornment={startAdornment}
           endAdornment={endAdornment}
+          className={className}
+          {...props}
         />
       </div>
     </>
