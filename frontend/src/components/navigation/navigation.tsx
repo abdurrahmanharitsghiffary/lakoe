@@ -28,7 +28,7 @@ function Navigation() {
   const { pathname } = useLocation();
 
   return (
-    <div className="flex flex-col mr-2 gap-4 px-1 py-4">
+    <div className="flex flex-col mr-2 gap-4 px-1 py-4 h-[90vh]">
       {navItems.map((item) => (
         <Link
           to={item.href ?? ""}
@@ -87,7 +87,7 @@ function Navigation() {
       <Button
         variant="ghost"
         size="lg"
-        className="flex w-full justify-start items-center mt-[240px]"
+        className="flex w-full justify-start items-center mt-auto"
       >
         <CgProfile className="ml-1 mr-2 h-8 w-8" />
         <h1 className="text-lg">Profil</h1>
