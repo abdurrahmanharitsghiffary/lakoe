@@ -1,9 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
-import HomePage from "./pages/home";
 import App from "./app";
 import { ProductsPage } from "./pages/products";
-import { FormProduct } from "@/features/products/form-product";
+import { FormProduct } from "@/features/products/components/form-product";
 import Typography from "@/components/ui/typography";
+import HomePage from "./pages/home";
+import OrdersPage from "./pages/orders";
 
 import { SettingsPage } from "./pages/settings";
 
@@ -22,7 +23,11 @@ export const router = createBrowserRouter([
         element: <FormProduct />,
       },
       {
-        path: "settings/store",
+        path: "orders",
+        element: <OrdersPage />,
+      },
+      {
+        path: "settings",
         element: <SettingsPage />,
       },
       {

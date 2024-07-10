@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addProductSchema } from "../validator/use-add-product";
+import { addProductSchema } from "../products/validator/use-add-product";
 import { z } from "zod";
 
 export const useAddProduct = () => {
@@ -11,11 +11,12 @@ export const useAddProduct = () => {
       name: "",
       url: "",
       description: "",
-      category: "",
+      category: [""],
       attachments: "",
-      price: "",
-      stock: "",
-      weight: "",
+      price: 0,
+      stock: 0,
+      weightInGram: 0,
+      minimumOrder: 0,
     },
   });
 
