@@ -10,7 +10,6 @@ import {
   AccordionItem,
 } from "@/components/ui/accordion";
 import { Button, buttonVariants } from "@/components/ui/button";
-import React from "react";
 import { IconType } from "react-icons/lib";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -32,6 +31,7 @@ function Navigation() {
     <div className="flex flex-col mr-2 gap-4 px-1 py-4 h-[90vh]">
       {navItems.map((item) => (
         <Link
+          key={item?.label}
           to={item.href ?? ""}
           className={cn(
             buttonVariants({
