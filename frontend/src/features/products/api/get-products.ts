@@ -4,29 +4,31 @@ import { Product } from "@/types/product";
 import { QueryConfig } from "@/types/query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getProducts = async (isActive?: boolean) => {
+type GetProductOptions = { q?: string; isActive?: boolean };
+
+export const getProducts = async (options?: GetProductOptions) => {
   const response = await axios.get<ApiResponse<Product[]>>("/products", {
-    params: { active: isActive },
+    params: { active: options?.isActive, q: options?.q },
   });
 
   return response.data;
 };
 
-export const getProductsOptions = (isActive?: boolean) => {
+export const getProductsOptions = (options?: GetProductOptions) => {
   return queryOptions({
-    queryKey: ["products", isActive],
-    queryFn: () => getProducts(isActive),
+    queryKey: ["products", options],
+    queryFn: () => getProducts(options),
   });
 };
 
 export type UseGetProductsOptions = {
   queryConfig?: QueryConfig<typeof getProductsOptions>;
-  isActive?: boolean;
+  options?: GetProductOptions;
 };
 
 export const useGetProducts = (options?: UseGetProductsOptions) => {
   return useQuery({
-    ...getProductsOptions(options?.isActive),
+    ...getProductsOptions(options?.options),
     ...options?.queryConfig,
   });
 };

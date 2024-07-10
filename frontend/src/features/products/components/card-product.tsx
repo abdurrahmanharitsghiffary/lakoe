@@ -7,9 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/components/ui/use-toast";
 import { Product } from "@/types/product";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 export type ProductVariant = {
   name: string;
@@ -23,11 +22,8 @@ export type CardProductProps = {
   product: Product | undefined;
 };
 
-export function CardProduct({
-  isChecked,
-  onCheckedChange,
-  product,
-}: CardProductProps) {
+function Comp({ isChecked, onCheckedChange, product }: CardProductProps) {
+  console.log("RE RENDER");
   const [isSwitched, setIsSwitched] = useState(product?.isActive ?? false);
   const [isOpen, setIsOpen] = useState(false);
   const [isPriceChangeOpen, setIsPriceChangeOpen] = useState(false);
@@ -132,3 +128,7 @@ export function CardProduct({
     </Card>
   );
 }
+
+const CardProduct = memo(Comp);
+
+export { CardProduct };

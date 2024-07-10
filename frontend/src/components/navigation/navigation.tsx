@@ -46,7 +46,7 @@ function Navigation() {
             color={pathname === item.href ? "blue" : undefined}
           />
           <h1
-            className="text-lg"
+            className="text-base"
             style={{ color: pathname === item.href ? "#0000FF" : undefined }}
           >
             {item.label}
@@ -62,7 +62,7 @@ function Navigation() {
               className="flex w-full justify-start items-center"
             >
               <IoSettingsOutline className="ml-1 mr-2 h-8 w-8" />
-              <h1 className="text-lg">Pengaturan</h1>
+              <h1 className="text-base">Pengaturan</h1>
             </Button>
           </AccordionTrigger>
           <AccordionContent className="flex flex-col justify-center gap-4 ml-8">
@@ -72,7 +72,7 @@ function Navigation() {
               className="flex w-full justify-start items-center"
             >
               <LiaShoppingBagSolid className="ml-1 mr-2 h-8 w-8" />
-              <h1 className="text-lg">Pesanan</h1>
+              <h1 className="text-base">Pesanan</h1>
             </Button>
             <Button
               variant="ghost"
@@ -80,7 +80,7 @@ function Navigation() {
               className="flex w-full justify-start items-center"
             >
               <LiaShoppingBagSolid className="ml-1 mr-2 h-8 w-8" />
-              <h1 className="text-lg">Pesanan</h1>
+              <h1 className="text-base">Pesanan</h1>
             </Button>
           </AccordionContent>
         </AccordionItem>
@@ -91,7 +91,7 @@ function Navigation() {
         className="flex w-full justify-start items-center mt-auto"
       >
         <CgProfile className="ml-1 mr-2 h-8 w-8" />
-        <h1 className="text-lg">Profil</h1>
+        <h1 className="text-base">Profil</h1>
       </Button>
     </div>
   );

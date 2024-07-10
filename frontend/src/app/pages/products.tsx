@@ -1,4 +1,5 @@
 import LakoeCheckbox from "@/components/checkbox/lakoe";
+import List from "@/components/list.";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,6 +9,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Typography from "@/components/ui/typography";
 import { useGetProducts } from "@/features/products/api/get-products";
@@ -15,12 +17,22 @@ import { CardProduct } from "@/features/products/components/card-product";
 import { useConfirmDeleteProduct } from "@/features/products/hooks/use-confirm-delete-product";
 import { useConfirmNonactiveProduct } from "@/features/products/hooks/use-confirm-nonactive-product";
 import { cn } from "@/lib/utils";
+import { Product } from "@/types/product";
+import { getAllSearchParams } from "@/utils/get-all-search-param";
 import { parseStrBool } from "@/utils/parse-str-bool";
 import { SelectValue } from "@radix-ui/react-select";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { BiTrash } from "react-icons/bi";
 import { CiCirclePlus } from "react-icons/ci";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useDebounce } from "use-debounce";
+
+const getCheckedProducts = (products: Product[]) => {
+  return products.map((product) => ({
+    isChecked: false,
+    id: product.id,
+  }));
+};
 
 export function ProductsPage() {
   const confirm = useConfirmDeleteProduct();
@@ -29,32 +41,45 @@ export function ProductsPage() {
   const navigate = useNavigate();
 
   const q = searchParams.get("q") || "";
+  const [s, setS] = useState(q);
+  const [dS] = useDebounce(s, 300);
   const active = searchParams.get("active") || "";
 
   const { data, isLoading } = useGetProducts({
-    isActive: active === "all" ? undefined : parseStrBool(active),
+    options: {
+      q,
+      isActive: active === "all" ? undefined : parseStrBool(active),
+    },
   });
-
-  const getCheckedProducts = () => {
-    return (data?.data ?? []).map((product) => ({
-      isChecked: false,
-      id: product.id,
-    }));
-  };
 
   const [checkedProducts, setCheckedProducts] = useState<
     { isChecked: boolean; id: number }[]
-  >(getCheckedProducts());
+  >(getCheckedProducts(data?.data ?? []));
+
+  const isCheckedSome = useMemo(
+    () => checkedProducts.some((v) => v.isChecked === true),
+    [checkedProducts]
+  );
+
+  const productData = data?.data ?? [];
+
+  const checkedProductLength = useMemo(
+    () =>
+      checkedProducts.filter((product) => product.isChecked === true).length ??
+      0,
+    [checkedProducts]
+  );
 
   useEffect(() => {
     if (data?.data) {
-      setCheckedProducts(getCheckedProducts());
+      setCheckedProducts(getCheckedProducts(data?.data ?? []));
     }
   }, [data?.data]);
 
   const handleValueChange = (type: string) => {
+    searchParams.set("active", type);
     navigate({
-      search: "?active=" + type,
+      search: "?" + getAllSearchParams(searchParams),
     });
   };
 
@@ -63,8 +88,32 @@ export function ProductsPage() {
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    navigate({ search: "?q=" + e.target.value });
+    setS(e.target.value);
   };
+
+  useEffect(() => {
+    searchParams.set("q", dS);
+    navigate({ search: "?" + getAllSearchParams(searchParams) });
+  }, [dS]);
+
+  const handleDeleteAllClick = async () => {
+    await confirm(checkedProductLength);
+  };
+
+  const handleUnactiveAllClick = async () => {
+    await confirmNonactive(checkedProductLength);
+  };
+
+  const handleProductCheckedChange = useCallback(
+    (state: { isChecked: boolean; id: number }) =>
+      setCheckedProducts((c) => {
+        return c.map((item) => {
+          if (item.id === state.id) return { ...c, ...state };
+          return item;
+        });
+      }),
+    []
+  );
 
   return (
     <>
@@ -111,7 +160,7 @@ export function ProductsPage() {
           </Tabs>
           <div className="flex justify-between m-3 gap-4">
             <Input
-              value={q}
+              value={s}
               onChange={handleSearch}
               placeholder="Cari produk"
               className="p-2 "
@@ -141,19 +190,13 @@ export function ProductsPage() {
               {data?.data?.length} Produk
             </Typography>
             <div className="flex gap-2 items-center h-8">
-              {checkedProducts.some((v) => v.isChecked === true) && (
+              {isCheckedSome && (
                 <>
                   <Button
                     variant="outline"
                     size="icon"
                     className="rounded-full w-6 h-6"
-                    onClick={async () => {
-                      await confirm(
-                        checkedProducts.filter(
-                          (product) => product.isChecked === true
-                        ).length ?? 0
-                      );
-                    }}
+                    onClick={handleDeleteAllClick}
                   >
                     <BiTrash />
                   </Button>
@@ -161,13 +204,7 @@ export function ProductsPage() {
                     variant="outline"
                     size="sm"
                     className="rounded-full h-6"
-                    onClick={async () => {
-                      await confirmNonactive(
-                        checkedProducts.filter(
-                          (product) => product.isChecked === true
-                        ).length ?? 0
-                      );
-                    }}
+                    onClick={handleUnactiveAllClick}
                   >
                     Nonaktifkan Produk
                   </Button>
@@ -175,28 +212,31 @@ export function ProductsPage() {
               )}
               <LakoeCheckbox
                 id="select-all"
-                checked={checkedProducts.some((pr) => pr.isChecked === true)}
+                checked={isCheckedSome}
                 label="Pilih semua"
                 onCheckedChange={handleCheckedChange}
               />
             </div>
           </div>
           <CardContent className="grid grid-cols gap-3 px-3">
-            {(data?.data ?? []).map((product, i) => (
-              <CardProduct
-                isChecked={checkedProducts?.[i]?.isChecked || false}
-                onCheckedChange={(state) =>
-                  setCheckedProducts((c) => {
-                    return c.map((item) => {
-                      if (item.id === state.id) return { ...c, ...state };
-                      return item;
-                    });
-                  })
-                }
-                product={product}
-                key={product?.id}
-              />
-            ))}
+            <List
+              data={productData}
+              isLoading={isLoading}
+              loader={
+                <div className="mx-auto">
+                  <LoadingSpinner className="text-lakoe-primary" />
+                </div>
+              }
+            >
+              {productData.map((product, i) => (
+                <CardProduct
+                  isChecked={checkedProducts?.[i]?.isChecked || false}
+                  onCheckedChange={handleProductCheckedChange}
+                  product={product}
+                  key={product?.id}
+                />
+              ))}
+            </List>
           </CardContent>
         </Card>
       </div>
