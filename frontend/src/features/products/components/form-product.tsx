@@ -26,6 +26,7 @@ import {
 import { useAddProduct } from "../../hook/use-add-product";
 
 import InputFileHidden from "@/components/ui/input-file-hidden";
+import { ProductFileInput } from "@/components/input/product-input";
 
 export function FormProduct() {
   const { form, onSubmit } = useAddProduct();
@@ -135,45 +136,12 @@ export function FormProduct() {
                 render={({ field }) => (
                   <div className="m-3">
                     <Label>Foto Produk</Label>
-                    <div className="flex gap-2">
-                      <FormItem>
-                        <FormControl>
-                          <div className="border-dashed border-2 border-gray-400 rounded-md w-40 h-36 flex justify-center items-center">
-                            <InputFileHidden {...field}>
-                              <RiImageAddLine
-                                size={60}
-                                className="text-gray-400"
-                              />
-                              <p className="text-gray-400 ms-2">Foto 1</p>
-                            </InputFileHidden>
-                          </div>
-                        </FormControl>
-                      </FormItem>
-
-                      <div className="border-dashed border-2 border-gray-400 rounded-md w-40 h-36 flex justify-center items-center">
-                        <InputFileHidden>
-                          <RiImageAddLine size={60} className="text-gray-400" />
-                          <p className="text-gray-400 ms-2">Foto 2</p>
-                        </InputFileHidden>
-                      </div>
-                      <div className="border-dashed border-2 border-gray-400 rounded-md w-40 h-36 flex justify-center items-center">
-                        <InputFileHidden>
-                          <RiImageAddLine size={60} className="text-gray-400" />
-                          <p className="text-gray-400 ms-2">Foto 3</p>
-                        </InputFileHidden>
-                      </div>
-                      <div className="border-dashed border-2 border-gray-400 rounded-md w-40 h-36 flex justify-center items-center">
-                        <InputFileHidden>
-                          <RiImageAddLine size={60} className="text-gray-400" />
-                          <p className="text-gray-400 ms-2">Foto 4</p>
-                        </InputFileHidden>
-                      </div>
-                      <div className="border-dashed border-2 border-gray-400 rounded-md w-40 h-36 flex justify-center items-center">
-                        <InputFileHidden>
-                          <RiImageAddLine size={60} className="text-gray-400" />
-                          <p className="text-gray-400 ms-2">Foto 5</p>
-                        </InputFileHidden>
-                      </div>
+                    <div className="flex gap-2 overflow-x-auto hide-scrollbar">
+                      <ProductFileInput>Foto 1</ProductFileInput>
+                      <ProductFileInput>Foto 2</ProductFileInput>
+                      <ProductFileInput>Foto 3</ProductFileInput>
+                      <ProductFileInput>Foto 4</ProductFileInput>
+                      <ProductFileInput>Foto 5</ProductFileInput>
                     </div>
                     <FormMessage className="pt-2" />
                   </div>

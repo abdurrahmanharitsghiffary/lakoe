@@ -13,6 +13,7 @@ export function Image(props: ImageProps) {
   const [isError, setIsError] = useState(false);
   console.log(isLoading, "load");
   console.log(isError, "err");
+
   return (
     <>
       <img

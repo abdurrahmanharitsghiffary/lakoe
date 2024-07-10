@@ -18,7 +18,7 @@ export function SettingsPage() {
   return (
     <>
       <div className="flex justify-center">
-        <Card className="w-full m-3">
+        <Card className="w-full">
           <h1 className="m-4 font-bold text-xl">Fesyen Store</h1>
           <Tabs
             defaultValue="semua"

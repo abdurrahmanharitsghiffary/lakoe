@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Product } from "@/types/product";
 import { memo, useState } from "react";
+import ProductMenu from "./product-menu";
 
 export type ProductVariant = {
   name: string;
@@ -88,9 +89,7 @@ function Comp({ isChecked, onCheckedChange, product }: CardProductProps) {
           {/* <Button size="sm" variant="outline" className="rounded-full h-6">
             <GoPaperclip /> Lihat Halaman
           </Button> */}
-          <Button size="sm" variant="outline" className="rounded-full h-6 w-6">
-            •••
-          </Button>
+          <ProductMenu productId={product?.id} />
         </div>
       </div>
       <div className="ml-auto flex flex-col justify-between items-end">

@@ -28,7 +28,7 @@ function Navigation() {
   const { pathname } = useLocation();
 
   return (
-    <div className="flex flex-col mr-2 gap-4 px-1 py-4 h-[90vh]">
+    <div className="flex flex-col gap-2 px-2 py-2 h-[90vh]">
       {navItems.map((item) => (
         <Link
           key={item?.label}
@@ -42,12 +42,16 @@ function Navigation() {
           )}
         >
           <item.icon
-            className="ml-1 mr-2 h-8 w-8"
-            color={pathname === item.href ? "blue" : undefined}
+            className={cn(
+              "ml-1 mr-2 h-8 w-8",
+              pathname === item.href ? "text-lakoe-primary" : undefined
+            )}
           />
           <h1
-            className="text-base"
-            style={{ color: pathname === item.href ? "#0000FF" : undefined }}
+            className={cn(
+              "text-base",
+              pathname === item.href ? "text-lakoe-primary" : undefined
+            )}
           >
             {item.label}
           </h1>

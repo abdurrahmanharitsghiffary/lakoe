@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
   :root {
     --lakoe-primary: #0086b4;
     --lakoe-primary-50: #f1f8fb;

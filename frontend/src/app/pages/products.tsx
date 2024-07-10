@@ -14,6 +14,11 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Typography from "@/components/ui/typography";
 import { useGetProducts } from "@/features/products/api/get-products";
 import { CardProduct } from "@/features/products/components/card-product";
+import {
+  ProductActiveFallback,
+  ProductNotActiveFallback,
+  ProductNotFoundFallback,
+} from "@/features/products/components/fallback";
 import { useConfirmDeleteProduct } from "@/features/products/hooks/use-confirm-delete-product";
 import { useConfirmNonactiveProduct } from "@/features/products/hooks/use-confirm-nonactive-product";
 import { cn } from "@/lib/utils";
@@ -114,6 +119,14 @@ export function ProductsPage() {
         });
       }),
     []
+  );
+
+  const productFallback = q ? (
+    <ProductNotFoundFallback />
+  ) : parseStrBool(active) ? (
+    <ProductActiveFallback />
+  ) : (
+    <ProductNotActiveFallback />
   );
 
   return (
@@ -223,6 +236,7 @@ export function ProductsPage() {
           <CardContent className="grid grid-cols gap-3 px-3">
             <List
               data={productData}
+              noItemsContent={productFallback}
               isLoading={isLoading}
               loader={
                 <div className="mx-auto">
