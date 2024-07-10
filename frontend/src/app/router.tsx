@@ -4,7 +4,8 @@ import App from "./app";
 import { ProductsPage } from "./pages/products";
 import { FormProduct } from "@/features/products/form-product";
 import Typography from "@/components/ui/typography";
-import { CardStore } from "@/features/settings/card-store";
+
+import { SettingsPage } from "./pages/settings";
 
 export const router = createBrowserRouter([
   {
@@ -22,7 +23,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "settings/store",
-        element: <CardStore />,
+        element: <SettingsPage />,
       },
       {
         path: "*",

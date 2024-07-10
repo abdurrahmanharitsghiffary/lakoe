@@ -2,6 +2,7 @@ import LakoeCheckbox from "@/components/checkbox/lakoe";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { LuPackageSearch } from "react-icons/lu";
 // import {
 //   MultiSelector,
 //   MultiSelectorContent,
@@ -108,6 +109,7 @@ export function ProductsPage() {
               placeholder="Cari produk"
               className="p-2 "
               style={{ flex: 2 }}
+              icon={<LuPackageSearch size={20} />}
             />
             {/* <MultiSelector
               values={selectedCategories}

@@ -42,7 +42,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </span>
           )}
           {icon && (
-            <span className="px-3 text-sm text-muted-foreground">{icon}</span>
+            <span className="px-1 text-sm text-muted-foreground">{icon}</span>
           )}
           <input
             type={type}
