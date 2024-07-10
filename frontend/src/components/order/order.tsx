@@ -1,4 +1,3 @@
-import React from "react";
 import {
     Card,
     CardContent,
@@ -8,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-interface ProductProps {
+interface OrderProps {
     status: keyof typeof status;
     invoice: string;
     name: string;
@@ -28,7 +27,7 @@ export const status = {
     dibatalkan: { label: "Dibatalkan", cn: "#ea3829", buttonLabel: ""},
 }
 
-export const ProductComponent: React.FC<ProductProps> = ({ status: statusKey, invoice, name, variant, size, image, totalItem, totalPrice }) => {
+export function OrderComponent({ status: statusKey, invoice, name, variant, size, image, totalItem, totalPrice }: OrderProps) {
     const handleSubmit = () => {
         // Logic for order submission
     };
@@ -36,40 +35,38 @@ export const ProductComponent: React.FC<ProductProps> = ({ status: statusKey, in
     const { label, cn, buttonLabel } = status[statusKey]
 
     return (
-        <div className="flex justify-center">
-            <Card className="shadow-lg rounded-lg overflow-hidden border border-gray-300 w-full h-23">
-                <CardHeader className="items-left bg-gray-50">
+        <div className="flex justify-center h-[150px]">
+            <Card className=" border border-gray-300 w-full"  style={{ minHeight: '150px' }}>
+                <CardHeader className="items-left bg-gray-50 p-1 pl-6 pb-0">
                     <div className="flex justify-between pt-4">
                         <div className="flex-shrink-0">
-                        <p className="py-1 px-4 block w-fit text-white rounded-sm w-1/5 h-7 flex justify-center pb-7" style={{ backgroundColor: cn }}>{label}</p>
-                        <p className="text-gray-500 mt-2">{invoice}</p>
+                        <p className=" px-3 block w-fit text-white rounded-sm h-7 flex justify-center pb-7 mt-1 text-base" style={{ backgroundColor: cn }}>{label}</p>
+                        <p className="text-gray-500 mt-2 text-sm pb-1">{invoice}</p>
                         </div>
 
                         {buttonLabel && (
-                            <Button className="py-2 px-4 text-black bg-white rounded-full border border-gray-300 mt-10" onClick={handleSubmit}>
+                            <Button className="py-2 px-4 text-black bg-white rounded-full border border-gray-300 mb-5 hover:bg-gray-200 hover:border-gray-400 hover:text-black" onClick={handleSubmit}>
                             {buttonLabel}
                          </Button>
                         )}
                     </div>
                 </CardHeader>
 
-                <CardContent className=" flex justify-end ">
-                    <div className="flex items-center mr-auto">
-                        <img className="w-20 h-20 object-cover border border-gray-300" src={image} alt={name} />
+                <CardContent className=" flex justify-end pt-0 pl-6 border-t border-grey-300 pt-1">
+                    <div className="flex items-center mr-auto pb-10">
+                        <img className="w-[50px] h-[50px] object-cover rounded-10 pt-1" src={image} alt={name} />
                         <div className="ml-4">
-                            <CardTitle className="text-2xl font-bold text-gray-900">
+                            <CardTitle className="text-base font-bold font-size-500 text-gray-900">
                                 {name} | {variant} - {size}
                             </CardTitle>
-                            <CardDescription className="text-gray-500 mt-2">{totalItem} Barang</CardDescription>
+                            <CardDescription className="text-gray-500">{totalItem} Barang</CardDescription>
                         </div>
                     </div>
 
-                    <div className="">
-                        <p className="text-lg text-gray-500">Total belanja</p>
-                        <p className="text-xl font-semibold text-gray-900">Rp{totalPrice}</p>
+                    <div className="mb-5">
+                        <p className="text-base text-gray-500">Total belanja</p>
+                        <p className="text-base font-semibold text-gray-900">Rp{totalPrice}</p>
                     </div>
-
-
                 </CardContent>
             </Card >
         </div>

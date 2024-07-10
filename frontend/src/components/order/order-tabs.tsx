@@ -4,48 +4,76 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
+import { TbListSearch } from "react-icons/tb";
 
+type StatusCount = {
+    semua: number;
+    belumDibayar: number;
+    pesananBaru: number;
+    siapDikirim: number;
+    dalamPengiriman: number;
+    pesananSelesai: number;
+    dibatalkan: number;
+}
 
+const orderStatusCount: StatusCount = {
+    semua: 10,
+    belumDibayar: 0,
+    pesananBaru: 1,
+    siapDikirim: 1,
+    dalamPengiriman: 1,
+    pesananSelesai: 1,
+    dibatalkan: 6,
 
-function ProductTabs() {
+}
+
+export function OrderTabs() {
     return (
-        <div className="w-full">
-            <p className="text-lg font-medium bg-white pl-3">Daftar Pesanan</p>
-            <Tabs defaultValue="account" className="w-[400px]">
-                <TabsList>
+        <div className="w-full overflow-x-hidden bg-white">
+            <p className="text-lg font-medium pl-3">Daftar Pesanan</p>
+            <Tabs defaultValue="account" className="w-full">
+                <div className="overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch'}}>
+                <TabsList className="flex space-x-4 min-w-max">
                     <TabsTrigger value="account" className="px-4 py-2 bg-white rouded-lg shadow-md">
-                    <Badge variant="secondary">5</Badge>
-                    Semua  
+                        {orderStatusCount.semua > 0 && <Badge className="bg-lakoe-primary mr-1">{orderStatusCount.semua}</Badge>}
+                        Semua
                     </TabsTrigger>
+
                     <TabsTrigger value="password" className="px-4 py-2 bg-white rouded-lg shadow-md">
-                    <Badge variant="secondary">5</Badge>
-                    Belum DiBayar
+                        {orderStatusCount.belumDibayar > 0 && <Badge className="bg-lakoe-primary mr-1">{orderStatusCount.belumDibayar}</Badge>}
+                        Belum DiBayar
                     </TabsTrigger>
+
                     <TabsTrigger value="password" className="px-4 py-2 bg-white rouded-lg shadow-md">
-                    <Badge variant="secondary">5</Badge>
-                    Pesanan Baru  
+                        {orderStatusCount.pesananBaru > 0 && <Badge className="bg-lakoe-primary mr-1">{orderStatusCount.pesananBaru}</Badge>}
+                        Pesanan Baru
                     </TabsTrigger>
+
                     <TabsTrigger value="password" className="px-4 py-2 bg-white rouded-lg shadow-md">
-                    <Badge variant="secondary">5</Badge>
-                    Siap Dikirim
+                        {orderStatusCount.siapDikirim > 0 && <Badge className="bg-lakoe-primary mr-1">{orderStatusCount.siapDikirim}</Badge>}
+                        Siap Dikirim
                     </TabsTrigger>
+
                     <TabsTrigger value="password" className="px-4 py-2 bg-white rouded-lg shadow-md">
-                    <Badge variant="secondary">5</Badge>
-                    Dalam Pengiriman
+                        {orderStatusCount.dalamPengiriman > 0 && <Badge className="bg-lakoe-primary mr-1">{orderStatusCount.dalamPengiriman}</Badge>}
+                        Dalam Pengiriman
                     </TabsTrigger>
+
                     <TabsTrigger value="password" className="px-4 py-2 bg-white rouded-lg shadow-md">
-                    <Badge variant="secondary">5</Badge>
-                    Pesanan Selesai      
+                        {orderStatusCount.pesananSelesai > 0 && <Badge className="bg-lakoe-primary mr-1">{orderStatusCount.pesananSelesai}</Badge>}
+                        Pesanan Selesai
                     </TabsTrigger>
+
                     <TabsTrigger value="password" className="px-4 py-2 bg-white rouded-lg shadow-md">
-                    <Badge variant="secondary">5</Badge>
-                    Dibatalkan 
+                        {orderStatusCount.dibatalkan > 0 && <Badge className="bg-lakoe-primary mr-1">{orderStatusCount.dibatalkan}</Badge>}
+                        Dibatalkan
                     </TabsTrigger>
                 </TabsList>
+                </div>
             </Tabs>
 
-            <div color="gray" className="w-full flex items-center max-w-sm border border-gray-300 border-opacity-50 p-4 rounded-md gap-1">
-                <Input placeholder="Cari Pesanan" type="text" className="flex-1" />
+            <div className="w-full flex items-center border border-gray-300 border-opacity-50 p-4 rounded-md gap-1">
+                <Input placeholder="Cari Pesanan" type="text" className="flex-1" startAdornment={<TbListSearch className="text-base"/>} />
 
                 <Select>
                     <SelectTrigger className="flex-1">
@@ -74,4 +102,4 @@ function ProductTabs() {
         </div>
     )
 }
-export default ProductTabs
+

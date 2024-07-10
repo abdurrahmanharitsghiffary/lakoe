@@ -1,6 +1,6 @@
-import { ProductComponent, status } from "./order"
+import { OrderComponent, status } from "./order"
 import { CardTitle } from "@/components/ui/card";
-import ProductTabs from "./order-tabs";
+import { OrderTabs } from "./order-tabs";
 
 interface IOrder {
     id: number;
@@ -18,25 +18,47 @@ export function OrderList() {
     const orders: IOrder[] = [
         {
             id: 1,
-            name: "Basic cotton kenary",
-            invoice: "1234",
+            name: "BASIC COTTON KENNARY",
+            invoice: "INV/1234/ASDF",
             status: "dalamPengiriman",
-            variant: "Black Mamba",
+            variant: "BLACK COLOR",
             size: "L",
             image: "https://s3-ap-southeast-1.amazonaws.com/cdn.jarvis-store.com/harga-kaos-upload/produk/large/20170126-140843.jpg",
-            totalItem: 0,
-            totalPrice: 0,
+            totalItem: 5,
+            totalPrice: 100000,
         },
         {
             id: 1,
-            name: "Kaos",
-            invoice: "1234",
+            name: "LUXURY GUCCI BAG",
+            invoice: "INV/1234/ASDF",
             status: "belum",
-            variant: "Black",
+            variant: "BLACK PINK T-SHIRT",
             size: "L",
             image: "https://s3-ap-southeast-1.amazonaws.com/cdn.jarvis-store.com/harga-kaos-upload/produk/large/20170126-140843.jpg",
-            totalItem: 0,
-            totalPrice: 0,
+            totalItem: 4,
+            totalPrice: 180000,
+        },
+        {
+            id: 1,
+            name: "LUXURY DIOR DRESS",
+            invoice: "INV/1234/ASDF",
+            status: "siapDikirim",
+            variant: "MUSTARD GREEN TEA",
+            size: "L",
+            image: "https://s3-ap-southeast-1.amazonaws.com/cdn.jarvis-store.com/harga-kaos-upload/produk/large/20170126-140843.jpg",
+            totalItem: 4,
+            totalPrice: 180000,
+        },
+        {
+            id: 1,
+            name: "Baju anak Perempuan",
+            invoice: "INV/1234/ASDF",
+            status: "dibatalkan",
+            variant: "Pink",
+            size: "L",
+            image: "https://s3-ap-southeast-1.amazonaws.com/cdn.jarvis-store.com/harga-kaos-upload/produk/large/20170126-140843.jpg",
+            totalItem: 4,
+            totalPrice: 180000,
         },
     ]
 
@@ -44,7 +66,7 @@ export function OrderList() {
     return (
         <div>
             {orders.map((order) => (
-                <ProductComponent
+                <OrderComponent
                     name={order.name}
                     invoice={order.invoice}
                     status={order.status}
