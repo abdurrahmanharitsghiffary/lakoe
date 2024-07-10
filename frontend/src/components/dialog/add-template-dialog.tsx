@@ -1,3 +1,4 @@
+import { ButtonPrimary } from "../button/btn-primary";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -43,10 +44,10 @@ export function AddTemplateDialog({ isOpen, onOpen }: Props) {
           </div>
 
           <DialogFooter>
-            <Button className="bg-white text-black rounded-full border hover:bg-black hover:text-white">
+            <Button variant={"outline"} className=" rounded-full ">
               Batal
             </Button>
-            <Button className="bg-blue-500 rounded-full">Simpan</Button>
+            <ButtonPrimary className="rounded-full">Simpan</ButtonPrimary>
           </DialogFooter>
         </DialogContent>
       </Dialog>

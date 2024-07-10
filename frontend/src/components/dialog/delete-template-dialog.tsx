@@ -1,3 +1,4 @@
+import { ButtonPrimary } from "../button/btn-primary";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -21,10 +22,10 @@ export function DeleteTemplateDialog({ isOpen, onOpen }: Props) {
             tidak dapat mengembalikan template pesan yang sudah dihapus{" "}
           </p>
           <DialogFooter>
-            <Button className="bg-white text-black rounded-full border hover:bg-black hover:text-white">
+            <Button variant={"outline"} className=" rounded-full ">
               Batalkan
             </Button>
-            <Button className="bg-blue-500 rounded-full">Ya, Hapus</Button>
+            <ButtonPrimary className="rounded-full">Ya, Hapus</ButtonPrimary>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -2,11 +2,11 @@ import { InputForm } from "../products/components/input/input-form";
 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+
 import InputFileHidden from "@/components/ui/input-file-hidden";
 import { RiImageAddLine } from "react-icons/ri";
+import { ButtonPrimary } from "@/components/button/btn-primary";
 
-// type TabType = "informasi" | "lokasi" | "template";
 export function CardStore() {
   return (
     <>
@@ -24,9 +24,7 @@ export function CardStore() {
               className="resize-none h-28"
             />
             <div className="text-end m-3">
-              <Button className="bg-blue-500 text-white rounded-full ">
-                Simpan
-              </Button>
+              <ButtonPrimary className="rounded-full">Simpan</ButtonPrimary>
             </div>
           </div>
         </div>

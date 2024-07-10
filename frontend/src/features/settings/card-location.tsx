@@ -6,6 +6,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { AddLocationDialog } from "@/components/dialog/add-location-dialog";
 import { useState } from "react";
 import { DeleteLocationDialog } from "@/components/dialog/delete-location-dialog";
+import { ButtonPrimary } from "@/components/button/btn-primary";
 
 export function CardLocation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,12 +22,12 @@ export function CardLocation() {
             </p>
           </div>
           <div className="m-3">
-            <Button
+            <ButtonPrimary
               onClick={() => setIsOpen(true)}
-              className="bg-white text-black rounded-full border hover:bg-black hover:text-white"
+              className="rounded-full"
             >
               Tambah Lokasi
-            </Button>
+            </ButtonPrimary>
           </div>
         </div>
         <Card className="m-4">
@@ -55,12 +56,13 @@ export function CardLocation() {
             </div>
             <div className="flex gap-3 m-4 ">
               <Button
+                variant={"outline"}
                 onClick={() => setIsOpen2(true)}
-                className="rounded-full bg-white text-black hover:bg-black hover:text-white border"
+                className="rounded-full "
               >
                 <FaRegTrashAlt size={15} />
               </Button>
-              <Button className="rounded-full  bg-white text-black hover:bg-black hover:text-white border">
+              <Button variant={"outline"} className="rounded-full ">
                 <FaRegEdit size={15} />
               </Button>
             </div>

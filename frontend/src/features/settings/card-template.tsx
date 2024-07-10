@@ -1,3 +1,4 @@
+import { ButtonPrimary } from "@/components/button/btn-primary";
 import { AddTemplateDialog } from "@/components/dialog/add-template-dialog";
 import { DeleteTemplateDialog } from "@/components/dialog/delete-template-dialog";
 import { UpdateTemplateDialog } from "@/components/dialog/update-template-dialog";
@@ -16,12 +17,12 @@ export function CardTemplate() {
       <div className="flex-col justify-center">
         <div className="flex justify-between">
           <h1 className="m-4 font-bold text-xl">Daftar Template Pesan</h1>
-          <Button
+          <ButtonPrimary
             onClick={() => setIsOpen(true)}
-            className="bg-blue-500 rounded-full m-4"
+            className="rounded-full m-4"
           >
             Buat Template
-          </Button>
+          </ButtonPrimary>
         </div>
         <Card className="m-4">
           <div className="flex justify-between">
@@ -45,14 +46,16 @@ export function CardTemplate() {
 
             <div className="flex gap-3 m-4 ">
               <Button
+                variant={"outline"}
                 onClick={() => setIsOpen2(true)}
-                className="rounded-full bg-white text-black hover:bg-black hover:text-white border"
+                className="rounded-full "
               >
                 <FaRegTrashAlt size={15} />
               </Button>
               <Button
+                variant={"outline"}
                 onClick={() => setIsOpen3(true)}
-                className="rounded-full  bg-white text-black hover:bg-black hover:text-white border"
+                className="rounded-full  "
               >
                 <FaRegEdit size={15} />
               </Button>
@@ -74,14 +77,16 @@ export function CardTemplate() {
 
             <div className="flex gap-3 m-4 ">
               <Button
+                variant={"outline"}
                 onClick={() => setIsOpen2(true)}
-                className="rounded-full bg-white text-black hover:bg-black hover:text-white border"
+                className="rounded-full "
               >
                 <FaRegTrashAlt size={15} />
               </Button>
               <Button
+                variant={"outline"}
                 onClick={() => setIsOpen3(true)}
-                className="rounded-full  bg-white text-black hover:bg-black hover:text-white border"
+                className="rounded-full  "
               >
                 <FaRegEdit size={15} />
               </Button>
@@ -102,14 +107,16 @@ export function CardTemplate() {
 
             <div className="flex gap-3 m-4 ">
               <Button
+                variant={"outline"}
                 onClick={() => setIsOpen2(true)}
-                className="rounded-full bg-white text-black hover:bg-black hover:text-white border"
+                className="rounded-full "
               >
                 <FaRegTrashAlt size={15} />
               </Button>
               <Button
+                variant={"outline"}
                 onClick={() => setIsOpen3(true)}
-                className="rounded-full  bg-white text-black hover:bg-black hover:text-white border"
+                className="rounded-full  "
               >
                 <FaRegEdit size={15} />
               </Button>
@@ -130,14 +137,16 @@ export function CardTemplate() {
 
             <div className="flex gap-3 m-4 ">
               <Button
+                variant={"outline"}
                 onClick={() => setIsOpen2(true)}
-                className="rounded-full bg-white text-black hover:bg-black hover:text-white border"
+                className="rounded-full "
               >
                 <FaRegTrashAlt size={15} />
               </Button>
               <Button
+                variant={"outline"}
                 onClick={() => setIsOpen3(true)}
-                className="rounded-full  bg-white text-black hover:bg-black hover:text-white border"
+                className="rounded-full  "
               >
                 <FaRegEdit size={15} />
               </Button>
