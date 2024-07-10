@@ -14,7 +14,7 @@ import { SelectValue } from "@radix-ui/react-select";
 // import { CiCirclePlus } from "react-icons/ci";
 import { RiImageAddLine } from "react-icons/ri";
 import { InputForm } from "./components/input/input-form";
-// import { useAddProduct } from "../hook/use-add-product";
+
 import {
   Form,
   FormControl,
