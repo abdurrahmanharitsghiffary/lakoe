@@ -37,12 +37,15 @@ export class ProductController {
   findAll(
     @Query(
       new ZodValidationPipe(
-        z.object({ active: z.enum(['true', 'false']).optional() }),
+        z.object({
+          active: z.enum(['true', 'false']).optional(),
+          q: z.string().optional(),
+        }),
       ),
     )
-    { active }: { active: string },
+    { active, q }: { active: string; q: string },
   ) {
-    return this.productService.findAll(parseStringBool(active));
+    return this.productService.search(q, parseStringBool(active));
   }
 
   @Get(':id')

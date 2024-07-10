@@ -50,6 +50,13 @@ export class ProductService {
     });
   }
 
+  search(q: string, isActive: boolean) {
+    return this.prismaService.product.findMany({
+      where: { isActive, name: { contains: q, mode: 'insensitive' } },
+      select: productSelect,
+    });
+  }
+
   async findOne(id: number) {
     // Get product bt id and if not found throw Exception
     const product = await this.prismaService.product.findUnique({
