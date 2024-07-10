@@ -1,4 +1,6 @@
 import ProductDialogActivation from "@/components/dialog/product-dialog-activation";
+import ProductDialogChangePrice from "@/components/dialog/product-dialog-changeprice";
+import ProductDialogChangeStock from "@/components/dialog/product-dialog-changestock";
 import { Image } from "@/components/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,8 @@ export function CardProduct({
   const { toast } = useToast();
   const [isSwitched, setIsSwitched] = useState(product?.isActive ?? false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isPriceChangeOpen, setIsPriceChangeOpen] = useState(false)
+  const [isStockChangeOpen, setIsStockChangeOpen] = useState(false)
   const variants = product?.variants ?? [] ?? [];
 
   const handleConfirm = (isSuccess: boolean) => {
@@ -74,10 +78,10 @@ export function CardProduct({
         <div className="flex gap-1">
           {!isSwitched ? (
             <>
-              <Button size="sm" variant="outline" className="rounded-full">
+              <Button onClick={()=>setIsPriceChangeOpen(true)}size="sm" variant="outline" className="rounded-full">
                 Ubah Harga
               </Button>
-              <Button size="sm" variant="outline" className="rounded-full">
+              <Button onClick={()=>setIsStockChangeOpen(true)}size="sm" variant="outline" className="rounded-full">
                 Ubah Stok
               </Button>
             </>
@@ -110,6 +114,16 @@ export function CardProduct({
         isOpen={isOpen}
         onOpen={setIsOpen}
         onConfirm={handleConfirm}
+      />
+      <ProductDialogChangePrice
+        product={{price,sku,src,stock,title,productVariants}}
+        isOpen={isPriceChangeOpen}
+        onOpen={setIsPriceChangeOpen}
+      />
+      <ProductDialogChangeStock
+        product={{price,sku,src,stock,title,productVariants}}
+        isOpen={isStockChangeOpen}
+        onOpen={setIsStockChangeOpen}
       />
     </Card>
   );

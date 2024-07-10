@@ -61,7 +61,7 @@ export function ProductsPage() {
   return (
     <>
       <div className="flex justify-center">
-        <Card className="w-full m-4">
+        <Card className="w-full max-w-lg m-10">
           <div className="flex justify-between">
             <h1 className="text-xl m-4 font-bold">Daftar Produk</h1>
             <Link

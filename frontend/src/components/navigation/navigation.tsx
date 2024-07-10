@@ -10,7 +10,6 @@ import {
   AccordionItem,
 } from "@/components/ui/accordion";
 import { Button, buttonVariants } from "@/components/ui/button";
-import React from "react";
 import { IconType } from "react-icons/lib";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
