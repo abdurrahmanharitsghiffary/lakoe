@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { SelectValue } from "@radix-ui/react-select";
 // import { CiCirclePlus } from "react-icons/ci";
 import { RiImageAddLine } from "react-icons/ri";
-import { InputForm } from "./components/input/input-form";
+import { InputForm } from "./input/input-form";
 // import { useAddProduct } from "../hook/use-add-product";
 import {
   Form,
@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { useAddProduct } from "../hook/use-add-product";
+import { useAddProduct } from "../../hook/use-add-product";
 
 import InputFileHidden from "@/components/ui/input-file-hidden";
 
@@ -33,9 +33,12 @@ export function FormProduct() {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-4"
+        >
           <div className="flex justify-center">
-            <Card className="w-full mt-2 mx-4">
+            <Card className="w-full">
               <h1 className="m-4 font-bold text-xl">Informasi Produk</h1>
               <FormField
                 control={form.control}
@@ -77,12 +80,16 @@ export function FormProduct() {
               <FormField
                 control={form.control}
                 name="category"
-                render={({ field }) => (
+                render={({ field: { onChange, value, ...field } }) => (
                   <div className="m-3">
                     <Label>Kategori</Label>
                     <FormItem>
                       <FormControl>
-                        <Select {...field}>
+                        <Select
+                          {...field}
+                          value={value?.[0] ?? ""}
+                          onValueChange={(value) => onChange([value])}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Pilih kategori" />
                           </SelectTrigger>
@@ -101,7 +108,7 @@ export function FormProduct() {
           </div>
 
           <div className="flex justify-center">
-            <Card className="w-full   m-4 relative">
+            <Card className="w-full relative">
               <h1 className="m-4 font-bold text-xl ">Detail Produk</h1>
               <FormField
                 control={form.control}
@@ -118,7 +125,7 @@ export function FormProduct() {
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-2 mt-2" />
+                    <FormMessage className=" mt-2" />
                   </div>
                 )}
               />
@@ -128,7 +135,7 @@ export function FormProduct() {
                 render={({ field }) => (
                   <div className="m-3">
                     <Label>Foto Produk</Label>
-                    <div className="flex justify-between">
+                    <div className="flex gap-2">
                       <FormItem>
                         <FormControl>
                           <div className="border-dashed border-2 border-gray-400 rounded-md w-40 h-36 flex justify-center items-center">
@@ -142,7 +149,7 @@ export function FormProduct() {
                           </div>
                         </FormControl>
                       </FormItem>
-                      <FormMessage className="absolute bottom-0 left-2" />
+
                       <div className="border-dashed border-2 border-gray-400 rounded-md w-40 h-36 flex justify-center items-center">
                         <InputFileHidden>
                           <RiImageAddLine size={60} className="text-gray-400" />
@@ -168,6 +175,7 @@ export function FormProduct() {
                         </InputFileHidden>
                       </div>
                     </div>
+                    <FormMessage className="pt-2" />
                   </div>
                 )}
               />
@@ -175,48 +183,74 @@ export function FormProduct() {
           </div>
 
           <div className="flex justify-center">
-            <Card className="w-full m-4">
-              <h1 className="m-4 font-bold text-xl ">Harga</h1>
+            <Card className="w-full">
+              <h1 className="m-4 font-bold text-xl">Harga</h1>
               <FormField
                 control={form.control}
                 name="price"
-                render={({ field }) => (
+                render={({ field: { onChange, ...field } }) => (
                   <>
                     <FormItem>
                       <FormControl>
                         <InputForm
+                          type="number"
                           label="Harga"
+                          onChange={(e) => onChange(+e.target.value)}
                           placeholder="Masukkan Harga Satuan Barang"
                           startAdornment="Rp."
                           {...field}
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-2" />
+                    <FormMessage className="ms-4 mb-2" />
                   </>
                 )}
-              />
-              <InputForm
-                label="Minimal Pembelian"
-                placeholder="1"
-                endAdornment="Produk"
               />
             </Card>
           </div>
 
           <div className="flex justify-center">
-            <Card className="w-full m-4 h-44 relative">
+            <Card className="w-full">
+              <h1 className="m-4 font-bold text-xl">Minimal Pembelian</h1>
+              <FormField
+                control={form.control}
+                name="minimumOrder"
+                render={({ field: { onChange, ...field } }) => (
+                  <>
+                    <FormItem>
+                      <FormControl>
+                        <InputForm
+                          label="Minimal Pembelian"
+                          placeholder="0"
+                          {...field}
+                          type="number"
+                          onChange={(e) => onChange(+e.target.value)}
+                          endAdornment="Produk"
+                        />
+                      </FormControl>
+                    </FormItem>
+                    <FormMessage className="ms-4 mb-2" />
+                  </>
+                )}
+              />
+            </Card>
+          </div>
+
+          <div className="flex justify-center">
+            <Card className="w-full h-44 relative">
               <h1 className="m-4  font-bold text-xl ">Pengelolaan Produk</h1>
-              <div className="flex justify-between ">
+              <div className="flex justify-between">
                 <FormField
                   control={form.control}
                   name="stock"
-                  render={({ field }) => (
+                  render={({ field: { onChange, ...field } }) => (
                     <>
                       <FormItem>
                         <FormControl>
                           <InputForm
+                            type="number"
                             label="Stok Produk"
+                            onChange={(e) => onChange(+e.target.value)}
                             placeholder="Masukkan jumlah stok"
                             className="w-full"
                             {...field}
@@ -227,25 +261,27 @@ export function FormProduct() {
                     </>
                   )}
                 />
-                <InputForm
+                {/* <InputForm
                   label="SKU (Stock Keeping Unit)"
                   placeholder="Masukkan Jumlah SKU"
-                />
+                /> */}
               </div>
             </Card>
           </div>
 
           <div className="flex justify-center w-full">
-            <Card className="w-full m-4 ">
+            <Card className="w-full">
               <h1 className="m-4 font-bold text-xl ">Berat dan Pengiriman</h1>
               <FormField
                 control={form.control}
-                name="weight"
-                render={({ field }) => (
+                name="weightInGram"
+                render={({ field: { onChange, ...field } }) => (
                   <div>
                     <FormItem>
                       <FormControl>
                         <InputForm
+                          type="number"
+                          onChange={(e) => onChange(+e.target.value)}
                           label="Berat Produk"
                           placeholder="Masukkan berat produk"
                           endAdornment="Gram"
@@ -257,7 +293,7 @@ export function FormProduct() {
                   </div>
                 )}
               />
-              <div className="flex">
+              <div className="flex flex-wrap">
                 <InputForm
                   label="Ukuran Produk"
                   placeholder="Masukkan panjang"
@@ -278,7 +314,7 @@ export function FormProduct() {
           </div>
 
           <div className="flex justify-center ">
-            <Card className="w-full m-4 ">
+            <Card className="w-full">
               <div className="flex justify-between">
                 <Button className="m-4 border bg-white text-black rounded-full hover:bg-black hover:text-white text-xs">
                   Preview Halaman Checkout

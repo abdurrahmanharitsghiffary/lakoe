@@ -28,11 +28,10 @@ export function CardProduct({
   onCheckedChange,
   product,
 }: CardProductProps) {
-  const { toast } = useToast();
   const [isSwitched, setIsSwitched] = useState(product?.isActive ?? false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isPriceChangeOpen, setIsPriceChangeOpen] = useState(false)
-  const [isStockChangeOpen, setIsStockChangeOpen] = useState(false)
+  const [isPriceChangeOpen, setIsPriceChangeOpen] = useState(false);
+  const [isStockChangeOpen, setIsStockChangeOpen] = useState(false);
   const variants = product?.variants ?? [] ?? [];
 
   const handleConfirm = (isSuccess: boolean) => {
@@ -43,15 +42,11 @@ export function CardProduct({
 
   const handleStatusChange = (isSwitched: boolean) => {
     console.log(isSwitched);
-    if (isSwitched && variants?.length > 1) {
+    if (isSwitched) {
       setIsOpen(true);
       return;
     }
-    if (isSwitched)
-      toast({
-        description: "Produk berhasil diaktifkan!",
-        className: "bg-zinc-950 text-white py-4",
-      });
+
     setIsSwitched((c) => !c);
   };
 
@@ -60,7 +55,7 @@ export function CardProduct({
       <Image
         alt={product?.name}
         src={product?.attachments?.[0]}
-        className="aspect-square object-cover object-center w-[20%] min-w-[120px] min-h-[120px] max-w-[120px] max-h-[120px]"
+        className="aspect-square object-cover object-center min-w-[120px] min-h-[120px] max-w-[120px] max-h-[120px]"
       />
       <div className="flex flex-col gap-1 justify-between w-[65%]">
         {variants?.length > 1 && (
@@ -68,29 +63,36 @@ export function CardProduct({
             {variants?.length} Varian
           </Badge>
         )}
-        <CardTitle className="text-md mt-0 truncate w-full">
-          {product?.name}
-        </CardTitle>
-        <CardDescription className="!text-sm font-semibold">
-          <span className="text-black">Rp. {variants?.[0]?.price}</span> • Stok{" "}
-          {variants?.[0]?.stock} • SKU {variants?.[0]?.sku}
-        </CardDescription>
+        <div className="flex flex-col gap-2">
+          <CardTitle className="text-md mt-0 truncate w-full">
+            {product?.name}
+          </CardTitle>
+          <CardDescription className="!text-sm font-semibold">
+            <span className="text-black">Rp. {variants?.[0]?.price}</span> •
+            Stok {variants?.[0]?.stock} • SKU {variants?.[0]?.sku}
+          </CardDescription>
+        </div>
         <div className="flex gap-1">
-          {!isSwitched ? (
-            <>
-              <Button onClick={()=>setIsPriceChangeOpen(true)}size="sm" variant="outline" className="rounded-full">
-                Ubah Harga
-              </Button>
-              <Button onClick={()=>setIsStockChangeOpen(true)}size="sm" variant="outline" className="rounded-full">
-                Ubah Stok
-              </Button>
-            </>
-          ) : (
-            <Button size="sm" variant="outline" className="rounded-full">
-              Edit Produk
-            </Button>
-          )}
-          <Button size="sm" variant="outline" className="rounded-full">
+          <Button
+            onClick={() => setIsPriceChangeOpen(true)}
+            size="sm"
+            variant="outline"
+            className="rounded-full h-6"
+          >
+            Ubah Harga
+          </Button>
+          <Button
+            onClick={() => setIsStockChangeOpen(true)}
+            size="sm"
+            variant="outline"
+            className="rounded-full h-6"
+          >
+            Ubah Stok
+          </Button>
+          {/* <Button size="sm" variant="outline" className="rounded-full h-6">
+            <GoPaperclip /> Lihat Halaman
+          </Button> */}
+          <Button size="sm" variant="outline" className="rounded-full h-6 w-6">
             •••
           </Button>
         </div>
@@ -111,17 +113,19 @@ export function CardProduct({
         />
       </div>
       <ProductDialogActivation
+        productName={product?.name}
+        variants={product?.variants}
         isOpen={isOpen}
         onOpen={setIsOpen}
         onConfirm={handleConfirm}
       />
       <ProductDialogChangePrice
-        product={{price,sku,src,stock,title,productVariants}}
+        product={product}
         isOpen={isPriceChangeOpen}
         onOpen={setIsPriceChangeOpen}
       />
       <ProductDialogChangeStock
-        product={{price,sku,src,stock,title,productVariants}}
+        product={product}
         isOpen={isStockChangeOpen}
         onOpen={setIsStockChangeOpen}
       />

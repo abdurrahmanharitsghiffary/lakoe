@@ -5,6 +5,17 @@
 @layer base {
   :root {
     --lakoe-primary: #0086b4;
+    --lakoe-primary-50: #f1f8fb;
+    --lakoe-primary-100: #c8e5ef;
+    --lakoe-primary-200: #97cee1;
+    --lakoe-primary-300: #5ab1ce;
+    --lakoe-primary-400: #359fc4;
+    --lakoe-primary-500: #0186b4;
+    --lakoe-primary-600: #007198;
+    --lakoe-primary-700: #005b7b;
+    --lakoe-primary-800: #004d68;
+    --lakoe-primary-900: #00384b;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 

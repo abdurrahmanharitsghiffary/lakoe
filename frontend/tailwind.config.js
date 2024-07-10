@@ -22,6 +22,7 @@ module.exports = {
       },
       colors: {
         "lakoe-primary": "var(--lakoe-primary)",
+        "lakoe-secondary": "var(--lakoe-primary-400)",
         "txt-secondary": "var(--lakoe-primary)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

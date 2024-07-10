@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./app";
 import { ProductsPage } from "./pages/products";
-import { FormProduct } from "@/features/products/form-product";
+import { FormProduct } from "@/features/products/components/form-product";
 import Typography from "@/components/ui/typography";
 import HomePage from "./pages/home";
 import OrdersPage from "./pages/orders";
@@ -21,8 +21,8 @@ export const router = createBrowserRouter([
         element: <FormProduct />,
       },
       {
-        path:'orders',
-        element:<OrdersPage />
+        path: "orders",
+        element: <OrdersPage />,
       },
       {
         path: "*",
