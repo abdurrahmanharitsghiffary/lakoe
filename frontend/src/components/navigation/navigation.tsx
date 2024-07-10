@@ -32,6 +32,7 @@ function Navigation() {
     <div className="flex flex-col mr-2 gap-4 px-1 py-4 h-[90vh]">
       {navItems.map((item) => (
         <Link
+          key={item?.label}
           to={item.href ?? ""}
           className={cn(
             buttonVariants({

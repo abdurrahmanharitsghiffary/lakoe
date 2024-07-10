@@ -6,6 +6,7 @@ import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
+import { Product } from "@/types/product";
 import { useState } from "react";
 
 export type ProductVariant = {
@@ -15,33 +16,20 @@ export type ProductVariant = {
 };
 
 export type CardProductProps = {
-  id: number;
-  src: string;
-  sku: string;
-  price: number;
-  title: string;
-  isActive: boolean;
-  stock: number;
   onCheckedChange?: (args: { isChecked: boolean; id: number }) => void;
   isChecked?: boolean;
-  productVariants?: ProductVariant[];
+  product: Product | undefined;
 };
 
 export function CardProduct({
-  price,
   isChecked,
   onCheckedChange,
-  sku,
-  isActive,
-  src,
-  id,
-  title,
-  stock,
-  productVariants = [],
+  product,
 }: CardProductProps) {
   const { toast } = useToast();
-  const [isSwitched, setIsSwitched] = useState(isActive);
+  const [isSwitched, setIsSwitched] = useState(product?.isActive ?? false);
   const [isOpen, setIsOpen] = useState(false);
+  const variants = product?.variants ?? [] ?? [];
 
   const handleConfirm = (isSuccess: boolean) => {
     console.log(isSuccess);
@@ -51,7 +39,7 @@ export function CardProduct({
 
   const handleStatusChange = (isSwitched: boolean) => {
     console.log(isSwitched);
-    if (isSwitched && productVariants?.length > 1) {
+    if (isSwitched && variants?.length > 1) {
       setIsOpen(true);
       return;
     }
@@ -66,20 +54,22 @@ export function CardProduct({
   return (
     <Card className="p-2 gap-2 flex">
       <Image
-        alt={title}
-        src={src}
+        alt={product?.name}
+        src={product?.attachments?.[0]}
         className="aspect-square object-cover object-center w-[20%] min-w-[120px] min-h-[120px] max-w-[120px] max-h-[120px]"
       />
       <div className="flex flex-col gap-1 justify-between w-[65%]">
-        {productVariants?.length > 1 && (
+        {variants?.length > 1 && (
           <Badge className="rounded-sm w-fit bg-lakoe-primary">
-            {productVariants?.length} Varian
+            {variants?.length} Varian
           </Badge>
         )}
-        <CardTitle className="text-md mt-0 truncate w-full">{title}</CardTitle>
+        <CardTitle className="text-md mt-0 truncate w-full">
+          {product?.name}
+        </CardTitle>
         <CardDescription className="!text-sm font-semibold">
-          <span className="text-black">Rp. {price}</span> • Stok {stock} • SKU{" "}
-          {sku}
+          <span className="text-black">Rp. {variants?.[0]?.price}</span> • Stok{" "}
+          {variants?.[0]?.stock} • SKU {variants?.[0]?.sku}
         </CardDescription>
         <div className="flex gap-1">
           {!isSwitched ? (
@@ -106,7 +96,8 @@ export function CardProduct({
           className="border-lakoe-primary data-[state=checked]:bg-lakoe-primary data-[state=checked]:text-white"
           checked={isChecked}
           onCheckedChange={(isChecked: boolean) => {
-            if (onCheckedChange) onCheckedChange({ isChecked, id });
+            if (onCheckedChange)
+              onCheckedChange({ isChecked, id: product?.id || -1 });
           }}
         />
         <Switch

@@ -6,16 +6,22 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import {
   CreateProductDto,
   createProductSchema,
 } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import {
+  UpdateProductDto,
+  updateProductSchema,
+} from './dto/update-product.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
+import { z } from 'zod';
+import { parseStringBool } from 'src/common/utils/parse-string-bool';
 
-@Controller('product')
+@Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
@@ -28,8 +34,15 @@ export class ProductController {
   }
 
   @Get()
-  findAll() {
-    return this.productService.findAll();
+  findAll(
+    @Query(
+      new ZodValidationPipe(
+        z.object({ active: z.enum(['true', 'false']).optional() }),
+      ),
+    )
+    { active }: { active: string },
+  ) {
+    return this.productService.findAll(parseStringBool(active));
   }
 
   @Get(':id')
@@ -38,7 +51,11 @@ export class ProductController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+  update(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateProductSchema))
+    updateProductDto: UpdateProductDto,
+  ) {
     return this.productService.update(+id, updateProductDto);
   }
 

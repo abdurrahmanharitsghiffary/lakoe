@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/common/services/prisma.service';
+import { productSelect } from './entities/product.entity';
+import { genSku } from 'src/common/utils/gen-sku';
 
 @Injectable()
 export class ProductService {
@@ -9,41 +11,98 @@ export class ProductService {
 
   create({ price, stock, weightInGram, categories, ...dto }: CreateProductDto) {
     return this.prismaService.$transaction(async (tx) => {
+      // create the product with variants
+      // product will have only one variant with name the same as product
+      // also connect relationship with categories if they are found or create of not found
       const createdProduct = await tx.product.create({
         data: {
           storeId: 1,
           ...dto,
           variants: {
-            create: { name: dto.name, price, stock, weightInGram },
+            create: {
+              name: dto.name,
+              price,
+              stock,
+              weightInGram,
+              // generate the SKU
+              sku: genSku(dto.name, dto.name, weightInGram),
+            },
           },
           categories: {
-            connectOrCreate: [{ create: { name: 'lol' }, where: { id: 1 } }],
+            connectOrCreate: categories.map((category) => ({
+              create: { name: category },
+              where: { name: category },
+            })),
           },
         },
       });
+
+      return createdProduct;
     });
   }
 
-  findAll() {
-    return this.prismaService.product.findMany();
+  findAll(active: boolean = undefined) {
+    console.log(active, 'Is ACtive');
+    // select all product with isActive the same as active
+    return this.prismaService.product.findMany({
+      where: { isActive: active },
+      select: productSelect,
+    });
   }
 
-  findOne(id: number) {
-    return this.prismaService.product.findUnique({ where: { id } });
-  }
-
-  update(
-    id: number,
-    { price, stock, weight, categories, ...dto }: UpdateProductDto,
-  ) {
-    return this.prismaService.product.update({
-      data: { ...dto },
+  async findOne(id: number) {
+    // Get product bt id and if not found throw Exception
+    const product = await this.prismaService.product.findUnique({
       where: { id },
+      select: productSelect,
+    });
+    if (!product) throw new NotFoundException('Product not found.');
+    return product;
+  }
+
+  async update(
+    id: number,
+    { price, stock, weightInGram, categories, ...dto }: UpdateProductDto,
+  ) {
+    // find first the product if not found it will throw Exception
+    await this.findOne(id);
+    // update using transation
+    return await this.prismaService.$transaction(async (tx) => {
+      // update the product and connect or create the categories
+      const updatedProducts = await tx.product.update({
+        where: { id },
+        data: {
+          storeId: 1,
+          ...dto,
+          categories: {
+            connectOrCreate: categories.map((category) => ({
+              create: { name: category },
+              where: { name: category },
+            })),
+          },
+        },
+      });
+
+      // find variant with name same as the product
+      const variant = await tx.product.findFirst({
+        where: { name: dto.name },
+      });
+
+      // update it if there are price, stock, or weight
+      await tx.variant.update({
+        data: { price, stock, weightInGram },
+        where: { id: variant.id },
+      });
+
+      return updatedProducts;
     });
   }
 
-  remove(id: number) {
-    return this.prismaService.product.delete({
+  async remove(id: number) {
+    // find first the product if not found it will throw Exception
+    await this.findOne(id);
+    // delete the product
+    return await this.prismaService.product.delete({
       where: { id },
     });
   }
