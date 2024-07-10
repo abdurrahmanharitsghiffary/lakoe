@@ -6,6 +6,8 @@ import Typography from "@/components/ui/typography";
 import HomePage from "./pages/home";
 import OrdersPage from "./pages/orders";
 
+import { SettingsPage } from "./pages/settings";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +25,10 @@ export const router = createBrowserRouter([
       {
         path: "orders",
         element: <OrdersPage />,
+      },
+      {
+        path: "settings",
+        element: <SettingsPage />,
       },
       {
         path: "*",

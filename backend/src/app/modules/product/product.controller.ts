@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  HttpCode,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import {
@@ -63,6 +64,7 @@ export class ProductController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id') id: string) {
     return this.productService.remove(+id);
   }

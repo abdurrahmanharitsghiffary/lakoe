@@ -24,6 +24,7 @@ import { SelectValue } from "@radix-ui/react-select";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { BiTrash } from "react-icons/bi";
 import { CiCirclePlus } from "react-icons/ci";
+import { LuPackageSearch } from "react-icons/lu";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
@@ -165,6 +166,7 @@ export function ProductsPage() {
               placeholder="Cari produk"
               className="p-2 "
               style={{ flex: 2 }}
+              icon={<LuPackageSearch size={20} />}
             />
             <Select>
               <SelectTrigger style={{ flex: 1 }}>
