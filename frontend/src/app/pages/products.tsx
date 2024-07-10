@@ -1,16 +1,7 @@
 import LakoeCheckbox from "@/components/checkbox/lakoe";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-// import {
-//   MultiSelector,
-//   MultiSelectorContent,
-//   MultiSelectorInput,
-//   MultiSelectorItem,
-//   MultiSelectorList,
-//   MultiSelectorTrigger,
-// } from "@/components/ui/multi-select";
-
 import {
   Select,
   SelectContent,
@@ -19,29 +10,52 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Typography from "@/components/ui/typography";
-import { dummyProducts } from "@/data/dummy-products";
-import { CardProduct } from "@/features/products/card-product";
+import { useGetProducts } from "@/features/products/api/get-products";
+import { CardProduct } from "@/features/products/components/card-product";
+import { useConfirmDeleteProduct } from "@/features/products/hooks/use-confirm-delete-product";
+import { useConfirmNonactiveProduct } from "@/features/products/hooks/use-confirm-nonactive-product";
 import { cn } from "@/lib/utils";
+import { parseStrBool } from "@/utils/parse-str-bool";
 import { SelectValue } from "@radix-ui/react-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { BiTrash } from "react-icons/bi";
 import { CiCirclePlus } from "react-icons/ci";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
-type TabType = "semua" | "aktif" | "nonaktif";
-
 export function ProductsPage() {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const confirm = useConfirmDeleteProduct();
+  const confirmNonactive = useConfirmNonactiveProduct();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const t = (searchParams.get("t") || "semua") as TabType;
+
   const q = searchParams.get("q") || "";
+  const active = searchParams.get("active") || "";
+
+  const { data, isLoading } = useGetProducts({
+    isActive: active === "all" ? undefined : parseStrBool(active),
+  });
+
+  const getCheckedProducts = () => {
+    return (data?.data ?? []).map((product) => ({
+      isChecked: false,
+      id: product.id,
+    }));
+  };
 
   const [checkedProducts, setCheckedProducts] = useState<
     { isChecked: boolean; id: number }[]
-  >(dummyProducts.map((product) => ({ isChecked: false, id: product.id })));
+  >(getCheckedProducts());
+
+  useEffect(() => {
+    if (data?.data) {
+      setCheckedProducts(getCheckedProducts());
+    }
+  }, [data?.data]);
 
   const handleValueChange = (type: string) => {
-    navigate({ search: "?t=" + type });
+    navigate({
+      search: "?active=" + type,
+    });
   };
 
   const handleCheckedChange = (checked: boolean) => {
@@ -52,16 +66,10 @@ export function ProductsPage() {
     navigate({ search: "?q=" + e.target.value });
   };
 
-  const filteredProducts = dummyProducts.filter((product) => {
-    if (t === "semua") return true;
-    if (t === "nonaktif") return product.isActive === false;
-    return product.isActive === true;
-  });
-
   return (
     <>
       <div className="flex justify-center">
-        <Card className="w-full m-4">
+        <Card className="w-full">
           <div className="flex justify-between">
             <h1 className="text-xl m-4 font-bold">Daftar Produk</h1>
             <Link
@@ -76,25 +84,25 @@ export function ProductsPage() {
             </Link>
           </div>
           <Tabs
-            defaultValue="semua"
+            defaultValue="all"
             onValueChange={handleValueChange}
-            value={t}
+            value={active}
           >
             <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
               <TabsTrigger
-                value="semua"
+                value="all"
                 className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-lakoe-primary data-[state=active]:text-lakoe-primary data-[state=active]:shadow-none "
               >
                 Semua
               </TabsTrigger>
               <TabsTrigger
-                value="aktif"
+                value="true"
                 className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-lakoe-primary data-[state=active]:text-lakoe-primary data-[state=active]:shadow-none "
               >
                 Aktif
               </TabsTrigger>
               <TabsTrigger
-                value="nonaktif"
+                value="false"
                 className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-lakoe-primary data-[state=active]:text-lakoe-primary data-[state=active]:shadow-none "
               >
                 Nonaktif
@@ -109,22 +117,6 @@ export function ProductsPage() {
               className="p-2 "
               style={{ flex: 2 }}
             />
-            {/* <MultiSelector
-              values={selectedCategories}
-              onValuesChange={setSelectedCategories}
-            >
-              <MultiSelectorTrigger className="mt-0">
-                <MultiSelectorInput placeholder="Semua kategori" />
-              </MultiSelectorTrigger>
-              <MultiSelectorContent>
-                <MultiSelectorList>
-                  <MultiSelectorItem value={"Pakaian"}>
-                    Pakaian
-                  </MultiSelectorItem>
-                  <MultiSelectorItem value={"Celana"}>Celana</MultiSelectorItem>
-                </MultiSelectorList>
-              </MultiSelectorContent>
-            </MultiSelector> */}
             <Select>
               <SelectTrigger style={{ flex: 1 }}>
                 <SelectValue placeholder="Semua Kategori" />
@@ -146,17 +138,51 @@ export function ProductsPage() {
           </div>
           <div className="flex px-3 pb-2 justify-between items-center">
             <Typography variant="p" className="font-semibold !text-sm">
-              {dummyProducts.length} Produk
+              {data?.data?.length} Produk
             </Typography>
-            <LakoeCheckbox
-              id="select-all"
-              checked={checkedProducts.every((pr) => pr.isChecked === true)}
-              label="Pilih semua"
-              onCheckedChange={handleCheckedChange}
-            />
+            <div className="flex gap-2 items-center h-8">
+              {checkedProducts.some((v) => v.isChecked === true) && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-full w-6 h-6"
+                    onClick={async () => {
+                      await confirm(
+                        checkedProducts.filter(
+                          (product) => product.isChecked === true
+                        ).length ?? 0
+                      );
+                    }}
+                  >
+                    <BiTrash />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full h-6"
+                    onClick={async () => {
+                      await confirmNonactive(
+                        checkedProducts.filter(
+                          (product) => product.isChecked === true
+                        ).length ?? 0
+                      );
+                    }}
+                  >
+                    Nonaktifkan Produk
+                  </Button>
+                </>
+              )}
+              <LakoeCheckbox
+                id="select-all"
+                checked={checkedProducts.some((pr) => pr.isChecked === true)}
+                label="Pilih semua"
+                onCheckedChange={handleCheckedChange}
+              />
+            </div>
           </div>
           <CardContent className="grid grid-cols gap-3 px-3">
-            {filteredProducts.map((product, i) => (
+            {(data?.data ?? []).map((product, i) => (
               <CardProduct
                 isChecked={checkedProducts?.[i]?.isChecked || false}
                 onCheckedChange={(state) =>
@@ -167,19 +193,8 @@ export function ProductsPage() {
                     });
                   })
                 }
-                id={product.id}
-                isActive={product.isActive}
-                productVariants={[
-                  { name: "xl", price: 20000, stock: 20 },
-                  { name: "lg", price: 23000, stock: 11 },
-                  { name: "sm", price: 20000, stock: 17 },
-                ]}
-                price={product.price}
-                sku={product.sku}
-                src="https://images.unsplash.com/flagged/photo-1553505192-acca7d4509be?q=80&w=1490&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                stock={product.stock}
-                title={product.title}
-                key={product.id}
+                product={product}
+                key={product?.id}
               />
             ))}
           </CardContent>
