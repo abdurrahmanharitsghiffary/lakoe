@@ -278,7 +278,7 @@ model Product {
   createdAt DateTime @default(now())
 
   storeId    Int
-  store      Store      @relation(fields: [storeId], references: [id])
+  store      Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
   categories Category[]
   variants   Variant[]
 
@@ -287,7 +287,7 @@ model Product {
 
 model Category {
   id   Int    @id @default(autoincrement())
-  name String @db.VarChar(125)
+  name String @unique @db.VarChar(125)
 
   products Product[]
 
@@ -311,7 +311,7 @@ model Variant {
   updatedAt DateTime @updatedAt
 
   productId     Int
-  product       Product    @relation(fields: [productId], references: [id])
+  product       Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
   parentVariant Variant?   @relation("Variant", fields: [parentId], references: [id], onDelete: Cascade)
   subVariants   Variant[]  @relation("Variant")
   cartItems     CartItem[]
@@ -385,9 +385,9 @@ model Address {
   updatedAt DateTime @updatedAt
 
   storeId Int?
-  store   Store? @relation(fields: [storeId], references: [id])
+  store   Store? @relation(fields: [storeId], references: [id], onDelete: Cascade)
   userId  Int?
-  user    User?  @relation(fields: [userId], references: [id])
+  user    User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // d
@@ -408,6 +408,7 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // ONGOING
   userId           Int?
   user             User?    @relation(fields: [userId], references: [id])
   productVariantId Int

@@ -20,6 +20,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Typography from "@/components/ui/typography";
 import { dummyProducts } from "@/data/dummy-products";
+import { useGetProducts } from "@/features/products/api/get-products";
 import { CardProduct } from "@/features/products/card-product";
 import { cn } from "@/lib/utils";
 import { SelectValue } from "@radix-ui/react-select";
@@ -35,7 +36,12 @@ export function ProductsPage() {
   const navigate = useNavigate();
   const t = (searchParams.get("t") || "semua") as TabType;
   const q = searchParams.get("q") || "";
+  const active = searchParams.get("active") || "";
 
+  const { data, isLoading } = useGetProducts({
+    isActive: active === "true" ? true : active === "false" ? false : undefined,
+  });
+  console.log(data, "DATA");
   const [checkedProducts, setCheckedProducts] = useState<
     { isChecked: boolean; id: number }[]
   >(dummyProducts.map((product) => ({ isChecked: false, id: product.id })));
@@ -51,12 +57,6 @@ export function ProductsPage() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     navigate({ search: "?q=" + e.target.value });
   };
-
-  const filteredProducts = dummyProducts.filter((product) => {
-    if (t === "semua") return true;
-    if (t === "nonaktif") return product.isActive === false;
-    return product.isActive === true;
-  });
 
   return (
     <>
@@ -156,7 +156,7 @@ export function ProductsPage() {
             />
           </div>
           <CardContent className="grid grid-cols gap-3 px-3">
-            {filteredProducts.map((product, i) => (
+            {(data?.data ?? []).map((product, i) => (
               <CardProduct
                 isChecked={checkedProducts?.[i]?.isChecked || false}
                 onCheckedChange={(state) =>
@@ -167,19 +167,8 @@ export function ProductsPage() {
                     });
                   })
                 }
-                id={product.id}
-                isActive={product.isActive}
-                productVariants={[
-                  { name: "xl", price: 20000, stock: 20 },
-                  { name: "lg", price: 23000, stock: 11 },
-                  { name: "sm", price: 20000, stock: 17 },
-                ]}
-                price={product.price}
-                sku={product.sku}
-                src="https://images.unsplash.com/flagged/photo-1553505192-acca7d4509be?q=80&w=1490&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                stock={product.stock}
-                title={product.title}
-                key={product.id}
+                product={product}
+                key={product?.id}
               />
             ))}
           </CardContent>
