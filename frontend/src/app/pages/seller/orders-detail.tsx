@@ -10,16 +10,25 @@ import { Card } from "@/components/ui/card";
 import { orderTabVariants } from "@/components/variants/order-tab-variants";
 import { cn } from "@/lib/utils";
 import { Order } from "@/types/order";
-import { CiViewList } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { OrderHistory } from "@/features/orders/seller/components/history";
 import { BiCalendar, BiUserCircle } from "react-icons/bi";
 import { PiInvoice } from "react-icons/pi";
 import moment from "moment";
-import { BsBox2, BsCopy, BsWallet } from "react-icons/bs";
+import { BsCopy } from "react-icons/bs";
 import { RiWhatsappFill } from "react-icons/ri";
 import { Image } from "@/components/image";
 import { TbTruckDelivery } from "react-icons/tb";
+<<<<<<< HEAD:frontend/src/app/pages/orders-detail.tsx
+=======
+import { Button } from "@/components/ui/button";
+import { ButtonCopy } from "@/components/button/copy";
+import { MdListAlt } from "react-icons/md";
+import { LuBox } from "react-icons/lu";
+import { IoWalletOutline } from "react-icons/io5";
+import { TrackingDialog } from "@/components/dialog/tracking-dialog";
+import { useState } from "react";
+>>>>>>> 92cec73804a6e4d6793e985da04ee7438c9ad0c1:frontend/src/app/pages/seller/orders-detail.tsx
 
 const ORDER_STATUS_LABEL = {
   CANCELLED: "Dibatalkan",
@@ -44,7 +53,15 @@ const ORDER_STATUS_DESCRIPTION = {
     "Pesanan telah di-pickup oleh Kurir dan siap untuk dikirim.",
 } as const;
 
+const getInvoice = (status: Order["status"]) => {
+  if ((["ON_DELIVERY", "SUCCESS"] as Order["status"][]).includes(status))
+    return "JTI81SAH18H";
+  return "-";
+};
+
 export default function OrderDetails() {
+  const [isOpen, setIsOpen] = useState(false);
+
   const order: Order = {
     courier: {
       courierCode: "jne",
@@ -69,7 +86,7 @@ export default function OrderDetails() {
     receiverLongitude: "106.71093027943792",
     receiverPostalCode: "63330",
     receiverProvince: "jawa_barat",
-    status: "SUCCESS",
+    status: "NEW_ORDER",
   };
 
   return (
@@ -91,7 +108,7 @@ export default function OrderDetails() {
       </Breadcrumb>
       <Card>
         <section className="flex gap-2 p-4">
-          <CiViewList size={24} className="text-lakoe-primary flex-shrink-0" />
+          <MdListAlt size={24} className="text-lakoe-primary flex-shrink-0" />
           <div className="flex flex-col gap-2">
             <Badge
               className={cn(
@@ -125,7 +142,14 @@ export default function OrderDetails() {
               <p>Invoice</p>
             </div>
             <div className="flex items-center gap-2">
-              <BsCopy size={22} />
+              <ButtonCopy
+                text="COPIED INVOICE..."
+                className="w-6 h-6"
+                size="icon"
+                variant="ghost"
+              >
+                <BsCopy />
+              </ButtonCopy>
               INV/1010101/MPL/BLABLABLA
             </div>
           </div>
@@ -142,7 +166,7 @@ export default function OrderDetails() {
       </Card>
       <Card>
         <section className="flex gap-2 p-4">
-          <BsBox2 size={20} className="text-lakoe-primary" />
+          <LuBox size={24} className="text-lakoe-primary" />
           <div className="flex flex-col gap-2 w-full">
             <p className="text-sm font-semibold">Detail Produk</p>
             <div className="text-sm">
@@ -177,43 +201,64 @@ export default function OrderDetails() {
               <TbTruckDelivery size={24} className="text-lakoe-primary" />
               <p className="font-semibold text-sm">Detail Pengiriman</p>
             </div>
-            <p className="font-semibold text-sm text-lakoe-primary">
+            <p
+              onClick={() => setIsOpen(true)}
+              className="font-semibold text-sm text-lakoe-primary"
+            >
               Lacak Pengiriman
             </p>
           </div>
           <div>
             <table className="text-sm font-semibold border-separate border-spacing-y-2 pl-8">
-              <tr className="pb-4">
-                <td className="mr-4">Kurir</td>
-                <td>{order.courier.courierServiceName}</td>
-              </tr>
-              <tr className="pb-4">
-                <td className="flex gap-2 items-center mr-4">
-                  <span>No Resi</span> <BsCopy />
-                </td>
-                <td>-</td>
-              </tr>
-              <tr className="pb-4">
-                <td className="flex gap-2 items-centers mr-4">
-                  <span>Alamat</span> <BsCopy />
-                </td>
-                <td>
-                  <p>{order.receiverAddress}</p>
-                  <p className="text-muted-foreground font-normal">
-                    085612123434
-                  </p>
-                  <p className="text-muted-foreground font-normal">
-                    Jamal Boolean{" "}
-                  </p>
-                </td>
-              </tr>
+              <tbody>
+                <tr className="pb-4">
+                  <td className="mr-4">Kurir</td>
+                  <td>{order.courier.courierServiceName}</td>
+                </tr>
+                <tr className="pb-4">
+                  <td className="flex gap-2 items-center mr-4">
+                    <span>No Resi</span>
+                    <ButtonCopy
+                      className="w-6 h-6"
+                      text="COPIED NO RESI..."
+                      size="icon"
+                      variant="ghost"
+                    >
+                      <BsCopy />
+                    </ButtonCopy>
+                  </td>
+                  <td>{getInvoice(order.status)}</td>
+                </tr>
+                <tr className="pb-4">
+                  <td className="flex gap-2 items-centers mr-4">
+                    <span>Alamat</span>
+                    <ButtonCopy
+                      className="w-6 h-6"
+                      text="COPIED NO RESI..."
+                      size="icon"
+                      variant="ghost"
+                    >
+                      <BsCopy />
+                    </ButtonCopy>
+                  </td>
+                  <td>
+                    <p>{order.receiverAddress}</p>
+                    <p className="text-muted-foreground font-normal">
+                      085612123434
+                    </p>
+                    <p className="text-muted-foreground font-normal">
+                      Jamal Boolean{" "}
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </section>
       </Card>
       <Card>
         <section className="p-4 flex gap-2 w-full">
-          <BsWallet size={20} className="text-lakoe-primary" />
+          <IoWalletOutline size={24} className="text-lakoe-primary" />
           <div className="flex flex-col gap-2 w-full">
             <p className="text-sm font-semibold">Rincian Pembayaran</p>
             <div className="w-full flex justify-between text-sm">
@@ -240,6 +285,19 @@ export default function OrderDetails() {
           </div>
         </section>
       </Card>
+      {order.status === "NEW_ORDER" && (
+        <Card>
+          <section className="flex justify-between w-full items-center p-4">
+            <Button variant="destructive" className="rounded-full" size="sm">
+              Tolak Pesanan
+            </Button>
+            <Button variant="lakoePrimary" className="rounded-full" size="sm">
+              Proses Pesanan
+            </Button>
+          </section>
+        </Card>
+      )}
+      <TrackingDialog isOpen={isOpen} onOpen={setIsOpen} />
     </div>
   );
 }

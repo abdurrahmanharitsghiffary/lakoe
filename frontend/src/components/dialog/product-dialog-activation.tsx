@@ -75,7 +75,7 @@ export default function ProductDialogActivation({
       if (onConfirm) onConfirm(true);
       toast({
         description: "Produk berhasil diaktifkan!",
-        className: "bg-zinc-950 text-white py-4",
+        className: "bg-zinc-950 text-white py-4 border-none",
       });
       onOpen(false);
     }
