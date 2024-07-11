@@ -8,6 +8,7 @@ import OrdersPage from "./pages/orders";
 
 import { SettingsPage } from "./pages/settings";
 import OrderDetails from "./pages/orders-detail";
+import { CardOrderBuyer } from "@/features/orders/buyer/components/card-order";
 
 export const router = createBrowserRouter([
   {
@@ -44,5 +45,9 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "newOrder",
+    element: <CardOrderBuyer />,
   },
 ]);

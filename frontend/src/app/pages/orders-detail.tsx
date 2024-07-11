@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { Order } from "@/types/order";
 import { CiViewList } from "react-icons/ci";
 import { Link } from "react-router-dom";
-import { OrderHistory } from "@/features/orders/components/history";
+import { OrderHistory } from "@/features/orders/seller/components/history";
 import { BiCalendar, BiUserCircle } from "react-icons/bi";
 import { PiInvoice } from "react-icons/pi";
 import moment from "moment";
@@ -20,7 +20,6 @@ import { BsBox2, BsCopy, BsWallet } from "react-icons/bs";
 import { RiWhatsappFill } from "react-icons/ri";
 import { Image } from "@/components/image";
 import { TbTruckDelivery } from "react-icons/tb";
-import { Button } from "@/components/ui/button";
 
 const ORDER_STATUS_LABEL = {
   CANCELLED: "Dibatalkan",
