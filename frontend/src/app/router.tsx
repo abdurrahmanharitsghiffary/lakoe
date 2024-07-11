@@ -1,15 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./app";
-import { ProductsPage } from "./pages/products";
+import { ProductsPage } from "./pages/seller/products";
 import { FormProduct } from "@/features/products/components/form-product";
 import Typography from "@/components/ui/typography";
-import HomePage from "./pages/home";
-import OrdersPage from "./pages/orders";
-import { SettingsPage } from "./pages/settings";
-import OrderDetails from "./pages/orders-detail";
-import { Seller } from "./seller";
-import { Buyer } from "./buyer";
-import Admin from "./admin";
+import HomePage from "./pages/seller/home";
+import OrdersPage from "./pages/seller/orders";
+import { SettingsPage } from "./pages/seller/settings";
+import OrderDetails from "./pages/seller/orders-detail";
+import { Seller } from "./pages/seller/seller";
+import { Buyer } from "./pages/buyer/buyer";
+import Admin from "./pages/admin/admin";
 
 export const router = createBrowserRouter([
   {
