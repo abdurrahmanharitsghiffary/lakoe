@@ -10,7 +10,6 @@ export function SettingsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const t = (searchParams.get("t") || "informasi") as TabType;
-
   const handleValueChange = (type: string) => {
     navigate({ search: "?t=" + type });
   };

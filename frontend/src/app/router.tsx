@@ -2,15 +2,20 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./app";
 import { ProductsPage } from "./pages/seller/products";
 import { FormProduct } from "@/features/products/components/form-product";
-import Typography from "@/components/ui/typography";
 import HomePage from "./pages/seller/home";
 import OrdersPage from "./pages/seller/orders";
 import { SettingsPage } from "./pages/seller/settings";
 import OrderDetails from "./pages/seller/orders-detail";
-import { Seller } from "./pages/seller/seller";
-import { Buyer } from "./pages/buyer/buyer";
-import Admin from "./pages/admin/admin";
 import { CardOrderBuyer } from "@/features/orders/buyer/components/card-order";
+import { SellerLayout } from "./pages/seller/layout";
+import { BuyerLayout } from "./pages/buyer/layout";
+import { AdminLayout } from "./pages/admin/layout/root-layout";
+import NotFoundPage from "./pages/fallback/404";
+import ErrorPage from "./pages/fallback/error";
+import { AdminHomePage } from "./pages/admin/home";
+import WithdrawalPage from "./pages/admin/withdrawal";
+import PendingWithdrawalPage from "./pages/admin/withdrawal/pending";
+import { WithdrawalDetails } from "./pages/admin/withdrawal/details";
 
 export const router = createBrowserRouter([
   {
@@ -19,17 +24,22 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Buyer />,
         children: [{ path: "", element: <CardOrderBuyer /> }],
+        element: <BuyerLayout />,
       },
       {
         path: "admin",
-        element: <Admin />,
-        children: [{ path: "", element: "lolerr" }],
+        element: <AdminLayout />,
+        children: [
+          { path: "", element: <AdminHomePage /> },
+          { path: "withdrawal", element: <WithdrawalPage /> },
+          { path: "withdrawal/pending", element: <PendingWithdrawalPage /> },
+          { path: "withdrawal/:id", element: <WithdrawalDetails /> },
+        ],
       },
       {
         path: "seller",
-        element: <Seller />,
+        element: <SellerLayout />,
         children: [
           { path: "", element: <HomePage /> },
           { path: "orders/:id", element: <OrderDetails /> },
@@ -49,19 +59,13 @@ export const router = createBrowserRouter([
             path: "settings",
             element: <SettingsPage />,
           },
-          {
-            path: "*",
-            element: (
-              <Typography
-                variant="h3"
-                className="fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
-              >
-                Page not found.
-              </Typography>
-            ),
-          },
         ],
       },
     ],
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
   },
 ]);
