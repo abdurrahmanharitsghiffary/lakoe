@@ -136,7 +136,7 @@ export function ProductsPage() {
           <div className="flex justify-between">
             <h1 className="text-xl m-4 font-bold">Daftar Produk</h1>
             <Link
-              to="/products/create"
+              to="/seller/products/create"
               className={cn(
                 buttonVariants(),
                 "m-4 bg-btn-primary rounded-full"

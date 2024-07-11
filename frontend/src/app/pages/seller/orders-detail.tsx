@@ -19,8 +19,6 @@ import { BsCopy } from "react-icons/bs";
 import { RiWhatsappFill } from "react-icons/ri";
 import { Image } from "@/components/image";
 import { TbTruckDelivery } from "react-icons/tb";
-<<<<<<< HEAD:frontend/src/app/pages/orders-detail.tsx
-=======
 import { Button } from "@/components/ui/button";
 import { ButtonCopy } from "@/components/button/copy";
 import { MdListAlt } from "react-icons/md";
@@ -28,7 +26,6 @@ import { LuBox } from "react-icons/lu";
 import { IoWalletOutline } from "react-icons/io5";
 import { TrackingDialog } from "@/components/dialog/tracking-dialog";
 import { useState } from "react";
->>>>>>> 92cec73804a6e4d6793e985da04ee7438c9ad0c1:frontend/src/app/pages/seller/orders-detail.tsx
 
 const ORDER_STATUS_LABEL = {
   CANCELLED: "Dibatalkan",

@@ -10,6 +10,7 @@ import OrderDetails from "./pages/seller/orders-detail";
 import { Seller } from "./pages/seller/seller";
 import { Buyer } from "./pages/buyer/buyer";
 import Admin from "./pages/admin/admin";
+import { CardOrderBuyer } from "@/features/orders/buyer/components/card-order";
 
 export const router = createBrowserRouter([
   {
@@ -19,7 +20,7 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Buyer />,
-        children: [{ path: "", element: "loler" }],
+        children: [{ path: "", element: <CardOrderBuyer /> }],
       },
       {
         path: "admin",
@@ -62,13 +63,5 @@ export const router = createBrowserRouter([
         ],
       },
     ],
-  },
-  {
-    path: "newOrder",
-    element: <CardOrderBuyer />,
-  },
-  {
-    path: "newOrder",
-    element: <CardOrderBuyer />,
   },
 ]);
