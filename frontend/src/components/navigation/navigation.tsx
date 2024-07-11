@@ -18,10 +18,10 @@ const navItems: { icon: IconType; label: string; href?: string }[] = [
   {
     icon: BiHomeCircle,
     label: "Dashboard",
-    href: "/dashboard",
+    href: "/seller/dashboard",
   },
-  { icon: IoMdCube, label: "Produk", href: "/products" },
-  { icon: LiaShoppingBagSolid, label: "Pesanan", href: "/orders" },
+  { icon: IoMdCube, label: "Produk", href: "/seller/products" },
+  { icon: LiaShoppingBagSolid, label: "Pesanan", href: "/seller/orders" },
 ];
 
 function Navigation() {

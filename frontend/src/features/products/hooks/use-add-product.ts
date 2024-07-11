@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addProductSchema } from "../products/validator/use-add-product";
 import { z } from "zod";
+import { addProductSchema } from "../validator/use-add-product";
 
 export const useAddProduct = () => {
   const form = useForm<z.infer<typeof addProductSchema>>({

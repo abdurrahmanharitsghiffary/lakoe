@@ -12,7 +12,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { SelectValue } from "@radix-ui/react-select";
 // import { CiCirclePlus } from "react-icons/ci";
-import { RiImageAddLine } from "react-icons/ri";
 import { InputForm } from "./input/input-form";
 // import { useAddProduct } from "../hook/use-add-product";
 import {
@@ -22,11 +21,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-
-import { useAddProduct } from "../../hook/use-add-product";
-
-import InputFileHidden from "@/components/ui/input-file-hidden";
 import { ProductFileInput } from "@/components/input/product-input";
+import { useAddProduct } from "../hooks/use-add-product";
 
 export function FormProduct() {
   const { form, onSubmit } = useAddProduct();

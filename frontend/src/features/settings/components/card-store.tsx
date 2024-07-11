@@ -1,11 +1,9 @@
-import { InputForm } from "../products/components/input/input-form";
-
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
 import InputFileHidden from "@/components/ui/input-file-hidden";
 import { RiImageAddLine } from "react-icons/ri";
 import { ButtonPrimary } from "@/components/button/btn-primary";
+import { InputForm } from "@/features/products/components/input/input-form";
 
 export function CardStore() {
   return (
