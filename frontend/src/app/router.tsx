@@ -7,6 +7,7 @@ import HomePage from "./pages/home";
 import OrdersPage from "./pages/orders";
 
 import { SettingsPage } from "./pages/settings";
+import OrderDetails from "./pages/orders-detail";
 
 export const router = createBrowserRouter([
   {
@@ -14,6 +15,7 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       { path: "/", element: <HomePage /> },
+      { path: "orders/:id", element: <OrderDetails /> },
       {
         path: "products",
         element: <ProductsPage />,

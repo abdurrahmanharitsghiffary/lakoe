@@ -89,7 +89,7 @@ function Comp({ isChecked, onCheckedChange, product }: CardProductProps) {
           {/* <Button size="sm" variant="outline" className="rounded-full h-6">
             <GoPaperclip /> Lihat Halaman
           </Button> */}
-          <ProductMenu productId={product?.id} />
+          <ProductMenu product={product} />
         </div>
       </div>
       <div className="ml-auto flex flex-col justify-between items-end">

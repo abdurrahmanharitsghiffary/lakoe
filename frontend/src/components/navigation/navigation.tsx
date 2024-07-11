@@ -43,7 +43,7 @@ function Navigation() {
         >
           <item.icon
             className={cn(
-              "ml-1 mr-2 h-8 w-8",
+              "ml-1 mr-2 text-2xl",
               pathname === item.href ? "text-lakoe-primary" : undefined
             )}
           />
@@ -65,7 +65,7 @@ function Navigation() {
               size="lg"
               className="flex w-full justify-start items-center"
             >
-              <IoSettingsOutline className="ml-1 mr-2 h-8 w-8" />
+              <IoSettingsOutline className="ml-1 mr-2 text-2xl" />
               <h1 className="text-base">Pengaturan</h1>
             </Button>
           </AccordionTrigger>
@@ -75,7 +75,7 @@ function Navigation() {
               size="lg"
               className="flex w-full justify-start items-center"
             >
-              <LiaShoppingBagSolid className="ml-1 mr-2 h-8 w-8" />
+              <LiaShoppingBagSolid className="ml-1 mr-2 text-2xl" />
               <h1 className="text-base">Pesanan</h1>
             </Button>
             <Button
@@ -83,7 +83,7 @@ function Navigation() {
               size="lg"
               className="flex w-full justify-start items-center"
             >
-              <LiaShoppingBagSolid className="ml-1 mr-2 h-8 w-8" />
+              <LiaShoppingBagSolid className="ml-1 mr-2 text-2xl" />
               <h1 className="text-base">Pesanan</h1>
             </Button>
           </AccordionContent>

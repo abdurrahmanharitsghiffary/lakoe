@@ -136,7 +136,7 @@ export function FormProduct() {
                 render={({ field }) => (
                   <div className="m-3">
                     <Label>Foto Produk</Label>
-                    <div className="flex gap-2 overflow-x-auto hide-scrollbar">
+                    <div className="flex gap-2 overflow-x-auto hide-sc">
                       <ProductFileInput>Foto 1</ProductFileInput>
                       <ProductFileInput>Foto 2</ProductFileInput>
                       <ProductFileInput>Foto 3</ProductFileInput>
