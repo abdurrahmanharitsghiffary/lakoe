@@ -6,6 +6,7 @@ import HomePage from "./pages/seller/home";
 import OrdersPage from "./pages/seller/orders";
 import { SettingsPage } from "./pages/seller/settings";
 import OrderDetails from "./pages/seller/orders-detail";
+import { CardOrderBuyer } from "@/features/orders/buyer/components/card-order";
 import { SellerLayout } from "./pages/seller/layout";
 import { BuyerLayout } from "./pages/buyer/layout";
 import { AdminLayout } from "./pages/admin/layout/root-layout";
@@ -26,8 +27,8 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        children: [{ path: "", element: <CardOrderBuyer /> }],
         element: <BuyerLayout />,
-        children: [{ path: "", element: "loler" }],
       },
       {
         path: "admin",

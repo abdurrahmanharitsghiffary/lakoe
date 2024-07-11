@@ -11,7 +11,7 @@ import { orderTabVariants } from "@/components/variants/order-tab-variants";
 import { cn } from "@/lib/utils";
 import { Order } from "@/types/order";
 import { Link } from "react-router-dom";
-import { OrderHistory } from "@/features/orders/components/history";
+import { OrderHistory } from "@/features/orders/seller/components/history";
 import { BiCalendar, BiUserCircle } from "react-icons/bi";
 import { PiInvoice } from "react-icons/pi";
 import moment from "moment";
