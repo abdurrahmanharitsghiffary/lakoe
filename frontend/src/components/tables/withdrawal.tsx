@@ -1,7 +1,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -10,8 +9,10 @@ import {
 } from "@/components/ui/table";
 import { WithdrawalStatus } from "@/types";
 import { Button } from "../ui/button";
+import { cva } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
-type Withdrawal = {
+export type Withdrawal = {
   status: WithdrawalStatus;
   amount: number;
   username: string;
@@ -21,51 +22,27 @@ type Withdrawal = {
   bank: string;
 };
 
-const withdrawals: Withdrawal[] = [
-  {
-    accName: "Jamal Boolean",
-    accNumber: "7460081232321212",
-    amount: 121431,
-    bank: "JAGO",
-    id: 1,
-    status: "PENDING",
-    username: "jamlbool123",
+const withdrawalTagVariants = cva("rounded-sm px-2 py-1 font-semibold", {
+  variants: {
+    variant: {
+      SUCCESS: "bg-green-300",
+      PENDING: "bg-green-100",
+      ON_PROCESS: "bg-yellow-300",
+      REJECTED: "bg-red-300",
+    },
   },
-  {
-    accName: "Jamal Native",
-    accNumber: "7460081232321243",
-    amount: 73000,
-    bank: "JAGO",
-    id: 2,
-    status: "SUCCESS",
-    username: "jamlntv123",
-  },
-  {
-    accName: "Jamal Native",
-    accNumber: "45123456723122",
-    amount: 80100,
-    bank: "BSI - Syariah",
-    id: 3,
-    status: "SUCCESS",
-    username: "jamlntv1234",
-  },
-  {
-    accName: "Jamal Native",
-    accNumber: "4512345678176",
-    amount: 120100,
-    bank: "BRI",
-    id: 4,
-    status: "SUCCESS",
-    username: "jamlntv1235",
-  },
-];
+});
 
-export function WithdrawalTable() {
+export function WithdrawalTable({
+  withdrawals,
+}: {
+  withdrawals: Withdrawal[];
+}) {
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Name</TableHead>
+          <TableHead className="w-[250px]">Name</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Bank</TableHead>
           <TableHead>Amount</TableHead>
@@ -76,14 +53,28 @@ export function WithdrawalTable() {
         {withdrawals.map((witdrawal) => (
           <TableRow key={witdrawal.id}>
             <TableCell className="font-medium">{witdrawal.accName}</TableCell>
-            <TableCell>{witdrawal.status}</TableCell>
+            <TableCell>
+              <span
+                className={cn(
+                  withdrawalTagVariants({ variant: witdrawal.status })
+                )}
+              >
+                {witdrawal.status}
+              </span>
+            </TableCell>
             <TableCell className="font-semibold">{witdrawal.bank}</TableCell>
-            <TableCell>Rp.{witdrawal.amount}</TableCell>
+            <TableCell className="font-semibold">
+              Rp.{witdrawal.amount}
+            </TableCell>
             <TableCell className="text-right">
-              <Button className="mr-2" variant="destructive">
-                Reject
-              </Button>
-              <Button>Accept</Button>
+              {witdrawal.status === "PENDING" && (
+                <>
+                  <Button className="mr-2" variant="destructive">
+                    Reject
+                  </Button>
+                  <Button>Accept</Button>
+                </>
+              )}
             </TableCell>
           </TableRow>
         ))}
@@ -91,7 +82,7 @@ export function WithdrawalTable() {
       <TableFooter>
         <TableRow>
           <TableCell colSpan={4}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
+          <TableCell className="text-right">Rp.2.500.00</TableCell>
         </TableRow>
       </TableFooter>
     </Table>

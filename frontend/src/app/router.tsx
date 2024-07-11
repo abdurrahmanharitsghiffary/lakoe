@@ -15,6 +15,9 @@ import { AdminHomePage } from "./pages/admin/home";
 import WithdrawalPage from "./pages/admin/withdrawal";
 import PendingWithdrawalPage from "./pages/admin/withdrawal/pending";
 import { WithdrawalDetails } from "./pages/admin/withdrawal/details";
+import SuccessWithdrawalPage from "./pages/admin/withdrawal/success";
+import RejectedWithdrawalPage from "./pages/admin/withdrawal/rejected";
+import OnProcessWithdrawalPage from "./pages/admin/withdrawal/on-process";
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +36,12 @@ export const router = createBrowserRouter([
           { path: "", element: <AdminHomePage /> },
           { path: "withdrawal", element: <WithdrawalPage /> },
           { path: "withdrawal/pending", element: <PendingWithdrawalPage /> },
+          { path: "withdrawal/success", element: <SuccessWithdrawalPage /> },
+          { path: "withdrawal/rejected", element: <RejectedWithdrawalPage /> },
+          {
+            path: "withdrawal/on-process",
+            element: <OnProcessWithdrawalPage />,
+          },
           { path: "withdrawal/:id", element: <WithdrawalDetails /> },
         ],
       },

@@ -24,7 +24,7 @@ export function AdminHomePage() {
         </Card>
         <Card className="flex-1 flex flex-col p-4 bg-yellow-300 rounded-2xl">
           <h3 className="text-base font-semibold flex justify-between items-center">
-            In Proccess
+            In Process
             <span className="flex gap-1 items-center">
               6<LuUsers size={16} />
             </span>

@@ -3,19 +3,19 @@ import PageLayout from "../layout/page-layout";
 import { WithdrawalTable } from "@/components/tables/withdrawal";
 import { dummyWithdrawals } from "@/data/dummy-withdrawals";
 
-const pendingWithdrawals = dummyWithdrawals.filter(
-  (w) => w.status === "PENDING"
+const rejectedWithdrawals = dummyWithdrawals.filter(
+  (w) => w.status === "REJECTED"
 );
 
-export default function PendingWithdrawalPage() {
+export default function RejectedWithdrawalPage() {
   return (
     <PageLayout
-      title={`Pending Withdrawal${pendingWithdrawals?.length > 1 && "s"} (${
-        pendingWithdrawals.length
+      title={`Rejected Withdrawal${rejectedWithdrawals?.length > 1 && "s"} (${
+        rejectedWithdrawals.length
       })`}
     >
       <Card>
-        <WithdrawalTable withdrawals={pendingWithdrawals} />
+        <WithdrawalTable withdrawals={rejectedWithdrawals} />
       </Card>
     </PageLayout>
   );
