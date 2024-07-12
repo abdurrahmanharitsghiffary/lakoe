@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { $Enums } from '@prisma/client';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 
@@ -17,20 +18,33 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const authOptional = this.reflector.getAllAndOverride('auth-optional', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
     const skipAuth = this.reflector.getAllAndOverride('skip-auth', [
       context.getHandler(),
       context.getClass(),
     ]);
 
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user: any }>();
 
-    if (skipAuth) return true;
+    if (skipAuth && !authOptional) return true;
 
     const token = this.getTokenFromHeaders(request);
 
-    const decoded = await this.jwtService.verifyAsync(token);
-
-    // request.user = decoded;
+    try {
+      const decoded = await this.jwtService.verifyAsync<{
+        id: number;
+        role: $Enums.Role;
+      }>(token);
+      request.user = decoded;
+    } catch (err) {
+      if (authOptional) return true;
+      throw err;
+    }
 
     return true;
   }

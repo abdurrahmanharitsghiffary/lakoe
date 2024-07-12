@@ -21,6 +21,8 @@ import {
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { z } from 'zod';
 import { parseStringBool } from 'src/common/utils/parse-string-bool';
+import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
+import { GetProductsSchema, getProductsSchema } from './schema/get-products';
 
 @Controller('products')
 export class ProductController {
@@ -35,21 +37,16 @@ export class ProductController {
   }
 
   @Get()
+  @SkipAuth()
   findAll(
-    @Query(
-      new ZodValidationPipe(
-        z.object({
-          active: z.enum(['true', 'false']).optional(),
-          q: z.string().optional(),
-        }),
-      ),
-    )
-    { active, q }: { active: string; q: string },
+    @Query(new ZodValidationPipe(getProductsSchema))
+    { active, q }: GetProductsSchema,
   ) {
     return this.productService.search(q, parseStringBool(active));
   }
 
   @Get(':id')
+  @SkipAuth()
   findOne(@Param('id') id: string) {
     return this.productService.findOne(+id);
   }
