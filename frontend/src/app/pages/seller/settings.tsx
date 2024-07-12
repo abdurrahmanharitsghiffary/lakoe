@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CardLocation } from "@/features/settings/components/card-location";
 import { CardStore } from "@/features/settings/components/card-store";
 import { CardTemplate } from "@/features/settings/components/card-template";
+import { Helmet } from "react-helmet-async";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 type TabType = "informasi" | "lokasi" | "template";
@@ -16,6 +17,9 @@ export function SettingsPage() {
 
   return (
     <>
+      <Helmet>
+        <title>Setting</title>
+      </Helmet>
       <div className="flex justify-center">
         <Card className="w-full">
           <h1 className="m-4 font-bold text-xl">Fesyen Store</h1>

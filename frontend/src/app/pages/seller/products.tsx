@@ -27,6 +27,7 @@ import { getAllSearchParams } from "@/utils/get-all-search-param";
 import { parseStrBool } from "@/utils/parse-str-bool";
 import { SelectValue } from "@radix-ui/react-select";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { BiTrash } from "react-icons/bi";
 import { CiCirclePlus } from "react-icons/ci";
 import { LuPackageSearch } from "react-icons/lu";
@@ -131,6 +132,9 @@ export function ProductsPage() {
 
   return (
     <>
+      <Helmet>
+        <title>Product</title>
+      </Helmet>
       <div className="flex justify-center">
         <Card className="w-full">
           <div className="flex justify-between">

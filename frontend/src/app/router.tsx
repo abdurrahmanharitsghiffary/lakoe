@@ -29,9 +29,11 @@ export const router = createBrowserRouter([
         path: "/",
         children: [{ path: "", element: <CardOrderBuyer /> }],
         element: <BuyerLayout />,
+        errorElement: <ErrorPage />,
       },
       {
         path: "admin",
+        errorElement: <ErrorPage />,
         element: <AdminLayout />,
         children: [
           { path: "", element: <AdminHomePage /> },
@@ -48,6 +50,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "seller",
+        errorElement: <ErrorPage />,
         element: <SellerLayout />,
         children: [
           { path: "", element: <HomePage /> },
@@ -70,11 +73,10 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
     ],
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "*",
-    element: <NotFoundPage />,
   },
 ]);

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 import { BiLogOut } from "react-icons/bi";
@@ -40,7 +40,7 @@ function NavItemSection({
     >
       {pathname === "/admin" + baseUrl + item?.href && (
         <motion.span
-          layoutId="underline"
+          layoutId={item?.isSection ? "underlineSection" : "underline"}
           className="absolute block bg-purple-600 left-0 inset-y-0 w-1"
         ></motion.span>
       )}
@@ -53,18 +53,20 @@ function NavItemSection({
           <ChevronDown />
         </motion.span>
       </button>
-      {isOpen && (
-        <motion.ul
-          className="pl-8 flex flex-col w-full h-full"
-          exit={{ y: -100, opacity: 0 }}
-          initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-        >
-          {item.items.map((it) => (
-            <NavList baseUrl={item?.href ?? ""} item={it} />
-          ))}
-        </motion.ul>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.ul
+            className="pl-8 flex flex-col w-full h-full"
+            exit={{ y: -100, opacity: 0 }}
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+          >
+            {item.items.map((it) => (
+              <NavList baseUrl={item?.href ?? ""} item={it} />
+            ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
     </li>
   );
 }

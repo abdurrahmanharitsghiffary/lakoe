@@ -26,6 +26,7 @@ import { LuBox } from "react-icons/lu";
 import { IoWalletOutline } from "react-icons/io5";
 import { TrackingDialog } from "@/components/dialog/tracking-dialog";
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 
 const ORDER_STATUS_LABEL = {
   CANCELLED: "Dibatalkan",
@@ -88,6 +89,9 @@ export default function OrderDetails() {
 
   return (
     <div className="grid grid-cols-1 gap-4">
+      <Helmet>
+        <title>Order</title>
+      </Helmet>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
