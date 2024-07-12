@@ -6,15 +6,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+// import {
+//   FormControl,
+//   FormDescription,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+//   FormMessage,
+// } from "@/components/ui/form";
+// import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useFieldArray, useForm } from "react-hook-form";
 
@@ -29,7 +29,7 @@ export default function ProductDialogActivation({
   onOpen,
   onConfirm,
 }: ProductDialogActivationProps) {
-  const { control, register } = useForm({
+  const { control } = useForm({
     defaultValues: {
       variant: [
         { name: "XL", price: 40827, stock: 20 },
