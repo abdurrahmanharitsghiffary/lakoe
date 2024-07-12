@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
 import { CommonModule } from 'src/common/common.module';
 import { ProductModule } from './modules/product/product.module';
-<<<<<<< HEAD
 import { UsersModule } from './modules/users/users.module';
+import { OrderModule } from './modules/order/order.module';
+import { PrismaService } from 'src/common/services/prisma.service';
 
 @Module({
-  imports: [CommonModule, ProductModule, UsersModule],
-=======
-
-@Module({
-  imports: [CommonModule, ProductModule],
->>>>>>> 71bc6615577c6d8475a4fcbe2b14ae941044b49a
+  imports: [CommonModule, ProductModule, UsersModule, OrderModule],
+  providers: [PrismaService],
+  exports: [PrismaService]
 })
 export class AppModule {}

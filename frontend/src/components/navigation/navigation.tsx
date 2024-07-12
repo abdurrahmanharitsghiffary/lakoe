@@ -3,6 +3,8 @@ import { IoMdCube } from "react-icons/io";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
+import { TbTruckDelivery } from "react-icons/tb";
+import { MdOutlinePayment } from "react-icons/md";
 import {
   Accordion,
   AccordionContent,
@@ -13,22 +15,23 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { IconType } from "react-icons/lib";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { MdOutlineStorefront } from "react-icons/md";
 
 const navItems: { icon: IconType; label: string; href?: string }[] = [
   {
     icon: BiHomeCircle,
     label: "Dashboard",
-    href: "/dashboard",
+    href: "/seller/dashboard",
   },
-  { icon: IoMdCube, label: "Produk", href: "/products" },
-  { icon: LiaShoppingBagSolid, label: "Pesanan", href: "/orders" },
+  { icon: IoMdCube, label: "Produk", href: "/seller/products" },
+  { icon: LiaShoppingBagSolid, label: "Pesanan", href: "/seller/orders" },
 ];
 
 function Navigation() {
   const { pathname } = useLocation();
 
   return (
-    <div className="flex flex-col mr-2 gap-4 px-1 py-4 h-[90vh]">
+    <div className="flex flex-col gap-2 px-2 py-2 h-[90vh]">
       {navItems.map((item) => (
         <Link
           key={item?.label}
@@ -42,27 +45,31 @@ function Navigation() {
           )}
         >
           <item.icon
-            className="ml-1 mr-2 h-8 w-8"
-            color={pathname === item.href ? "blue" : undefined}
+            className={cn(
+              "ml-1 mr-2 text-2xl",
+              pathname === item.href ? "text-lakoe-primary" : undefined
+            )}
           />
           <h1
-            className="text-lg"
-            style={{ color: pathname === item.href ? "#0000FF" : undefined }}
+            className={cn(
+              "text-base",
+              pathname === item.href ? "text-lakoe-primary" : undefined
+            )}
           >
             {item.label}
           </h1>
         </Link>
       ))}
       <Accordion type="single" collapsible style={{ marginTop: "-15px" }}>
-        <AccordionItem value="item-1">
+        <AccordionItem value="item-1" className="border-b-0">
           <AccordionTrigger>
             <Button
               variant="ghost"
               size="lg"
               className="flex w-full justify-start items-center"
             >
-              <IoSettingsOutline className="ml-1 mr-2 h-8 w-8" />
-              <h1 className="text-lg">Pengaturan</h1>
+              <IoSettingsOutline className="ml-1 mr-2 text-2xl" />
+              <h1 className="text-base">Pengaturan</h1>
             </Button>
           </AccordionTrigger>
           <AccordionContent className="flex flex-col justify-center gap-4 ml-8">
@@ -71,16 +78,24 @@ function Navigation() {
               size="lg"
               className="flex w-full justify-start items-center"
             >
-              <LiaShoppingBagSolid className="ml-1 mr-2 h-8 w-8" />
-              <h1 className="text-lg">Pesanan</h1>
+              <MdOutlineStorefront className="ml-1 mr-2 text-2xl" />
+              <h1 className="text-base">Atur Toko</h1>
             </Button>
             <Button
               variant="ghost"
               size="lg"
               className="flex w-full justify-start items-center"
             >
-              <LiaShoppingBagSolid className="ml-1 mr-2 h-8 w-8" />
-              <h1 className="text-lg">Pesanan</h1>
+              <TbTruckDelivery className="ml-1 mr-2 text-2xl" />
+              <h1 className="text-base">Pengiriman</h1>
+            </Button>
+            <Button
+              variant="ghost"
+              size="lg"
+              className="flex w-full justify-start items-center"
+            >
+              <MdOutlinePayment className="ml-1 mr-2 text-2xl" />
+              <h1 className="text-base">Metode Pembayaran</h1>
             </Button>
           </AccordionContent>
         </AccordionItem>
@@ -91,7 +106,7 @@ function Navigation() {
         className="flex w-full justify-start items-center mt-auto"
       >
         <CgProfile className="ml-1 mr-2 h-8 w-8" />
-        <h1 className="text-lg">Profil</h1>
+        <h1 className="text-base">Profil</h1>
       </Button>
     </div>
   );

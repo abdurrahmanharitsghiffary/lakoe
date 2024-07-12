@@ -8,7 +8,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         <div className="basis-1/5 h-full">
           <Navigation />
         </div>
-        <div className="basis-3/5 bg-zinc-200 overflow-y-auto">{children}</div>
+        <div className="basis-3/5 bg-zinc-100 overflow-y-auto">{children}</div>
         <div className="basis-1/5 h-full"></div>
       </div>
     </div>
