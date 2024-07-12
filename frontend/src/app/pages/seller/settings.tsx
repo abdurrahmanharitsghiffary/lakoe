@@ -1,8 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CardLocation } from "@/features/settings/card-location";
-import { CardStore } from "@/features/settings/card-store";
-import { CardTemplate } from "@/features/settings/card-template";
+import { CardLocation } from "@/features/settings/components/card-location";
+import { CardStore } from "@/features/settings/components/card-store";
+import { CardTemplate } from "@/features/settings/components/card-template";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 type TabType = "informasi" | "lokasi" | "template";
@@ -10,7 +10,6 @@ export function SettingsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const t = (searchParams.get("t") || "informasi") as TabType;
-
   const handleValueChange = (type: string) => {
     navigate({ search: "?t=" + type });
   };

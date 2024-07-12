@@ -3,6 +3,8 @@ import { IoMdCube } from "react-icons/io";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
+import { TbTruckDelivery } from "react-icons/tb";
+import { MdOutlinePayment } from "react-icons/md";
 import {
   Accordion,
   AccordionContent,
@@ -13,15 +15,16 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { IconType } from "react-icons/lib";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { MdOutlineStorefront } from "react-icons/md";
 
 const navItems: { icon: IconType; label: string; href?: string }[] = [
   {
     icon: BiHomeCircle,
     label: "Dashboard",
-    href: "/dashboard",
+    href: "/seller/dashboard",
   },
-  { icon: IoMdCube, label: "Produk", href: "/products" },
-  { icon: LiaShoppingBagSolid, label: "Pesanan", href: "/orders" },
+  { icon: IoMdCube, label: "Produk", href: "/seller/products" },
+  { icon: LiaShoppingBagSolid, label: "Pesanan", href: "/seller/orders" },
 ];
 
 function Navigation() {
@@ -75,16 +78,24 @@ function Navigation() {
               size="lg"
               className="flex w-full justify-start items-center"
             >
-              <LiaShoppingBagSolid className="ml-1 mr-2 text-2xl" />
-              <h1 className="text-base">Pesanan</h1>
+              <MdOutlineStorefront className="ml-1 mr-2 text-2xl" />
+              <h1 className="text-base">Atur Toko</h1>
             </Button>
             <Button
               variant="ghost"
               size="lg"
               className="flex w-full justify-start items-center"
             >
-              <LiaShoppingBagSolid className="ml-1 mr-2 text-2xl" />
-              <h1 className="text-base">Pesanan</h1>
+              <TbTruckDelivery className="ml-1 mr-2 text-2xl" />
+              <h1 className="text-base">Pengiriman</h1>
+            </Button>
+            <Button
+              variant="ghost"
+              size="lg"
+              className="flex w-full justify-start items-center"
+            >
+              <MdOutlinePayment className="ml-1 mr-2 text-2xl" />
+              <h1 className="text-base">Metode Pembayaran</h1>
             </Button>
           </AccordionContent>
         </AccordionItem>
