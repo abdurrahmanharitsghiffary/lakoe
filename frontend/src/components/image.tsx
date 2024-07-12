@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Skeleton } from "./ui/skeleton";
-import { MdBrokenImage } from "react-icons/md";
+import { MdBrokenImage, MdMoreHoriz } from "react-icons/md";
 import { cn } from "@/lib/utils";
 
 type ImageProps = React.DetailedHTMLProps<
@@ -18,7 +18,7 @@ export function Image(props: ImageProps) {
     <>
       <img
         {...props}
-        src={props?.src + "?cache=none"}
+        src={props?.src}
         style={{
           display:
             isLoading || isError ? "none" : props.style?.display || "block",
@@ -32,8 +32,7 @@ export function Image(props: ImageProps) {
           setIsLoading(false);
         }}
       />
-      {isLoading && <Skeleton {...props} />}
-      {isError && (
+      {(isError || isLoading) && (
         <div
           {...props}
           className={cn(
@@ -41,7 +40,7 @@ export function Image(props: ImageProps) {
             "flex justify-center items-center bg-zinc-200"
           )}
         >
-          <MdBrokenImage size={30} />
+          <MdMoreHoriz size={30} />
         </div>
       )}
     </>

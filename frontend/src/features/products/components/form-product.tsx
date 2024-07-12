@@ -23,11 +23,14 @@ import {
 } from "@/components/ui/form";
 import { ProductFileInput } from "@/components/input/product-input";
 import { useAddProduct } from "../hooks/use-add-product";
+
 import { DescInput } from "@/components/input/desc-input";
+
+import { BiTrash } from "react-icons/bi";
+import { MdAddCircleOutline } from "react-icons/md";
 
 export function FormProduct() {
   const { form, onSubmit } = useAddProduct();
-
   return (
     <>
       <Form {...form}>
@@ -150,6 +153,41 @@ export function FormProduct() {
               />
             </Card>
           </div>
+          <Card className="p-4 flex flex-col gap-4">
+            <div className="flex justify-between w-full items-center">
+              <div className="flex flex-col gap-2">
+                <h2 className="text-xl font-bold items-center">
+                  Variant Produk
+                </h2>
+                <p className="text-muted-foreground">
+                  Tambah variant agar pembeli dapat memilih produk yang sesuai,
+                  yuk!
+                </p>
+              </div>
+
+              <Button className="flex gap-2 rounded-full" variant="outline">
+                <BiTrash size={20} /> Hapus Variant
+              </Button>
+            </div>
+            <div className="flex gap-2">
+              <Button className="rounded-full" variant="outline">
+                Warna
+              </Button>
+              <Button className="rounded-full" variant="outline">
+                Ukuran
+              </Button>
+              <Button className="rounded-full" variant="outline">
+                Ukuran Kemasan
+              </Button>
+              <Button className="rounded-full flex gap-2" variant="outline">
+                <MdAddCircleOutline size={20} />
+                Buat Tipe Varian
+              </Button>
+            </div>
+            {/* <div className="relative">
+              <VariantForms />
+            </div> */}
+          </Card>
 
           <div className="flex justify-center">
             <Card className="w-full">
@@ -162,12 +200,12 @@ export function FormProduct() {
                     <FormItem>
                       <FormControl>
                         <InputForm
+                          isRequired
                           type="number"
                           label="Harga"
                           onChange={(e) => onChange(+e.target.value)}
                           placeholder="Masukkan Harga Satuan Barang"
                           startAdornment="Rp."
-                          isRequired
                           focus={"lakoePrimary"}
                           {...field}
                         />

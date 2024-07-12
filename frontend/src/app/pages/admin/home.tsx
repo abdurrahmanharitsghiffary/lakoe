@@ -3,10 +3,18 @@ import PageLayout from "./layout/page-layout";
 import { VisitorChart } from "@/components/charts/visitor-chart";
 import { Card } from "@/components/ui/card";
 import { LuUsers } from "react-icons/lu";
+import { WithdrawalTable } from "@/components/tables/withdrawal";
+import { dummyWithdrawals } from "@/data/dummy-withdrawals";
+import { Helmet } from "react-helmet-async";
 
 export function AdminHomePage() {
   return (
     <PageLayout title="Dashboard">
+      <Helmet>
+        <title>Dashboard</title>
+        <meta content="Admin dashboard page" name="description" />
+        <meta content="Dashboard, Admin, Page, Management" name="keywords" />
+      </Helmet>
       <div className="flex gap-4 w-full">
         <VisitorChart />
         <BarChart />
@@ -50,6 +58,9 @@ export function AdminHomePage() {
           <p className="text-3xl font-bold">Rp.21.888.00</p>
         </Card>
       </div>
+      <Card className="flex-1">
+        <WithdrawalTable withdrawals={dummyWithdrawals} />
+      </Card>
     </PageLayout>
   );
 }
