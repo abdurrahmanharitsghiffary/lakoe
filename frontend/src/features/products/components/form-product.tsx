@@ -9,7 +9,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+
 import { SelectValue } from "@radix-ui/react-select";
 // import { CiCirclePlus } from "react-icons/ci";
 import { InputForm } from "./input/input-form";
@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import { ProductFileInput } from "@/components/input/product-input";
 import { useAddProduct } from "../hooks/use-add-product";
+import { DescInput } from "@/components/input/desc-input";
 
 export function FormProduct() {
   const { form, onSubmit } = useAddProduct();
@@ -47,6 +48,8 @@ export function FormProduct() {
                         <InputForm
                           label="Nama Produk"
                           placeholder="Masukkan Nama"
+                          isRequired
+                          focus={"lakoePrimary"}
                           {...field}
                         />
                       </FormControl>
@@ -66,6 +69,8 @@ export function FormProduct() {
                           label="URL halaman checkout"
                           placeholder="Masukkan URL halaman checkout"
                           startAdornment="lakoe.store/"
+                          isRequired
+                          focus={"lakoePrimary"}
                           {...field}
                         />
                       </FormControl>
@@ -112,12 +117,12 @@ export function FormProduct() {
                 name="description"
                 render={({ field }) => (
                   <div className="m-3">
-                    <Label>Deskripsi</Label>
                     <FormItem>
                       <FormControl>
-                        <Textarea
-                          placeholder="Masukkan Deskripsi Lengkap Produk Kamu"
-                          className="resize-none h-32"
+                        <DescInput
+                          label="Deskripsi"
+                          placeholder="Masukkan deskripsi produk"
+                          isRequired
                           {...field}
                         />
                       </FormControl>
@@ -129,7 +134,7 @@ export function FormProduct() {
               <FormField
                 control={form.control}
                 name="attachments"
-                render={({ field }) => (
+                render={() => (
                   <div className="m-3">
                     <Label>Foto Produk</Label>
                     <div className="flex gap-2 overflow-x-auto hide-sc">
@@ -162,6 +167,8 @@ export function FormProduct() {
                           onChange={(e) => onChange(+e.target.value)}
                           placeholder="Masukkan Harga Satuan Barang"
                           startAdornment="Rp."
+                          isRequired
+                          focus={"lakoePrimary"}
                           {...field}
                         />
                       </FormControl>
@@ -190,6 +197,7 @@ export function FormProduct() {
                           type="number"
                           onChange={(e) => onChange(+e.target.value)}
                           endAdornment="Produk"
+                          focus={"lakoePrimary"}
                         />
                       </FormControl>
                     </FormItem>
@@ -217,6 +225,8 @@ export function FormProduct() {
                             onChange={(e) => onChange(+e.target.value)}
                             placeholder="Masukkan jumlah stok"
                             className="w-full"
+                            isRequired
+                            focus={"lakoePrimary"}
                             {...field}
                           />
                         </FormControl>
@@ -249,6 +259,8 @@ export function FormProduct() {
                           label="Berat Produk"
                           placeholder="Masukkan berat produk"
                           endAdornment="Gram"
+                          isRequired
+                          focus={"lakoePrimary"}
                           {...field}
                         />
                       </FormControl>
@@ -262,16 +274,19 @@ export function FormProduct() {
                   label="Ukuran Produk"
                   placeholder="Masukkan panjang"
                   endAdornment="cm"
+                  focus={"lakoePrimary"}
                 />
                 <InputForm
                   className="mt-6"
                   placeholder="Masukkan lebar"
                   endAdornment="cm"
+                  focus={"lakoePrimary"}
                 />
                 <InputForm
                   className="mt-6"
                   placeholder="Masukkan tinggi"
                   endAdornment="cm"
+                  focus={"lakoePrimary"}
                 />
               </div>
             </Card>
@@ -280,11 +295,11 @@ export function FormProduct() {
           <div className="flex justify-center ">
             <Card className="w-full">
               <div className="flex justify-between">
-                <Button className="m-4 border bg-white text-black rounded-full hover:bg-black hover:text-white text-xs">
+                <Button variant={"outline"} className="m-4 rounded-full">
                   Preview Halaman Checkout
                 </Button>
                 <div className="flex  m-4 gap-2 ">
-                  <Button className="rounded-full bg-white text-black hover:bg-black hover:text-white">
+                  <Button variant={"outline"} className="rounded-full ">
                     Batal
                   </Button>
                   <Button

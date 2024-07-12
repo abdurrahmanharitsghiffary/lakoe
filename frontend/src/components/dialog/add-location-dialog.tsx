@@ -1,3 +1,4 @@
+import { InputForm } from "@/features/products/components/input/input-form";
 import { ButtonPrimary } from "../button/btn-primary";
 import { Button } from "../ui/button";
 import {
@@ -7,21 +8,28 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import { Input } from "../ui/input";
+
 import { Label } from "../ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+
 import { Textarea } from "../ui/textarea";
+import { SelectInput } from "../input/select-input";
 export type Props = {
   isOpen: boolean;
   onOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 export function AddLocationDialog({ isOpen, onOpen }: Props) {
+  const cityOptions = [
+    { value: "jakarta", name: "Jakarta" },
+    { value: "depok", name: "Depok" },
+    { value: "bekasi", name: "Bekasi" },
+  ];
+
+  const postOptions = [
+    { value: "jakarta", name: "154123" },
+    { value: "depok", name: "19087" },
+    { value: "bekasi", name: "12645" },
+  ];
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onOpen}>
@@ -29,44 +37,34 @@ export function AddLocationDialog({ isOpen, onOpen }: Props) {
           <DialogHeader>
             <DialogTitle>Tambah Lokasi</DialogTitle>
           </DialogHeader>
-          <div>
-            <Label>Nama Lokasi</Label>
-            <Input placeholder="Cth. Toko Amanda" />
-          </div>
-          <div>
-            <Label>Kota/Kecamatan</Label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Cari Kota/Kecamatan" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="jakarta">Jakarta</SelectItem>
-                <SelectItem value="depok">Bekasi</SelectItem>
-                <SelectItem value="bekasi">Bekasi</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Kode Pos</Label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Masukkan 5 digit kode pos" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="jakarta">154123</SelectItem>
-                <SelectItem value="depok">19087</SelectItem>
-                <SelectItem value="bekasi">12645</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
+
+          <InputForm
+            label="Nama Lokasi"
+            placeholder="Cth. Toko Amanda"
+            focus={"lakoePrimary"}
+            isRequired
+          />
+
+          <SelectInput
+            label="Kota/Kecamatan"
+            placeHolder="Cari Kota/Kecamatan"
+            options={cityOptions}
+          />
+
+          <SelectInput
+            label="Kode Pos"
+            placeHolder="Masukkan 5 digit kode pos"
+            options={postOptions}
+          />
+
+          <div className="mx-3">
             <Label>Alamat Lengkap</Label>
             <Textarea
               placeholder="Tuliskan alamat lengkap toko"
               className="resize-none"
             />
           </div>
-          <div>
+          <div className="mx-3">
             <Label>Pinpoint Lokasi</Label>
             <p className="text-sm text-gray-400">
               Tandain lokasi untuk mempermudah permintaan pickup kurir

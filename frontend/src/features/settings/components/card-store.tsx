@@ -12,8 +12,16 @@ export function CardStore() {
         <h1 className="m-4 font-bold text-xl">Informasi Toko</h1>
         <div className="flex justify-between">
           <div className="flex-col w-full">
-            <InputForm label="Slogan" placeholder="Buat slogan untuk tokomu" />
-            <InputForm label="Nama Toko" placeholder="Fesyen Store" />
+            <InputForm
+              label="Slogan"
+              placeholder="Buat slogan untuk tokomu"
+              focus={"lakoePrimary"}
+            />
+            <InputForm
+              label="Nama Toko"
+              placeholder="Fesyen Store"
+              focus={"lakoePrimary"}
+            />
           </div>
           <div className="m-3 w-full">
             <Label>Deskripsi</Label>
