@@ -3,7 +3,7 @@ import { Form, useFieldArray, useForm } from "react-hook-form";
 import { variantSchema, VariantSchema } from "../../validator/variants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import MultipleSelector, { Option } from "@/components/ui/multi-select";
+import { MultipleSelector, Option } from "@/components/ui/multi-select";
 import { cn } from "@/lib/utils";
 import { badgeVariants } from "@/components/ui/badge";
 import { useState } from "react";

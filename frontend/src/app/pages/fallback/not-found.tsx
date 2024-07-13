@@ -1,10 +1,10 @@
 import { Button, buttonVariants } from "@/components/ui/button";
-import Typography from "@/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function NotFoundPage() {
+export function NotFoundPage() {
   const navigate = useNavigate();
   return (
     <div className="flex flex-col absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-center gap-4 max-w-md">

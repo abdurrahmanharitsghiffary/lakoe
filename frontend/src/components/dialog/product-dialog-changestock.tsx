@@ -18,7 +18,7 @@ import {
 import { InputForm } from "@/features/products/components/input/input-form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChangeStokSchema } from "@/validator/validator";
+import { changeStokSchema } from "@/validator/validator";
 import { ChangeStokType } from "@/types/type";
 import { Product } from "@/types/product";
 
@@ -28,13 +28,13 @@ type ProductDialogChangeStockProps = {
   product: Product | undefined;
 };
 
-export default function ProductDialogChangeStock({
+export function ProductDialogChangeStock({
   isOpen,
   onOpen,
   product,
 }: ProductDialogChangeStockProps) {
   const form = useForm<ChangeStokType>({
-    resolver: zodResolver(ChangeStokSchema),
+    resolver: zodResolver(changeStokSchema),
     defaultValues: {
       stok: product?.variants?.[0]?.stock ?? 0,
     },

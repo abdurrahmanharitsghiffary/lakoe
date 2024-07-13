@@ -18,7 +18,7 @@ import {
 import { InputForm } from "@/features/products/components/input/input-form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChangePriceSchema } from "@/validator/validator";
+import { changePriceSchema } from "@/validator/validator";
 import { ChangePriceType } from "@/types/type";
 import { Product } from "@/types/product";
 
@@ -28,13 +28,13 @@ type ProductDialogChangePriceProps = {
   product: Product | undefined;
 };
 
-export default function ProductDialogChangePrice({
+export function ProductDialogChangePrice({
   isOpen,
   onOpen,
   product,
 }: ProductDialogChangePriceProps) {
   const form = useForm<ChangePriceType>({
-    resolver: zodResolver(ChangePriceSchema),
+    resolver: zodResolver(changePriceSchema),
     defaultValues: {
       price: product?.variants?.[0]?.price,
     },

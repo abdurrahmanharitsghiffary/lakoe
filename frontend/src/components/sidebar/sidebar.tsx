@@ -53,7 +53,7 @@ function NavItemSection({
           <ChevronDown />
         </motion.span>
       </button>
-      <AnimatePresence>
+      <AnimatePresence mode="popLayout">
         {isOpen && (
           <motion.ul
             className="pl-8 flex flex-col w-full h-full"
@@ -101,7 +101,7 @@ const getNavItems = (navItems: NavItem[]) => {
   });
 };
 
-export default function Sidebar({ navItems }: { navItems: NavItem[] }) {
+export function Sidebar({ navItems }: { navItems: NavItem[] }) {
   return (
     <div className="h-[100dvh] w-[280px] bg-white dark:bg-slate-800 shadow-md border-r-[1px] overflow-y-auto">
       <h1 className="text-3xl font-bold p-4 h-[10%]">Lakoe</h1>

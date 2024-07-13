@@ -11,7 +11,7 @@ export type ListProps<T> = React.DetailedHTMLProps<
   loader?: React.ReactNode;
 };
 
-export default function List<T>({
+export function List<T>({
   data = [],
   isLoading,
   loader,

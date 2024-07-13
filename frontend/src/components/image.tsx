@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Skeleton } from "./ui/skeleton";
-import { MdBrokenImage, MdMoreHoriz } from "react-icons/md";
+import { MdMoreHoriz } from "react-icons/md";
 import { cn } from "@/lib/utils";
 
 type ImageProps = React.DetailedHTMLProps<

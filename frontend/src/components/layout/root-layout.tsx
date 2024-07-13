@@ -1,6 +1,6 @@
-import Navigation from "@/components/navigation/navigation";
+import { Navigation } from "@/components/navigation/navigation";
 
-function RootLayout({ children }: { children: React.ReactNode }) {
+export function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="max-h-[100dvh] min-h-[100dvh]">
       <div className="w-full h-16 border-2 border-gray-100 fixed top-0 inset-x-0 bg-white"></div>
@@ -14,4 +14,3 @@ function RootLayout({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-export default RootLayout;

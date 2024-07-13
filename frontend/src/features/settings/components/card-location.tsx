@@ -6,7 +6,6 @@ import { FaRegEdit } from "react-icons/fa";
 import { AddLocationDialog } from "@/components/dialog/add-location-dialog";
 import { useState } from "react";
 import { DeleteLocationDialog } from "@/components/dialog/delete-location-dialog";
-import { ButtonPrimary } from "@/components/button/btn-primary";
 
 export function CardLocation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,12 +21,13 @@ export function CardLocation() {
             </p>
           </div>
           <div className="m-3">
-            <ButtonPrimary
+            <Button
               onClick={() => setIsOpen(true)}
+              variant="lakoePrimary"
               className="rounded-full"
             >
               Tambah Lokasi
-            </ButtonPrimary>
+            </Button>
           </div>
         </div>
         <Card className="m-4">

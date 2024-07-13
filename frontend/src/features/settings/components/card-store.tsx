@@ -1,9 +1,9 @@
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import InputFileHidden from "@/components/ui/input-file-hidden";
+import { InputFileHidden } from "@/components/ui/input-file-hidden";
 import { RiImageAddLine } from "react-icons/ri";
-import { ButtonPrimary } from "@/components/button/btn-primary";
 import { InputForm } from "@/features/products/components/input/input-form";
+import { Button } from "@/components/ui/button";
 
 export function CardStore() {
   return (
@@ -30,7 +30,9 @@ export function CardStore() {
               className="resize-none h-28"
             />
             <div className="text-end m-3">
-              <ButtonPrimary className="rounded-full">Simpan</ButtonPrimary>
+              <Button variant="lakoePrimary" className="rounded-full">
+                Simpan
+              </Button>
             </div>
           </div>
         </div>

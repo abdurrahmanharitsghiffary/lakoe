@@ -45,7 +45,7 @@ const accItems: { icon: IconType; label: string; href?: string }[] = [
   },
 ];
 
-function Navigation() {
+export function Navigation() {
   const { pathname } = useLocation();
 
   return (
@@ -124,14 +124,11 @@ function Navigation() {
       </Accordion>
       <Button
         variant="ghost"
-        size="lg"
         className="flex w-full justify-start items-center mt-auto"
       >
-        <CgProfile className="ml-1 mr-2 h-8 w-8" />
+        <CgProfile className="ml-1 mr-2 h-8 w-8 !text-2xl" />
         <h1 className="text-base">Profil</h1>
       </Button>
     </div>
   );
 }
-
-export default Navigation;

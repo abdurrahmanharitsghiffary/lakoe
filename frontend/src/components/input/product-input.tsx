@@ -1,5 +1,5 @@
 import React, { forwardRef, useState } from "react";
-import InputFileHidden from "../ui/input-file-hidden";
+import { InputFileHidden } from "../ui/input-file-hidden";
 import { RiImageAddLine } from "react-icons/ri";
 import { Image } from "../image";
 import { Button } from "../ui/button";

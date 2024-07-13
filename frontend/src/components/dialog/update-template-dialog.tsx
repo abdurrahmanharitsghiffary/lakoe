@@ -1,4 +1,3 @@
-import { ButtonPrimary } from "../button/btn-primary";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -47,7 +46,9 @@ export function UpdateTemplateDialog({ isOpen, onOpen }: Props) {
             <Button variant={"outline"} className="rounded-full">
               Batalkan
             </Button>
-            <ButtonPrimary className="rounded-full">Simpan</ButtonPrimary>
+            <Button variant="lakoePrimary" className="rounded-full">
+              Simpan
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
