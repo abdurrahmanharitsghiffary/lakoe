@@ -19,6 +19,7 @@ import { WithdrawalDetails } from "./pages/admin/withdrawal/details";
 import SuccessWithdrawalPage from "./pages/admin/withdrawal/success";
 import RejectedWithdrawalPage from "./pages/admin/withdrawal/rejected";
 import OnProcessWithdrawalPage from "./pages/admin/withdrawal/on-process";
+import { LoginPage } from "./pages/auth/login";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,11 @@ export const router = createBrowserRouter([
         children: [{ path: "", element: <CardOrderBuyer /> }],
         element: <BuyerLayout />,
         errorElement: <ErrorPage />,
+      },
+      {
+        path: "auth",
+        errorElement: <ErrorPage />,
+        children: [{ path: "login", element: <LoginPage /> }],
       },
       {
         path: "admin",
