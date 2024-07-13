@@ -27,6 +27,24 @@ const navItems: { icon: IconType; label: string; href?: string }[] = [
   { icon: LiaShoppingBagSolid, label: "Pesanan", href: "/seller/orders" },
 ];
 
+const accItems: { icon: IconType; label: string; href?: string }[] = [
+  {
+    icon: MdOutlineStorefront,
+    label: "Atur Toko",
+    href: "/seller/settings/store",
+  },
+  {
+    icon: TbTruckDelivery,
+    label: "Pengiriman",
+    href: "seller/settings/delivery",
+  },
+  {
+    icon: MdOutlinePayment,
+    label: "Metode Pembayaran",
+    href: "seller/settings/payment",
+  },
+];
+
 function Navigation() {
   const { pathname } = useLocation();
 
@@ -73,30 +91,34 @@ function Navigation() {
             </Button>
           </AccordionTrigger>
           <AccordionContent className="flex flex-col justify-center gap-4 ml-8">
-            <Button
-              variant="ghost"
-              size="lg"
-              className="flex w-full justify-start items-center"
-            >
-              <MdOutlineStorefront className="ml-1 mr-2 text-2xl" />
-              <h1 className="text-base">Atur Toko</h1>
-            </Button>
-            <Button
-              variant="ghost"
-              size="lg"
-              className="flex w-full justify-start items-center"
-            >
-              <TbTruckDelivery className="ml-1 mr-2 text-2xl" />
-              <h1 className="text-base">Pengiriman</h1>
-            </Button>
-            <Button
-              variant="ghost"
-              size="lg"
-              className="flex w-full justify-start items-center"
-            >
-              <MdOutlinePayment className="ml-1 mr-2 text-2xl" />
-              <h1 className="text-base">Metode Pembayaran</h1>
-            </Button>
+            {accItems.map((item) => (
+              <Link
+                key={item?.label}
+                to={item.href ?? ""}
+                className={cn(
+                  buttonVariants({
+                    variant: item.href === pathname ? "secondary" : "ghost",
+                    size: "lg",
+                  }),
+                  "flex w-full justify-start items-center py-3"
+                )}
+              >
+                <item.icon
+                  className={cn(
+                    "ml-1 mr-2 text-2xl",
+                    pathname === item.href ? "text-lakoe-primary" : undefined
+                  )}
+                />
+                <h1
+                  className={cn(
+                    "text-base",
+                    pathname === item.href ? "text-lakoe-primary" : undefined
+                  )}
+                >
+                  {item.label}
+                </h1>
+              </Link>
+            ))}
           </AccordionContent>
         </AccordionItem>
       </Accordion>

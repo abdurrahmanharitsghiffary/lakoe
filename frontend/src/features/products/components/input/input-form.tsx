@@ -1,10 +1,10 @@
 import { Input, InputProps } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cva } from "class-variance-authority";
-import { forwardRef } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
 interface InputFormProps
   extends InputProps,
+    VariantProps<typeof inputVariantProps>,
     React.RefAttributes<HTMLInputElement> {
   label?: string;
   placeholder: string;
@@ -14,10 +14,10 @@ interface InputFormProps
   isRequired?: boolean;
 }
 
-const inputFormVariants = cva("relative", {
+const labelVariantProps = cva("relative", {
   variants: {
     isRequired: {
-      true: "after:content-['*'] after:text-destructive after:absolute after:-right-3 after:text-md after:-bottom-2 after:text-xl",
+      true: "after:content-['*'] after:text-destructive after:text-md after:ms-1",
       false: "",
     },
   },
@@ -26,35 +26,37 @@ const inputFormVariants = cva("relative", {
   },
 });
 
-const InputForm = forwardRef<HTMLInputElement, InputFormProps>(
-  (
-    {
-      label,
-      placeholder,
-      startAdornment,
-      endAdornment,
-      className,
-      isRequired,
-      ...props
+export const inputVariantProps = cva("", {
+  variants: {
+    focus: {
+      lakoePrimary:
+        "focus:ring-lakoe-primary focus:ring-2 focus:ring-offset-2 focus:outline-none focus:rounded-lg",
     },
-    ref
-  ) => {
-    return (
-      <>
-        <div className="m-3">
-          <Label className={inputFormVariants({ isRequired })}>{label}</Label>
-          <Input
-            ref={ref}
-            placeholder={placeholder}
-            startAdornment={startAdornment}
-            endAdornment={endAdornment}
-            className={className}
-            {...props}
-          />
-        </div>
-      </>
-    );
-  }
-);
+  },
+});
 
-export { InputForm };
+export function InputForm({
+  label,
+  placeholder,
+  startAdornment,
+  endAdornment,
+
+  isRequired,
+  focus,
+  ...props
+}: InputFormProps) {
+  return (
+    <>
+      <div className="m-3">
+        <Label className={labelVariantProps({ isRequired })}>{label}</Label>
+        <Input
+          classNames={{ input: inputVariantProps({ focus }) }}
+          placeholder={placeholder}
+          startAdornment={startAdornment}
+          endAdornment={endAdornment}
+          {...props}
+        />
+      </div>
+    </>
+  );
+}

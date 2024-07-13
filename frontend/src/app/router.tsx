@@ -74,7 +74,7 @@ export const router = createBrowserRouter([
             element: <OrdersPage />,
           },
           {
-            path: "settings",
+            path: "settings/store",
             element: <SettingsPage />,
           },
         ],
