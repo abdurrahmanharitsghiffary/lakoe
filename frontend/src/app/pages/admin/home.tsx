@@ -1,5 +1,5 @@
 import { BarChart } from "@/components/charts/bar-chart";
-import PageLayout from "./layout/page-layout";
+import { PageLayout } from "./layout/page-layout";
 import { VisitorChart } from "@/components/charts/visitor-chart";
 import { Card } from "@/components/ui/card";
 import { LuUsers } from "react-icons/lu";

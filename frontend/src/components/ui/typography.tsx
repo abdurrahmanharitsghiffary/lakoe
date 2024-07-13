@@ -46,4 +46,4 @@ const Typography = React.forwardRef<HTMLHeadingElement, TypographyProps>(
 );
 Typography.displayName = "H1";
 
-export default Typography;
+export { Typography };

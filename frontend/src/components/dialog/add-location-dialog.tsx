@@ -1,5 +1,4 @@
 import { InputForm } from "@/features/products/components/input/input-form";
-import { ButtonPrimary } from "../button/btn-primary";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -78,7 +77,9 @@ export function AddLocationDialog({ isOpen, onOpen }: Props) {
             <Button variant={"outline"} className=" rounded-full ">
               Batal
             </Button>
-            <ButtonPrimary className="rounded-full">Simpan</ButtonPrimary>
+            <Button variant="lakoePrimary" className="rounded-full">
+              Simpan
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

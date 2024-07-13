@@ -1,17 +1,12 @@
-import LakoeCheckbox from "@/components/checkbox/lakoe";
-import List from "@/components/list.";
+import { LakoeCheckbox } from "@/components/checkbox/lakoe";
+import { List } from "@/components/list";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
+import { MultipleSelector, Option } from "@/components/ui/multi-select";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Typography from "@/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import { useGetProducts } from "@/features/products/api/get-products";
 import { CardProduct } from "@/features/products/components/card-product";
 import {
@@ -25,7 +20,6 @@ import { cn } from "@/lib/utils";
 import { Product } from "@/types/product";
 import { getAllSearchParams } from "@/utils/get-all-search-param";
 import { parseStrBool } from "@/utils/parse-str-bool";
-import { SelectValue } from "@radix-ui/react-select";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { BiTrash } from "react-icons/bi";
@@ -40,6 +34,14 @@ const getCheckedProducts = (products: Product[]) => {
     id: product.id,
   }));
 };
+
+const categoryOptions: Option[] = [
+  { label: "Pakaian", value: "pakaian" },
+  { label: "Celana", value: "celana" },
+  { label: "Elektronik", value: "elektronik" },
+  { label: "Makanan", value: "makanan" },
+  { label: "Minuman", value: "minuman" },
+];
 
 export function ProductsPage() {
   const confirm = useConfirmDeleteProduct();
@@ -181,11 +183,11 @@ export function ProductsPage() {
               value={s}
               onChange={handleSearch}
               placeholder="Cari produk"
-              className="p-2 "
               style={{ flex: 2 }}
               icon={<LuPackageSearch size={20} />}
             />
-            <Select>
+            <MultipleSelector defaultOptions={categoryOptions} />
+            {/* <Select>
               <SelectTrigger style={{ flex: 1 }}>
                 <SelectValue placeholder="Semua Kategori" />
               </SelectTrigger>
@@ -202,7 +204,7 @@ export function ProductsPage() {
                 <SelectItem value="date">Hari</SelectItem>
                 <SelectItem value="month">Bulan</SelectItem>
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
           <div className="flex px-3 pb-2 justify-between items-center">
             <Typography variant="p" className="font-semibold !text-sm">

@@ -1,5 +1,6 @@
 import { Input, InputProps } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
 interface InputFormProps
@@ -30,7 +31,7 @@ export const inputVariantProps = cva("", {
   variants: {
     focus: {
       lakoePrimary:
-        "focus:ring-lakoe-primary focus:ring-2 focus:ring-offset-2 focus:outline-none focus:rounded-lg",
+        "has-[:focus]:ring-lakoe-primary has-[:focus]:ring-2 focus:ring-offset-2 focus:outline-none focus:rounded-md",
     },
   },
 });
@@ -40,17 +41,17 @@ export function InputForm({
   placeholder,
   startAdornment,
   endAdornment,
-
+  className,
   isRequired,
   focus,
   ...props
 }: InputFormProps) {
   return (
     <>
-      <div className="m-3">
+      <div className="m-3 flex flex-col gap-3">
         <Label className={labelVariantProps({ isRequired })}>{label}</Label>
         <Input
-          classNames={{ input: inputVariantProps({ focus }) }}
+          className={cn(inputVariantProps({ focus }), className)}
           placeholder={placeholder}
           startAdornment={startAdornment}
           endAdornment={endAdornment}

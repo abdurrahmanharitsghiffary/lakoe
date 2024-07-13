@@ -22,7 +22,7 @@ const navItems: { label: string; href?: string }[] = [
 /**
  * @deprecated since version 2.0
  */
-function DashboardNavigation() {
+export function DashboardNavigation() {
   const { pathname } = useLocation();
 
   return (
@@ -162,5 +162,3 @@ function DashboardNavigation() {
     </div>
   );
 }
-
-export default DashboardNavigation;

@@ -1,7 +1,7 @@
 import { z, ZodType } from "zod";
 import { ChangePriceType, ChangeStokType } from "@/types/type";
 
-export const ChangePriceSchema: ZodType<ChangePriceType> = z.object({
+export const changePriceSchema: ZodType<ChangePriceType> = z.object({
   price: z
     .number()
     .min(1, {
@@ -9,7 +9,7 @@ export const ChangePriceSchema: ZodType<ChangePriceType> = z.object({
     })
     .max(255),
 });
-export const ChangeStokSchema: ZodType<ChangeStokType> = z.object({
+export const changeStokSchema: ZodType<ChangeStokType> = z.object({
   stok: z
     .number()
     .min(1, {

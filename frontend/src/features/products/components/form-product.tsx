@@ -119,7 +119,7 @@ export function FormProduct() {
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <div className="m-3">
+                  <div>
                     <FormItem>
                       <FormControl>
                         <DescInput
@@ -130,7 +130,7 @@ export function FormProduct() {
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className=" mt-2" />
+                    <FormMessage className="mt-2" />
                   </div>
                 )}
               />
@@ -309,19 +309,19 @@ export function FormProduct() {
               />
               <div className="flex flex-wrap">
                 <InputForm
-                  label="Ukuran Produk"
+                  label="Panjang"
                   placeholder="Masukkan panjang"
                   endAdornment="cm"
                   focus={"lakoePrimary"}
                 />
                 <InputForm
-                  className="mt-6"
+                  label="Lebar"
                   placeholder="Masukkan lebar"
                   endAdornment="cm"
                   focus={"lakoePrimary"}
                 />
                 <InputForm
-                  className="mt-6"
+                  label="Tinggi"
                   placeholder="Masukkan tinggi"
                   endAdornment="cm"
                   focus={"lakoePrimary"}

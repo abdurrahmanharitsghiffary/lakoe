@@ -11,7 +11,7 @@ import { orderTabVariants } from "@/components/variants/order-tab-variants";
 import { cn } from "@/lib/utils";
 import { Order } from "@/types/order";
 import { Link } from "react-router-dom";
-import { OrderHistory } from "@/features/orders/seller/components/history";
+import { OrderHistory } from "@/features/orders/components/seller/history";
 import { BiCalendar, BiUserCircle } from "react-icons/bi";
 import { PiInvoice } from "react-icons/pi";
 import moment from "moment";
@@ -57,7 +57,7 @@ const getInvoice = (status: Order["status"]) => {
   return "-";
 };
 
-export default function OrderDetails() {
+export function OrderDetails() {
   const [isOpen, setIsOpen] = useState(false);
 
   const order: Order = {

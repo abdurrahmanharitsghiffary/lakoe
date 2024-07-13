@@ -13,7 +13,7 @@ type Props = {
   product: Product | undefined;
 };
 
-export default function ProductMenu({ product }: Props) {
+export function ProductMenu({ product }: Props) {
   const confirm = useConfirm();
   return (
     <>

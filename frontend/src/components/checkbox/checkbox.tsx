@@ -3,7 +3,7 @@ import { CheckboxProps as ShadcnCheckboxProps } from "@radix-ui/react-checkbox";
 
 export type CheckboxProps = ShadcnCheckboxProps & { label?: string };
 
-export default function Checkbox({ id, label, ...props }: CheckboxProps) {
+export function Checkbox({ id, label, ...props }: CheckboxProps) {
   return (
     <div className="items-top flex space-x-2">
       <div className="grid gap-1.5 leading-none">
