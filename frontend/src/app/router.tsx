@@ -20,6 +20,7 @@ import { OnProcessWithdrawalPage } from "./pages/admin/withdrawal/on-process";
 import { LoginPage } from "./pages/auth/login";
 import { CreateProductPage } from "./pages/seller/create-product";
 import { CardOrderBuyer } from "@/features/orders/components/buyer/card-order";
+import { RegisterPage } from "./pages/auth/regist";
 
 export const router = createBrowserRouter([
   {
@@ -35,7 +36,10 @@ export const router = createBrowserRouter([
       {
         path: "auth",
         errorElement: <ErrorPage />,
-        children: [{ path: "login", element: <LoginPage /> }],
+        children: [
+          { path: "login", element: <LoginPage /> },
+          { path: "register", element: <RegisterPage /> },
+        ],
       },
       {
         path: "admin",

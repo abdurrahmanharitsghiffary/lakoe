@@ -5,6 +5,7 @@ import { AllExceptionFilter } from './filters/exception/all-exception.filter';
 import { ResponseInterceptor } from './interceptors/response/response.interceptor';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from './guards/auth/auth.guard';
+import { RoleGuard } from './guards/role/role.guard';
 
 @Global()
 @Module({
@@ -17,9 +18,10 @@ import { AuthGuard } from './guards/auth/auth.guard';
   ],
   providers: [
     PrismaService,
-    { provide: APP_GUARD, useClass: AuthGuard },
+    // { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_FILTER, useClass: AllExceptionFilter },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
+    { provide: APP_GUARD, useClass: RoleGuard },
   ],
   exports: [PrismaService],
 })
