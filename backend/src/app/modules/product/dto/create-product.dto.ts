@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { zfd } from 'zod-form-data';
 
 export class CreateProductDto {
   name: string;
@@ -11,11 +12,11 @@ export class CreateProductDto {
 }
 
 export const createProductSchema = z.object({
-  name: z.string().min(2),
-  description: z.string(),
-  minimumOrder: z.number().min(1).positive(),
-  categories: z.array(z.string()).optional(),
-  weightInGram: z.number().min(1).positive(),
-  stock: z.number().min(1).positive(),
-  price: z.number().positive(),
+  name: zfd.text(z.string().min(2)),
+  description: zfd.text(z.string()),
+  minimumOrder: zfd.numeric(z.number().min(1).positive()),
+  categories: zfd.repeatable(z.array(zfd.text())).optional(),
+  weightInGram: zfd.numeric(z.number().min(1).positive()),
+  stock: zfd.numeric(z.number().min(1).positive()),
+  price: zfd.numeric(z.number().positive()),
 });

@@ -197,13 +197,13 @@ model Courier {
 }
 
 model Store {
-  id               Int    @id @default(autoincrement())
-  name             String @db.VarChar(125)
-  slogan           String @db.VarChar(125)
-  description      String @db.Text
-  domain           String @db.VarChar(125)
-  logoAttachment   String
-  bannerAttachment String
+  id               Int     @id @default(autoincrement())
+  name             String  @db.VarChar(125)
+  slogan           String  @db.VarChar(125)
+  description      String  @db.Text
+  domain           String  @db.VarChar(125)
+  logoAttachment   String?
+  bannerAttachment String?
 
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
@@ -325,6 +325,7 @@ model Variant {
   cartItems     CartItem[]
   orderDetails  OrderDetail[]
 
+  @@unique([name, productId])
   @@map("product_variants")
 }
 

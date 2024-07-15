@@ -19,7 +19,7 @@ import { CloudinaryService } from './services/cloudinary.service';
   providers: [
     PrismaService,
     CloudinaryService,
-    // { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_FILTER, useClass: AllExceptionFilter },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
   ],
