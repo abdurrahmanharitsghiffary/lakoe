@@ -27,6 +27,25 @@ export function RegisterForm() {
                 />
               </div>
               <div className="grid gap-2">
+                <Label htmlFor="username">username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="@amandasmith"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  id="phone"
+                  type="text"
+                  placeholder="082xxxxxxx"
+                  required
+                />
+              </div>
+
+              <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"

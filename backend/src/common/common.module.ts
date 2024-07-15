@@ -4,7 +4,7 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AllExceptionFilter } from './filters/exception/all-exception.filter';
 import { ResponseInterceptor } from './interceptors/response/response.interceptor';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthGuard } from './guards/auth/auth.guard';
+
 import { CloudinaryService } from './services/cloudinary.service';
 import { RoleGuard } from './guards/role/role.guard';
 
