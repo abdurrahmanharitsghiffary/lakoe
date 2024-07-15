@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { cloudinaryUpload } from '../libs/cloudinary';
-import cloudinary from 'cloudinary';
-import streamifier from 'streamifier';
+import * as cloudinary from 'cloudinary';
+import * as streamifier from 'streamifier';
 
 @Injectable()
 export class CloudinaryService {
@@ -10,7 +10,7 @@ export class CloudinaryService {
   }
 
   async uploadStream(imageBuffer: Buffer) {
-    return new Promise((resolve, reject) => {
+    return new Promise<cloudinary.UploadApiResponse>((resolve, reject) => {
       const imageStream = cloudinary.v2.uploader.upload_stream(
         {
           upload_preset: 'lakoe',

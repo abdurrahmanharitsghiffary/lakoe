@@ -9,21 +9,24 @@ import { genSku } from 'src/common/utils/gen-sku';
 export class ProductService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create({
-    price,
-    stock,
-    weightInGram,
-    categories,
-    ...dto
-  }: CreateProductDto & { attachments?: string[] }) {
+  create(
+    storeId: number,
+    {
+      price,
+      stock,
+      weightInGram,
+      categories,
+      ...dto
+    }: CreateProductDto & { attachments?: string[] },
+  ) {
     return this.prismaService.$transaction(async (tx) => {
       // create the product with variants
       // product will have only one variant with name the same as product
       // also connect relationship with categories if they are found or create of not found
       const createdProduct = await tx.product.create({
         data: {
-          storeId: 1,
           ...dto,
+          storeId,
           variants: {
             create: {
               name: dto.name,

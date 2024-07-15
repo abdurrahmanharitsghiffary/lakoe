@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { $Enums } from '@prisma/client';
 import { Request } from 'express';
+import { APP_CONFIG } from 'src/common/config/app.config';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -26,9 +27,20 @@ export class AuthGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    const request = context
-      .switchToHttp()
-      .getRequest<Request & { user: any }>();
+    const request = context.switchToHttp().getRequest<Request>();
+    console.log(process.env.NODE_ENV);
+    if (APP_CONFIG.TESTING.DISABLE_AUTH_IN_DEV) {
+      console.log(APP_CONFIG, 'AP CINFIG');
+      if (APP_CONFIG.TESTING.LOGIN_AS.USER_2)
+        request.user = { id: 2, role: 'ADMIN' };
+
+      if (APP_CONFIG.TESTING.LOGIN_AS.USER_1_NOT_ADMIN)
+        request.user = { id: 1, role: 'USER' };
+
+      if (APP_CONFIG.TESTING.LOGIN_AS.USER_1)
+        request.user = { id: 1, role: 'ADMIN' };
+      return true;
+    }
 
     if (skipAuth && !authOptional) return true;
 

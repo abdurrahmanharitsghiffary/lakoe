@@ -20,7 +20,7 @@ import { RoleGuard } from './guards/role/role.guard';
   providers: [
     PrismaService,
     CloudinaryService,
-    // { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_FILTER, useClass: AllExceptionFilter },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
     { provide: APP_GUARD, useClass: RoleGuard },

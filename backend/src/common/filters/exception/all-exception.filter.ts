@@ -34,6 +34,7 @@ export class AllExceptionFilter<T> implements ExceptionFilter {
     }
 
     return response.status(500).json({
+      name: (exception as any)?.name ?? null,
       statusCode: 500,
       message: 'Internal server error.',
       success: false,

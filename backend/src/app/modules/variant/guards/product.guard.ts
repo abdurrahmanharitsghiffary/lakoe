@@ -13,15 +13,16 @@ export class ProductGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
-    const id = Number(request.params?.id) || -1;
+    const id = request.body.productId;
+
     const product = await this.prismaService.product.findUnique({
       where: { id },
-      select: { store: { select: { user: { select: { id: true } } } } },
+      select: { store: { select: { userId: true } } },
     });
 
     if (!product) throw new NotFoundException('Product not found.');
 
-    if (request?.user?.id !== product.store.user.id) return false;
+    if (product.store.userId !== request.user.id) return false;
     return true;
   }
 }
