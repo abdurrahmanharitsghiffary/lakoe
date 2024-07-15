@@ -4,8 +4,9 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AllExceptionFilter } from './filters/exception/all-exception.filter';
 import { ResponseInterceptor } from './interceptors/response/response.interceptor';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthGuard } from './guards/auth/auth.guard';
+
 import { CloudinaryService } from './services/cloudinary.service';
+import { RoleGuard } from './guards/role/role.guard';
 
 @Global()
 @Module({
@@ -22,6 +23,7 @@ import { CloudinaryService } from './services/cloudinary.service';
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_FILTER, useClass: AllExceptionFilter },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
+    { provide: APP_GUARD, useClass: RoleGuard },
   ],
   exports: [PrismaService, CloudinaryService],
 })

@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useLogin } from "@/hooks/use-login";
+import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
 export const description =
@@ -11,6 +13,7 @@ export const iframeHeight = "800px";
 export const containerClassName = "w-full h-full p-4 lg:p-0";
 
 export function LoginForm() {
+  const { register, handleSubmit, onSubmit, errors } = useLogin();
   return (
     <div className="w-full lg:grid lg:grid-cols-2 min-h-[100dvh]">
       <div className="flex items-center justify-center py-12">
@@ -22,37 +25,45 @@ export function LoginForm() {
             </p>
           </div>
           <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  to="/forgot-password"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  type="email"
+                  placeholder="m@example.com"
+                  {...register("email")}
+                  required
+                />
               </div>
-              <Input id="password" type="password" required />
-            </div>
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
-            <Button variant="outline" className="w-full">
-              Login with Google
-            </Button>
+              <div className="grid gap-2">
+                <div className="flex items-center">
+                  <Label htmlFor="password">Password</Label>
+                  <Link
+                    to="/forgot-password"
+                    className="ml-auto inline-block text-sm underline"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
+                <Input
+                  type="password"
+                  placeholder="••••••••"
+                  {...register("password")}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
+              <Button variant="outline" className="w-full">
+                <FcGoogle className="mr-2" />
+                Login with Google
+              </Button>
+            </form>
           </div>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link to="#" className="underline">
+            <Link to="/auth/register" className="underline">
               Sign up
             </Link>
           </div>

@@ -17,7 +17,7 @@ model User {
   id       Int    @id @default(autoincrement())
   email    String @unique @db.VarChar(255)
   password String @db.VarChar(255)
-  role     Role   @default(USER)
+  role     Role?  @default(USER)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -25,6 +25,7 @@ model User {
   carts   Cart[]
   store   Store?
   profile Profile?
+  token   Token[]
 
   // invoices Invoice[]
   // addresses Address[]
@@ -49,6 +50,29 @@ model Profile {
   user   User @relation(fields: [userId], references: [id])
 
   @@map("profiles")
+}
+
+model Token {
+  id    Int       @id @default(autoincrement())
+  token String    @unique
+  type  TokenType
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expiresAt Int
+
+  revokedAt DateTime?
+
+  @@map("tokens")
+}
+
+enum TokenType {
+  ACCESS_TOKEN
+  VERIFY_TOKEN
+  RESET_TOKEN
 }
 
 enum Gender {
