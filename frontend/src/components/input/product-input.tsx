@@ -4,14 +4,15 @@ import { RiImageAddLine } from "react-icons/ri";
 import { Image } from "../image";
 import { Button } from "../ui/button";
 import { BiX } from "react-icons/bi";
+import { cn } from "@/lib/utils";
 
 type ProductInputProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLDivElement>,
   HTMLDivElement
->;
+> & { classNames?: { wrapper?: string } };
 
 const ProductFileInput = forwardRef<HTMLInputElement, ProductInputProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, classNames, ...props }, ref) => {
     const [imageSrc, setImageSrc] = useState("");
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,12 +28,13 @@ const ProductFileInput = forwardRef<HTMLInputElement, ProductInputProps>(
       setImageSrc("");
     };
 
-    console.log(imageSrc, "SRC");
     return (
       <InputFileHidden
         divProps={{
-          className:
-            "border-dashed border-2 border-gray-400 rounded-md aspect-square min-w-36 h-36 flex flex-col justify-center items-center",
+          className: cn(
+            "border-dashed border-2 border-gray-400 rounded-md aspect-square min-w-36 h-36 flex flex-col justify-center items-center overflow-hidden",
+            classNames?.wrapper
+          ),
         }}
         onChange={(e) => {
           if (props?.onChange) props.onChange(e);
@@ -43,7 +45,7 @@ const ProductFileInput = forwardRef<HTMLInputElement, ProductInputProps>(
         ref={ref}
       >
         {imageSrc && (
-          <div className="w-full h-full  absolute aspect-square">
+          <div className="w-full h-full absolute aspect-square">
             <Button
               onClick={handleCloseClick}
               size="icon"

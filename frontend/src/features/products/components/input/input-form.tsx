@@ -48,7 +48,7 @@ export function InputForm({
 }: InputFormProps) {
   return (
     <>
-      <div className="m-3 flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         <Label className={labelVariantProps({ isRequired })}>{label}</Label>
         <Input
           className={cn(inputVariantProps({ focus }), className)}

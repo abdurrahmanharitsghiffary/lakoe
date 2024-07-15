@@ -36,12 +36,12 @@ const accItems: { icon: IconType; label: string; href?: string }[] = [
   {
     icon: TbTruckDelivery,
     label: "Pengiriman",
-    href: "seller/settings/delivery",
+    href: "/seller/settings/delivery",
   },
   {
     icon: MdOutlinePayment,
     label: "Metode Pembayaran",
-    href: "seller/settings/payment",
+    href: "/seller/settings/payment",
   },
 ];
 

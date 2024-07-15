@@ -13,7 +13,7 @@ import { LiaMoneyCheckSolid } from "react-icons/lia";
 
 export function CardFooter() {
   return (
-    <div className="flex flex-col w-full gap-4 p-[20px]">
+    <div className="flex flex-col w-full gap-4">
       <Card className="flex flex-col bg-white h-auto gap-4 py-4 w-full">
         <div className="flex flex-row justify-between">
           <h1 className="text-[20px] font-bold mx-4">Reporting Period</h1>

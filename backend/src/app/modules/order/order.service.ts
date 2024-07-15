@@ -8,22 +8,22 @@ export class OrderService {
 
   async create(createOrderDto: CreateOrderDto) {
     const { userId, productVariantId, courier, ...data } = createOrderDto;
-    return await this.prisma.order.create({
-      data: {
-        ...data,
-        status: 'NOT_PAID',
-        user: userId ? { connect: { id: userId } } : undefined,
-        productVariant: { connect: { id: productVariantId } },
-        courier: {
-          create: {
-            courierCode: courier.courierCode,
-            courierServiceCode: courier.courierServiceCode,
-            courierServiceName: courier.courierServiceName,
-            price: courier.price,
-          },
-        },
-      },
-    });
+    // return await this.prisma.order.create({
+    //   data: {
+    //     ...data,
+    //     status: 'NOT_PAID',
+    //     user: userId ? { connect: { id: userId } } : undefined,
+    //     productVariant: { connect: { id: productVariantId } },
+    //     courier: {
+    //       create: {
+    //         courierCode: courier.courierCode,
+    //         courierServiceCode: courier.courierServiceCode,
+    //         courierServiceName: courier.courierServiceName,
+    //         price: courier.price,
+    //       },
+    //     },
+    //   },
+    // });
   }
 
   async findAll() {
@@ -35,8 +35,7 @@ export class OrderService {
       where: { id },
       select: {
         status: true,
-        qty: true,
-        pricePerProduct: true,
+        orderDetails: true,
         createdAt: true,
         updatedAt: true,
       },

@@ -1,11 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { PrismaService } from 'src/common/services/prisma.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(private prisma: PrismaService) {}
+  async register(response: CreateAuthDto) {
+    const userWithSameEmail = await this.prisma.user.count({
+      where: {
+        email: response.email,
+      },
+    });
+
+    if (userWithSameEmail != 0) {
+      throw new HttpException(`Email already exists`, 400);
+    }
+
+    response.password = await bcrypt.hash(response.password, 10);
+
+    return await this.prisma.user.create({
+      data: response,
+    });
   }
 
   findAll() {

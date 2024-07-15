@@ -13,10 +13,10 @@ export const useAddProduct = () => {
       description: "",
       category: [""],
       attachments: "",
-      price: 0,
-      stock: 0,
-      weightInGram: 0,
-      minimumOrder: 0,
+      price: 1,
+      stock: 1,
+      weightInGram: 1,
+      minimumOrder: 1,
     },
   });
 

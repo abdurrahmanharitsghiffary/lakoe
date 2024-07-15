@@ -25,7 +25,7 @@ export class UsersController {
     @Body(new ZodValidationPipe(createUserSchema)) createUserDto: CreateUserDto,
   ) {
     try {
-      return await this.usersService.register(createUserDto);
+      return await this.usersService.create(createUserDto);
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }

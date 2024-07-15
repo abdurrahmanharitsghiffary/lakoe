@@ -56,14 +56,14 @@ export function AddLocationDialog({ isOpen, onOpen }: Props) {
             options={postOptions}
           />
 
-          <div className="mx-3">
+          <div>
             <Label>Alamat Lengkap</Label>
             <Textarea
               placeholder="Tuliskan alamat lengkap toko"
               className="resize-none"
             />
           </div>
-          <div className="mx-3">
+          <div>
             <Label>Pinpoint Lokasi</Label>
             <p className="text-sm text-gray-400">
               Tandain lokasi untuk mempermudah permintaan pickup kurir

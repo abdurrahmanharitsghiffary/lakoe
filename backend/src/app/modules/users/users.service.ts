@@ -7,24 +7,14 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
-  async register(response: CreateUserDto) {
-    const userWithSameEmail = await this.prisma.user.count({
-      where: {
-        email: response.email,
-      },
-    });
 
-    if (userWithSameEmail != 0) {
-      throw new HttpException(`Email already exists`, 400);
-    }
-
+  async create(response: CreateUserDto) {
     response.password = await bcrypt.hash(response.password, 10);
 
-    const user = await this.prisma.user.create({
+    const newUser = await this.prisma.user.create({
       data: response,
     });
-
-    return user;
+    return newUser;
   }
 
   async findAll() {

@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { FiDownload } from "react-icons/fi";
 export function TableOrderHeader() {
   return (
-    <div color="gray" className="flex flex-row justify-between mx-4">
+    <div color="gray" className="flex flex-row justify-between">
       <Select>
         <SelectTrigger className="w-[110px]">
           <FiDownload className="mr-1" />

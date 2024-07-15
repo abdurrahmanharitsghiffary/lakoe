@@ -39,13 +39,13 @@ export function FormProduct() {
           className="flex flex-col gap-4"
         >
           <div className="flex justify-center">
-            <Card className="w-full">
-              <h1 className="m-4 font-bold text-xl">Informasi Produk</h1>
+            <Card className="p-4 w-full flex flex-col gap-4">
+              <h1 className="font-bold text-xl">Informasi Produk</h1>
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
                         <InputForm
@@ -57,15 +57,15 @@ export function FormProduct() {
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-4"></FormMessage>
-                  </>
+                    <FormMessage></FormMessage>
+                  </div>
                 )}
               />
               <FormField
                 control={form.control}
                 name="url"
                 render={({ field }) => (
-                  <>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
                         <InputForm
@@ -78,15 +78,16 @@ export function FormProduct() {
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-4"></FormMessage>
-                  </>
+                    <FormMessage></FormMessage>
+                  </div>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="category"
                 render={({ field: { onChange, value, ...field } }) => (
-                  <div className="m-3">
+                  <div className="flex flex-col gap-2">
                     <Label>Kategori</Label>
                     <FormItem>
                       <FormControl>
@@ -105,7 +106,7 @@ export function FormProduct() {
                         </Select>
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-2" />
+                    <FormMessage />
                   </div>
                 )}
               />
@@ -113,13 +114,13 @@ export function FormProduct() {
           </div>
 
           <div className="flex justify-center">
-            <Card className="w-full relative">
-              <h1 className="m-4 font-bold text-xl ">Detail Produk</h1>
+            <Card className="p-4 w-full relative flex flex-col gap-4">
+              <h1 className="font-bold text-xl ">Detail Produk</h1>
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <div>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
                         <DescInput
@@ -130,7 +131,7 @@ export function FormProduct() {
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="mt-2" />
+                    <FormMessage />
                   </div>
                 )}
               />
@@ -138,7 +139,7 @@ export function FormProduct() {
                 control={form.control}
                 name="attachments"
                 render={() => (
-                  <div className="m-3">
+                  <div className="flex flex-col gap-3">
                     <Label>Foto Produk</Label>
                     <div className="flex gap-2 overflow-x-auto hide-sc">
                       <ProductFileInput>Foto 1</ProductFileInput>
@@ -147,7 +148,7 @@ export function FormProduct() {
                       <ProductFileInput>Foto 4</ProductFileInput>
                       <ProductFileInput>Foto 5</ProductFileInput>
                     </div>
-                    <FormMessage className="pt-2" />
+                    <FormMessage />
                   </div>
                 )}
               />
@@ -190,13 +191,13 @@ export function FormProduct() {
           </Card>
 
           <div className="flex justify-center">
-            <Card className="w-full">
-              <h1 className="m-4 font-bold text-xl">Harga</h1>
+            <Card className="w-full flex flex-col gap-4 p-4">
+              <h1 className="font-bold text-xl">Harga</h1>
               <FormField
                 control={form.control}
                 name="price"
                 render={({ field: { onChange, ...field } }) => (
-                  <>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
                         <InputForm
@@ -211,21 +212,21 @@ export function FormProduct() {
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-4 mb-2" />
-                  </>
+                    <FormMessage />
+                  </div>
                 )}
               />
             </Card>
           </div>
 
           <div className="flex justify-center">
-            <Card className="w-full">
-              <h1 className="m-4 font-bold text-xl">Minimal Pembelian</h1>
+            <Card className="w-full p-4 flex flex-col gap-4">
+              <h1 className="font-bold text-xl">Minimal Pembelian</h1>
               <FormField
                 control={form.control}
                 name="minimumOrder"
                 render={({ field: { onChange, ...field } }) => (
-                  <>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
                         <InputForm
@@ -239,56 +240,55 @@ export function FormProduct() {
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-4 mb-2" />
-                  </>
+                    <FormMessage />
+                  </div>
                 )}
               />
             </Card>
           </div>
 
           <div className="flex justify-center">
-            <Card className="w-full h-44 relative">
-              <h1 className="m-4  font-bold text-xl ">Pengelolaan Produk</h1>
-              <div className="flex justify-between">
-                <FormField
-                  control={form.control}
-                  name="stock"
-                  render={({ field: { onChange, ...field } }) => (
-                    <>
-                      <FormItem>
-                        <FormControl>
-                          <InputForm
-                            type="number"
-                            label="Stok Produk"
-                            onChange={(e) => onChange(+e.target.value)}
-                            placeholder="Masukkan jumlah stok"
-                            className="w-full"
-                            isRequired
-                            focus={"lakoePrimary"}
-                            {...field}
-                          />
-                        </FormControl>
-                      </FormItem>
-                      <FormMessage className="absolute  bottom-2 left-3 " />
-                    </>
-                  )}
-                />
-                {/* <InputForm
+            <Card className="p-4 w-full relative flex flex-col gap-4">
+              <h1 className="font-bold text-xl">Pengelolaan Produk</h1>
+              <FormField
+                control={form.control}
+                name="stock"
+                render={({ field: { onChange, ...field } }) => (
+                  <div className="flex flex-col">
+                    <FormItem>
+                      <FormControl>
+                        <InputForm
+                          type="number"
+                          label="Stok Produk"
+                          onChange={(e) => onChange(+e.target.value)}
+                          placeholder="Masukkan jumlah stok"
+                          className="w-full"
+                          isRequired
+                          focus={"lakoePrimary"}
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                    <FormMessage />
+                  </div>
+                )}
+              />
+
+              {/* <InputForm
                   label="SKU (Stock Keeping Unit)"
                   placeholder="Masukkan Jumlah SKU"
                 /> */}
-              </div>
             </Card>
           </div>
 
           <div className="flex justify-center w-full">
-            <Card className="w-full">
-              <h1 className="m-4 font-bold text-xl ">Berat dan Pengiriman</h1>
+            <Card className="w-full p-4 flex flex-col gap-4">
+              <h1 className="font-bold text-xl ">Berat dan Pengiriman</h1>
               <FormField
                 control={form.control}
                 name="weightInGram"
                 render={({ field: { onChange, ...field } }) => (
-                  <div>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
                         <InputForm
@@ -303,11 +303,11 @@ export function FormProduct() {
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-4" />
+                    <FormMessage />
                   </div>
                 )}
               />
-              <div className="flex flex-wrap">
+              <div className="flex flex-wrap gap-4">
                 <InputForm
                   label="Panjang"
                   placeholder="Masukkan panjang"
@@ -331,12 +331,12 @@ export function FormProduct() {
           </div>
 
           <div className="flex justify-center ">
-            <Card className="w-full">
+            <Card className="w-full p-4">
               <div className="flex justify-between">
-                <Button variant={"outline"} className="m-4 rounded-full">
+                <Button variant={"outline"} className="rounded-full">
                   Preview Halaman Checkout
                 </Button>
-                <div className="flex  m-4 gap-2 ">
+                <div className="flex gap-2">
                   <Button variant={"outline"} className="rounded-full ">
                     Batal
                   </Button>

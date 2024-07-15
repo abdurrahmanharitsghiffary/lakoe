@@ -11,7 +11,7 @@ export function CardHeader() {
   const [isWihtdrawalCreditOpen, setIsWithdrawalOpen] = useState(false);
 
   return (
-    <div className="flex flex-col w-full gap-4 p-[20px] mb-[-22px]">
+    <div className="flex flex-col w-full gap-4">
       <div>
         <h1 className=" mr-4 text-[26px] font-bold mt-2">Credit Dashboard</h1>
       </div>
@@ -22,7 +22,8 @@ export function CardHeader() {
         </h1>
         <Button
           onClick={() => setIsWithdrawalOpen(true)}
-          className=" mx-4 w-100 bg-lakoe-primary"
+          variant="lakoePrimary"
+          className="mx-4 w-100"
         >
           Tarik Credit
         </Button>
