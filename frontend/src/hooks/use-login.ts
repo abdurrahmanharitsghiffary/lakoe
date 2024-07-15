@@ -1,12 +1,12 @@
 import { useToast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
-import { Register } from "@/types/auth-type";
-import { registerSchema } from "@/validator/auth-validator";
+import { Login } from "@/types/auth-type";
+import { loginSchema } from "@/validator/auth-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-export const useRegist = () => {
+export const useLogin = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -14,15 +14,15 @@ export const useRegist = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Register>({
+  } = useForm<Login>({
     mode: "onChange",
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit: SubmitHandler<Register> = async (data) => {
+  const onSubmit: SubmitHandler<Login> = async (data) => {
     try {
-      const response = await axios.post("/auth/register", data);
-      console.log("register succes:", response);
+      const response = await axios.post("/auth/login", data);
+      console.log("login success:", response);
 
       const token = response.data.data.token;
       const user = response.data.user;
@@ -33,7 +33,7 @@ export const useRegist = () => {
 
       if (user) {
         toast({
-          title: "Register Success",
+          title: "Login Success",
           duration: 3000,
           variant: "default",
         });

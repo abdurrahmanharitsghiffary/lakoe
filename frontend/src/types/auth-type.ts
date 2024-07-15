@@ -1,7 +1,6 @@
 export type Register = {
   fullName: string;
   username: string;
-  profilePicture?: FileList;
   birthDate?: Date;
   phone: string;
   bio?: string;

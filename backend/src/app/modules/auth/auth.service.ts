@@ -16,14 +16,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwt: JwtService,
   ) {}
-  async register({
-    fullName,
-    username,
-    phone,
-    profilePicture,
-    birthDate,
-    ...response
-  }: CreateAuthDto) {
+  async register({ fullName, username, phone, ...response }: CreateAuthDto) {
     response.password = await bcrypt.hash(response.password, 10);
 
     const userWithSameUsername = await this.prisma.profile.count({
@@ -45,8 +38,6 @@ export class AuthService {
               fullName,
               username,
               phone,
-              profilePicture,
-              birthDate,
             },
           },
         },
