@@ -63,7 +63,7 @@ export function LoginForm() {
           src="/assets/placeholder.png"
           alt="Image"
           width="1920"
-          className="h-full w-full object-cover dark:brightness-[0.2] object-left dark:grayscale"
+          className="h-full w-full object-cover dark:brightness-[0.2] object-right dark:grayscale"
         />
       </div>
     </div>

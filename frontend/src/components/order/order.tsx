@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Image } from "../image";
 
 interface OrderProps {
   status: keyof typeof status;
@@ -64,16 +65,13 @@ export function OrderComponent({
   const { label, cn, buttonLabel } = status[statusKey];
 
   return (
-    <div className="flex justify-center h-[150px] mt-3">
-      <Card
-        className=" border border-gray-300 w-full m-2"
-        style={{ minHeight: "150px" }}
-      >
-        <CardHeader className="items-left bg-gray-50 p-1 pl-6 pb-0">
-          <div className="flex justify-between pt-4">
+    <Card className="overflow-hidden flex justify-center min-h-[150px]">
+      <div className="w-full">
+        <CardHeader className="items-left bg-gray-50 p-3">
+          <div className="flex justify-between">
             <div className="flex-shrink-0">
               <p
-                className=" px-3 block w-fit text-white rounded-sm h-7 flex justify-center pb-7 mt-1 text-base"
+                className=" px-3 w-fit text-white rounded-sm h-7 flex justify-center pb-7 mt-1 text-base"
                 style={{ backgroundColor: cn }}
               >
                 {label}
@@ -92,12 +90,12 @@ export function OrderComponent({
           </div>
         </CardHeader>
 
-        <CardContent className=" flex justify-end pt-0 pl-6 border-t border-grey-300 pt-1">
-          <div className="flex items-center mr-auto pb-10">
-            <img
-              className="w-[50px] h-[50px] object-cover rounded-10 pt-1"
+        <CardContent className="!p-4 flex justify-end border-t border-grey-300 pt-1">
+          <div className="flex items-center mr-auto">
+            <Image
               src={image}
               alt={name}
+              className="aspect-square h-[50px] w-[50px] object-center object-cover"
             />
             <div className="ml-4">
               <CardTitle className="text-base font-bold font-size-500 text-gray-900">
@@ -109,14 +107,14 @@ export function OrderComponent({
             </div>
           </div>
 
-          <div className="mb-5">
+          <div>
             <p className="text-base text-gray-500">Total belanja</p>
             <p className="text-base font-semibold text-gray-900">
               Rp{totalPrice}
             </p>
           </div>
         </CardContent>
-      </Card>
-    </div>
+      </div>
+    </Card>
   );
 }

@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { MultipleSelector, Option } from "@/components/ui/multi-select";
 import { LoadingSpinner } from "@/components/ui/spinner";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Typography } from "@/components/ui/typography";
 import { useGetProducts } from "@/features/products/api/get-products";
 import { CardProduct } from "@/features/products/components/card-product";
@@ -20,13 +19,22 @@ import { cn } from "@/lib/utils";
 import { Product } from "@/types/product";
 import { getAllSearchParams } from "@/utils/get-all-search-param";
 import { parseStrBool } from "@/utils/parse-str-bool";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { BiTrash } from "react-icons/bi";
-import { CiCirclePlus } from "react-icons/ci";
+import { GoPlusCircle } from "react-icons/go";
 import { LuPackageSearch } from "react-icons/lu";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
+import { inputVariantProps } from "@/features/products/components/input/input-form";
+import { TabItem, Tabs } from "@/components/tabs";
 
 const getCheckedProducts = (products: Product[]) => {
   return products.map((product) => ({
@@ -43,6 +51,12 @@ const categoryOptions: Option[] = [
   { label: "Minuman", value: "minuman" },
 ];
 
+const tabs: TabItem[] = [
+  { label: "Semua", value: "all" },
+  { label: "Aktif", value: "true" },
+  { label: "Nonaktif", value: "false" },
+];
+
 export function ProductsPage() {
   const confirm = useConfirmDeleteProduct();
   const confirmNonactive = useConfirmNonactiveProduct();
@@ -52,7 +66,7 @@ export function ProductsPage() {
   const q = searchParams.get("q") || "";
   const [s, setS] = useState(q);
   const [dS] = useDebounce(s, 300);
-  const active = searchParams.get("active") || "";
+  const active = searchParams.get("active") || "all";
 
   const { data, isLoading } = useGetProducts({
     options: {
@@ -78,12 +92,6 @@ export function ProductsPage() {
       0,
     [checkedProducts]
   );
-
-  useEffect(() => {
-    if (data?.data) {
-      setCheckedProducts(getCheckedProducts(data?.data ?? []));
-    }
-  }, [data?.data]);
 
   const handleValueChange = (type: string) => {
     searchParams.set("active", type);
@@ -112,6 +120,15 @@ export function ProductsPage() {
   const handleUnactiveAllClick = async () => {
     await confirmNonactive(checkedProductLength);
   };
+
+  const getIsProductChecked = useCallback(
+    (product: Product) => {
+      return checkedProducts.find((d) => d.id === product.id)?.isChecked
+        ? true
+        : false;
+    },
+    [checkedProducts]
+  );
 
   const handleProductCheckedChange = useCallback(
     (state: { isChecked: boolean; id: number }) =>
@@ -144,58 +161,42 @@ export function ProductsPage() {
             <Link
               to="/seller/products/create"
               className={cn(
-                buttonVariants(),
-                "m-4 bg-btn-primary rounded-full"
+                buttonVariants({ variant: "lakoePrimary" }),
+                "m-4 rounded-full"
               )}
             >
-              <CiCirclePlus size={25} />
+              <GoPlusCircle size={25} />
               <span className="ml-2">Tambah Produk</span>
             </Link>
           </div>
           <Tabs
+            key="productTabs"
+            items={tabs}
             defaultValue="all"
             onValueChange={handleValueChange}
             value={active}
-          >
-            <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
-              <TabsTrigger
-                value="all"
-                className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-lakoe-primary data-[state=active]:text-lakoe-primary data-[state=active]:shadow-none "
-              >
-                Semua
-              </TabsTrigger>
-              <TabsTrigger
-                value="true"
-                className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-lakoe-primary data-[state=active]:text-lakoe-primary data-[state=active]:shadow-none "
-              >
-                Aktif
-              </TabsTrigger>
-              <TabsTrigger
-                value="false"
-                className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-lakoe-primary data-[state=active]:text-lakoe-primary data-[state=active]:shadow-none "
-              >
-                Nonaktif
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          />
           <div className="flex justify-between m-3 gap-4">
             <Input
+              className={inputVariantProps({ focus: "lakoePrimary" })}
               value={s}
               onChange={handleSearch}
               placeholder="Cari produk"
               style={{ flex: 2 }}
               icon={<LuPackageSearch size={20} />}
             />
-            <MultipleSelector defaultOptions={categoryOptions} />
-            {/* <Select>
-              <SelectTrigger style={{ flex: 1 }}>
-                <SelectValue placeholder="Semua Kategori" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pakaian">Pakaian</SelectItem>
-                <SelectItem value="celana">Celana</SelectItem>
-              </SelectContent>
-            </Select>
+            <MultipleSelector
+              maxSelected={3}
+              hidePlaceholderWhenSelected
+              emptyIndicator="Semua kategori sudah terpilih."
+              className={cn(
+                inputVariantProps({ focus: "lakoePrimary" }),
+                "flex-wrap"
+              )}
+              placeholder="Semua Kategori"
+              commandProps={{ style: { flex: 1 } }}
+              defaultOptions={categoryOptions}
+            />
             <Select>
               <SelectTrigger style={{ flex: 1 }}>
                 <SelectValue placeholder="Urutkan" />
@@ -204,7 +205,7 @@ export function ProductsPage() {
                 <SelectItem value="date">Hari</SelectItem>
                 <SelectItem value="month">Bulan</SelectItem>
               </SelectContent>
-            </Select> */}
+            </Select>
           </div>
           <div className="flex px-3 pb-2 justify-between items-center">
             <Typography variant="p" className="font-semibold !text-sm">
@@ -250,9 +251,9 @@ export function ProductsPage() {
                 </div>
               }
             >
-              {productData.map((product, i) => (
+              {productData.map((product) => (
                 <CardProduct
-                  isChecked={checkedProducts?.[i]?.isChecked || false}
+                  isChecked={getIsProductChecked(product)}
                   onCheckedChange={handleProductCheckedChange}
                   product={product}
                   key={product?.id}

@@ -49,9 +49,9 @@ export function DashboardDialogTarikCredit({
       >
         <DialogContent className="flex-col sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle className="mx-3">Tarik Credit</DialogTitle>
+            <DialogTitle>Tarik Credit</DialogTitle>
             <DialogDescription className="flex w-100">
-              <Card className=" bg-gray w-full h-auto py-4 mx-3 mt-3 justify-start">
+              <Card className=" bg-gray w-full h-auto py-4 mt-3 justify-start">
                 <div className="flex px-3 gap-3 mx-3 ">
                   <p> • </p>
                   <p>Withdraw hanya dilakukan maksimal 1x per hari.</p>
@@ -86,14 +86,14 @@ export function DashboardDialogTarikCredit({
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription className="flex mx-3 gap-2">
+                        <FormDescription className="flex gap-2">
                           <p className="text-blue-500 italic">
                             Jumlah Maksimal:{" "}
                           </p>
                           <p className="text-blue-500 font-bold italic">Rp0</p>
                         </FormDescription>
                       </FormItem>
-                      <FormMessage className="ms-4"></FormMessage>
+                      <FormMessage></FormMessage>
                     </>
                   )}
                 />
@@ -101,7 +101,7 @@ export function DashboardDialogTarikCredit({
                   control={form.control}
                   name="bank"
                   render={({ field }) => (
-                    <div className="m-3">
+                    <div className="my-3">
                       <Label>Tarik Ke :</Label>
                       <FormItem>
                         <FormControl>
@@ -118,7 +118,7 @@ export function DashboardDialogTarikCredit({
                           </Select>
                         </FormControl>
                       </FormItem>
-                      <FormMessage className="ms-2" />
+                      <FormMessage />
                     </div>
                   )}
                 />
@@ -136,7 +136,7 @@ export function DashboardDialogTarikCredit({
                           />
                         </FormControl>
                       </FormItem>
-                      <FormMessage className="ms-4"></FormMessage>
+                      <FormMessage></FormMessage>
                     </>
                   )}
                 />
@@ -156,7 +156,8 @@ export function DashboardDialogTarikCredit({
                   onClick={() => {
                     onOpen(false);
                   }}
-                  className=" rounded-full bg-lakoe-primary"
+                  variant="lakoePrimary"
+                  className="rounded-full"
                   //   onClick={handleSubmit((data) => {
                   //     onSubmit(data)
                   //   })}

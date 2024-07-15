@@ -47,11 +47,11 @@ export function TableOrder() {
     },
   ];
   return (
-    <div className="flex flex-col w-100 p-[8px] gap-4">
+    <div className="flex flex-col w-100 gap-4">
       <div className="flex flex-col w-100">
         <TableOrderHeader />
       </div>
-      <Table className="bg-white mx-4 w-[955px]">
+      <Table className="bg-white w-[955px]">
         <TableHeader>
           <TableRow>
             <TableHead>No</TableHead>

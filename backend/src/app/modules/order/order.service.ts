@@ -4,31 +4,30 @@ import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(createOrderDto: CreateOrderDto) {
     const { userId, productVariantId, courier, ...data } = createOrderDto;
-    return await this.prisma.order.create({
-      data: {
-        ...data,
-        status: "NOT_PAID",
-        user: userId ? { connect: { id: userId } } : undefined,
-        productVariant: { connect: { id: productVariantId } },
-        courier: {
-          create: {
-            courierCode: courier.courierCode,
-            courierServiceCode: courier.courierServiceCode,
-            courierServiceName: courier.courierServiceName,
-            price: courier.price
-          }
-        }
-      }
-    } 
-    );
+    // return await this.prisma.order.create({
+    //   data: {
+    //     ...data,
+    //     status: 'NOT_PAID',
+    //     user: userId ? { connect: { id: userId } } : undefined,
+    //     productVariant: { connect: { id: productVariantId } },
+    //     courier: {
+    //       create: {
+    //         courierCode: courier.courierCode,
+    //         courierServiceCode: courier.courierServiceCode,
+    //         courierServiceName: courier.courierServiceName,
+    //         price: courier.price,
+    //       },
+    //     },
+    //   },
+    // });
   }
 
   async findAll() {
-    return await this.prisma.order.findMany()
+    return await this.prisma.order.findMany();
   }
 
   async findById(id: number) {
@@ -36,12 +35,11 @@ export class OrderService {
       where: { id },
       select: {
         status: true,
-        qty: true,
-        pricePerProduct: true,
+        orderDetails: true,
         createdAt: true,
         updatedAt: true,
-      }
-    })
+      },
+    });
   }
 
   // async update(id: number, updateOrderDto: UpdateOrderDto) {
@@ -53,7 +51,7 @@ export class OrderService {
 
   async remove(id: number) {
     return await this.prisma.order.delete({
-      where: { id }
-    })
+      where: { id },
+    });
   }
 }

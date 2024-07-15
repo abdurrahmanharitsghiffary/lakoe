@@ -9,7 +9,13 @@ import { genSku } from 'src/common/utils/gen-sku';
 export class ProductService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create({ price, stock, weightInGram, categories, ...dto }: CreateProductDto) {
+  create({
+    price,
+    stock,
+    weightInGram,
+    categories,
+    ...dto
+  }: CreateProductDto & { attachments?: string[] }) {
     return this.prismaService.$transaction(async (tx) => {
       // create the product with variants
       // product will have only one variant with name the same as product

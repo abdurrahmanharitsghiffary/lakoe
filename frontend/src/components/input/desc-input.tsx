@@ -20,7 +20,7 @@ const descVariantProps = cva("", {
 export function DescInput({ label, placeholder, isRequired }: DescProps) {
   return (
     <>
-      <div className="m-3">
+      <div className="flex flex-col gap-2">
         <Label className={descVariantProps({ isRequired })}>{label}</Label>
         <Textarea placeholder={placeholder} className="resize-none h-32" />
       </div>

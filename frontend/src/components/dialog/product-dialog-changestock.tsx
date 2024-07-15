@@ -89,7 +89,8 @@ export function ProductDialogChangeStock({
               onClick={() => {
                 onOpen(false);
               }}
-              className=" rounded-full bg-lakoe-primary"
+              variant="lakoePrimary"
+              className="rounded-full"
               //   onClick={handleSubmit((data) => {
               //     onSubmit(data)
               //   })}

@@ -65,7 +65,7 @@ export function OrderList() {
   ];
 
   return (
-    <div>
+    <div className="flex flex-col gap-2 p-2">
       {orders.map((order) => (
         <OrderComponent
           name={order.name}

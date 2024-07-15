@@ -16,7 +16,7 @@ interface SelectProps {
 export function SelectInput({ label, placeHolder, options }: SelectProps) {
   return (
     <>
-      <div className="mx-3">
+      <div className="flex flex-col gap-2">
         <Label>{label}</Label>
         <Select>
           <SelectTrigger>

@@ -9,7 +9,6 @@ export const variantSelect = {
   id: true,
   createdAt: true,
   updatedAt: true,
-  image: true,
   isActive: true,
   price: true,
   sku: true,
