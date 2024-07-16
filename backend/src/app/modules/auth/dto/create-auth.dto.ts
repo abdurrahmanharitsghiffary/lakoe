@@ -13,6 +13,15 @@ export class LoginDto {
   password: string;
 }
 
+export class ResetTokenDto {
+  email: string;
+}
+
+export class ResetPasswordDto {
+  token: string;
+  newPassword: string;
+}
+
 export const loginSchema = z.object({
   email: z.string().email({ message: 'Invalid email' }),
   password: z.string().min(8, 'Password min length is 8 characters').max(30),
