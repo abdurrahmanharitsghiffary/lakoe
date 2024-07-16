@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { AlertDialogProvider } from "@/providers/alert-dialog-provider";
-import { ThemeProvider } from "@/providers/theme";
+// import { ThemeProvider } from "@/providers/theme";
 
 const queryClient = new QueryClient();
 
@@ -13,7 +13,7 @@ export default function AppProvider({
   children?: React.ReactNode;
 }) {
   return (
-    <ThemeProvider>
+    // <ThemeProvider>
       <ToastProvider>
         <AlertDialogProvider>
           <QueryClientProvider client={queryClient}>
@@ -22,6 +22,6 @@ export default function AppProvider({
           <Toaster />
         </AlertDialogProvider>
       </ToastProvider>
-    </ThemeProvider>
+    // </ThemeProvider>
   );
 }

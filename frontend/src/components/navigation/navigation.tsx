@@ -72,15 +72,21 @@ function Navigation() {
               <h1 className="text-base">Pengaturan</h1>
             </Button>
           </AccordionTrigger>
+
           <AccordionContent className="flex flex-col justify-center gap-4 ml-8">
-            <Button
-              variant="ghost"
-              size="lg"
-              className="flex w-full justify-start items-center"
-            >
-              <MdOutlineStorefront className="ml-1 mr-2 text-2xl" />
-              <h1 className="text-base">Atur Toko</h1>
-            </Button>
+
+            <Link to="settings">
+              <Button
+                variant="ghost"
+                size="lg"
+                className="flex w-full justify-start items-center"
+              >
+                <MdOutlineStorefront className="ml-1 mr-2 text-2xl" />
+                <h1 className="text-base">Atur Toko</h1>
+              </Button>
+            </Link>
+
+            <Link to="settings/delivery">
             <Button
               variant="ghost"
               size="lg"
@@ -89,14 +95,19 @@ function Navigation() {
               <TbTruckDelivery className="ml-1 mr-2 text-2xl" />
               <h1 className="text-base">Pengiriman</h1>
             </Button>
-            <Button
-              variant="ghost"
-              size="lg"
-              className="flex w-full justify-start items-center"
-            >
-              <MdOutlinePayment className="ml-1 mr-2 text-2xl" />
-              <h1 className="text-base">Metode Pembayaran</h1>
-            </Button>
+            </Link>
+
+            <Link to="settings/paymentMethod">
+              <Button
+                variant="ghost"
+                size="lg"
+                className="flex w-full justify-start items-center"
+              >
+                <MdOutlinePayment className="ml-1 mr-2 text-2xl" />
+                <h1 className="text-base">Metode Pembayaran</h1>
+              </Button>
+
+            </Link>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

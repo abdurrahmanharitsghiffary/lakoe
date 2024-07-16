@@ -19,6 +19,8 @@ import { WithdrawalDetails } from "./pages/admin/withdrawal/details";
 import SuccessWithdrawalPage from "./pages/admin/withdrawal/success";
 import RejectedWithdrawalPage from "./pages/admin/withdrawal/rejected";
 import OnProcessWithdrawalPage from "./pages/admin/withdrawal/on-process";
+import { PaymentMethod } from "@/features/settings/components/payment-method";
+import {Delivery} from "@/features/settings/components/delivery"
 
 export const router = createBrowserRouter([
   {
@@ -68,6 +70,14 @@ export const router = createBrowserRouter([
             path: "settings",
             element: <SettingsPage />,
           },
+          {
+            path: "settings/delivery",
+            element: <Delivery />,
+          },
+          {
+            path: "settings/paymentMethod",
+            element: <PaymentMethod/>
+          }
         ],
       },
     ],
