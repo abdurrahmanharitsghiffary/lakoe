@@ -7,16 +7,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useToast } from "../ui/use-toast";
-import { ButtonPrimary } from "../button/btn-primary";
 import { Variant } from "@/types/variant";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect } from "react";
-import { Button } from "../ui/button";
 
 type ProductDialogActivationProps = {
   isOpen: boolean;
@@ -26,13 +25,21 @@ type ProductDialogActivationProps = {
   productName: string | undefined;
 };
 
-export default function ProductDialogActivation({
+export function ProductDialogActivation({
   isOpen,
   onOpen,
   productName,
   onConfirm,
   variants,
 }: ProductDialogActivationProps) {
+  const { control } = useForm({
+    defaultValues: {
+      variant: [
+        { name: "XL", price: 40827, stock: 20 },
+        { name: "LG", price: 78827, stock: 20 },
+      ],
+    },
+  });
   const { toast } = useToast();
 
   const form = useForm({
@@ -162,13 +169,14 @@ export default function ProductDialogActivation({
             >
               Batalkan
             </Button>
-            <ButtonPrimary
+            <Button
+              variant="lakoePrimary"
               type="submit"
               className="rounded-full"
               form="activation_form"
             >
               Save changes
-            </ButtonPrimary>
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

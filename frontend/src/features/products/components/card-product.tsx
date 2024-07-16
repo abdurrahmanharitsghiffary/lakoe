@@ -1,6 +1,6 @@
-import ProductDialogActivation from "@/components/dialog/product-dialog-activation";
-import ProductDialogChangePrice from "@/components/dialog/product-dialog-changeprice";
-import ProductDialogChangeStock from "@/components/dialog/product-dialog-changestock";
+import { ProductDialogActivation } from "@/components/dialog/product-dialog-activation";
+import { ProductDialogChangePrice } from "@/components/dialog/product-dialog-changeprice";
+import { ProductDialogChangeStock } from "@/components/dialog/product-dialog-changestock";
 import { Image } from "@/components/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Product } from "@/types/product";
 import { memo, useState } from "react";
-import ProductMenu from "./product-menu";
+import { ProductMenu } from "./product-menu";
 
 export type ProductVariant = {
   name: string;

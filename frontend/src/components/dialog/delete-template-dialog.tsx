@@ -1,4 +1,3 @@
-import { ButtonPrimary } from "../button/btn-primary";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -25,7 +24,9 @@ export function DeleteTemplateDialog({ isOpen, onOpen }: Props) {
             <Button variant={"outline"} className=" rounded-full ">
               Batalkan
             </Button>
-            <ButtonPrimary className="rounded-full">Ya, Hapus</ButtonPrimary>
+            <Button variant="lakoePrimary" className="rounded-full">
+              Ya, Hapus
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

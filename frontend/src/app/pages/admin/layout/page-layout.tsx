@@ -5,7 +5,7 @@ type AdminPageLayoutProps = React.DetailedHTMLProps<
   HTMLDivElement
 > & { title?: string };
 
-export default function PageLayout({
+export function PageLayout({
   children,
   title,
   ...props

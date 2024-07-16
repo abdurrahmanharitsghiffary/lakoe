@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function WithdrawalPage() {
+export function WithdrawalPage() {
   return <div>WithdrawalPage</div>;
 }

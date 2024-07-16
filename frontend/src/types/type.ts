@@ -1,7 +1,7 @@
-export interface ChangePriceType{
-    price: number;
+export interface ChangePriceType {
+  price: number;
 }
 
-export interface ChangeStokType{
-    stok: number;
+export interface ChangeStokType {
+  stok: number;
 }

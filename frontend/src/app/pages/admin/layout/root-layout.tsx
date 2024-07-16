@@ -8,7 +8,8 @@ import { PiHandWithdrawBold } from "react-icons/pi";
 import { IoAnalytics, IoSettingsOutline } from "react-icons/io5";
 import { TiCancel } from "react-icons/ti";
 import { DiTerminal } from "react-icons/di";
-import Sidebar, { NavItem } from "@/components/sidebar/sidebar";
+import { Sidebar, NavItem } from "@/components/sidebar/sidebar";
+import { Helmet } from "react-helmet-async";
 
 const navItems: NavItem[] = [
   {
@@ -74,6 +75,9 @@ const navItems: NavItem[] = [
 export function AdminLayout() {
   return (
     <div className="flex w-full min-h-[100dvh] max-h-[100dvh] overflow-y-hidden">
+      <Helmet>
+        <title>Admin</title>
+      </Helmet>
       <Sidebar navItems={navItems} />
       <main className="!bg-slate-100 w-full overflow-y-auto">
         <Outlet />

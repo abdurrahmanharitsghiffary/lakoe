@@ -1,26 +1,29 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "./app";
+import { App } from "./app";
 import { ProductsPage } from "./pages/seller/products";
-import { FormProduct } from "@/features/products/components/form-product";
-import HomePage from "./pages/seller/home";
-import OrdersPage from "./pages/seller/orders";
+import { HomePage } from "./pages/seller/home";
+import { OrdersPage } from "./pages/seller/orders";
 import { SettingsPage } from "./pages/seller/settings";
-import OrderDetails from "./pages/seller/orders-detail";
-import { CardOrderBuyer } from "@/features/orders/buyer/components/card-order";
+import { OrderDetails } from "./pages/seller/orders-detail";
 import { SellerLayout } from "./pages/seller/layout";
 import { BuyerLayout } from "./pages/buyer/layout";
 import { AdminLayout } from "./pages/admin/layout/root-layout";
-import NotFoundPage from "./pages/fallback/404";
-import ErrorPage from "./pages/fallback/error";
+import { NotFoundPage } from "./pages/fallback/not-found";
+import { ErrorPage } from "./pages/fallback/error";
 import { AdminHomePage } from "./pages/admin/home";
-import WithdrawalPage from "./pages/admin/withdrawal";
-import PendingWithdrawalPage from "./pages/admin/withdrawal/pending";
+import { WithdrawalPage } from "./pages/admin/withdrawal";
+import { PendingWithdrawalPage } from "./pages/admin/withdrawal/pending";
 import { WithdrawalDetails } from "./pages/admin/withdrawal/details";
-import SuccessWithdrawalPage from "./pages/admin/withdrawal/success";
-import RejectedWithdrawalPage from "./pages/admin/withdrawal/rejected";
-import OnProcessWithdrawalPage from "./pages/admin/withdrawal/on-process";
+import { SuccessWithdrawalPage } from "./pages/admin/withdrawal/success";
+import { RejectedWithdrawalPage } from "./pages/admin/withdrawal/rejected";
+import { OnProcessWithdrawalPage } from "./pages/admin/withdrawal/on-process";
+import { LoginPage } from "./pages/auth/login";
+import { CreateProductPage } from "./pages/seller/create-product";
+import { CardOrderBuyer } from "@/features/orders/components/buyer/card-order";
+import { DashboardSeller } from "./pages/seller/dashboard";
+import { RegisterPage } from "./pages/auth/regist";
+import { Delivery } from "@/features/settings/components/delivery";
 import { PaymentMethod } from "@/features/settings/components/payment-method";
-import {Delivery} from "@/features/settings/components/delivery"
 
 export const router = createBrowserRouter([
   {
@@ -31,9 +34,19 @@ export const router = createBrowserRouter([
         path: "/",
         children: [{ path: "", element: <CardOrderBuyer /> }],
         element: <BuyerLayout />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "auth",
+        errorElement: <ErrorPage />,
+        children: [
+          { path: "login", element: <LoginPage /> },
+          { path: "register", element: <RegisterPage /> },
+        ],
       },
       {
         path: "admin",
+        errorElement: <ErrorPage />,
         element: <AdminLayout />,
         children: [
           { path: "", element: <AdminHomePage /> },
@@ -50,9 +63,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "seller",
+        errorElement: <ErrorPage />,
         element: <SellerLayout />,
         children: [
           { path: "", element: <HomePage /> },
+          { path: "dashboard", element: <DashboardSeller /> },
           { path: "orders/:id", element: <OrderDetails /> },
           {
             path: "products",
@@ -60,14 +75,14 @@ export const router = createBrowserRouter([
           },
           {
             path: "products/create",
-            element: <FormProduct />,
+            element: <CreateProductPage />,
           },
           {
             path: "orders",
             element: <OrdersPage />,
           },
           {
-            path: "settings",
+            path: "settings/store",
             element: <SettingsPage />,
           },
           {
@@ -80,11 +95,10 @@ export const router = createBrowserRouter([
           }
         ],
       },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
     ],
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "*",
-    element: <NotFoundPage />,
   },
 ]);

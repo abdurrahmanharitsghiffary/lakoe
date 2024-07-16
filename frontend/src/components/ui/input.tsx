@@ -31,34 +31,32 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ) => {
     return (
       <div className="flex flex-col">
-        {label && (
-          <label className="mb-1 text-sm  text-gray-700">{label}</label>
-        )}
+        {label && <label className="mb-1 text-sm text-gray-700">{label}</label>}
         <div
           className={cn(
-            "flex items-center h-10 w-full rounded-md border border-input bg-background text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
+            "flex items-center h-10 w-full border border-input bg-background rounded-md text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 has-[:focus]:outline-none has-[:focus]:ring-2 has-[:focus]:ring-primary has-[:focus]:ring-offset-2 has-[:focus]:rounded-md overflow-hidden",
             className
           )}
         >
           {startAdornment && (
-            <span className="p-3 text-sm text-muted-foreground bg-gray-100 rounded-l-lg">
+            <span className="p-2 px-3 h-full text-sm text-muted-foreground bg-gray-100 rounded-l-md">
               {startAdornment}
             </span>
           )}
           {icon && (
-            <span className="px-1 text-sm text-muted-foreground">{icon}</span>
+            <span className="px-3 text-sm text-muted-foreground">{icon}</span>
           )}
           <input
             type={type}
             className={cn(
-              "flex-1 pe-12 ps-3 py-2 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50",
+              "flex-1 px-3 py-2 placeholder:text-muted-foreground disabled:opacity-50 focus:outline-none",
               classNames?.input
             )}
             ref={ref}
             {...props}
           />
           {endAdornment && (
-            <span className="p-3 text-sm text-muted-foreground bg-gray-100 rounded-r-lg">
+            <span className="p-2 px-3 h-full text-sm text-muted-foreground bg-gray-100 rounded-r-md">
               {endAdornment}
             </span>
           )}

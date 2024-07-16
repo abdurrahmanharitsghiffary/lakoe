@@ -67,6 +67,11 @@ export function WithdrawalTable({
               Rp.{witdrawal.amount}
             </TableCell>
             <TableCell className="text-right">
+              {witdrawal.status === "ON_PROCESS" && (
+                <Button className="mr-2" variant="destructive">
+                  Cancel
+                </Button>
+              )}
               {witdrawal.status === "PENDING" && (
                 <>
                   <Button className="mr-2" variant="destructive">

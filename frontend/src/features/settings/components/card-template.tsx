@@ -1,4 +1,3 @@
-import { ButtonPrimary } from "@/components/button/btn-primary";
 import { AddTemplateDialog } from "@/components/dialog/add-template-dialog";
 import { DeleteTemplateDialog } from "@/components/dialog/delete-template-dialog";
 import { UpdateTemplateDialog } from "@/components/dialog/update-template-dialog";
@@ -17,12 +16,13 @@ export function CardTemplate() {
       <div className="flex-col justify-center">
         <div className="flex justify-between">
           <h1 className="m-4 font-bold text-xl">Daftar Template Pesan</h1>
-          <ButtonPrimary
+          <Button
+            variant="lakoePrimary"
             onClick={() => setIsOpen(true)}
             className="rounded-full m-4"
           >
             Buat Template
-          </ButtonPrimary>
+          </Button>
         </div>
         <Card className="m-4">
           <div className="flex justify-between">
