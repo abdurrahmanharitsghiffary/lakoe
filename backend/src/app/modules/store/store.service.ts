@@ -47,6 +47,15 @@ export class StoreService {
     return store;
   }
 
+  async findOneByUserId(id: number) {
+    const store = await this.prismaService.store.findUnique({
+      where: { userId: id },
+      select: selectStore,
+    });
+    if (!store) throw new NotFoundException('Store not found.');
+    return store;
+  }
+
   async update(
     id: number,
     updateStoreDto: UpdateStoreDto & {

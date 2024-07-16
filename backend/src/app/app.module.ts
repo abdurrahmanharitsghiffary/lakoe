@@ -6,9 +6,10 @@ import { OrderModule } from './modules/order/order.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { StoreModule } from './modules/store/store.module';
 import { VariantModule } from './modules/variant/variant.module';
-import { MeController } from './modules/me/me.controller';
-import { MeService } from './modules/me/me.service';
 import { MeModule } from './modules/me/me.module';
+import { OauthModule } from './modules/oauth/oauth.module';
+import { CronModule } from './modules/cron/cron.module';
+import { PaymentModule } from './modules/payment/payment.module';
 
 @Module({
   imports: [
@@ -20,8 +21,9 @@ import { MeModule } from './modules/me/me.module';
     StoreModule,
     VariantModule,
     MeModule,
+    OauthModule,
+    CronModule,
+    PaymentModule,
   ],
-  controllers: [MeController],
-  providers: [MeService],
 })
 export class AppModule {}

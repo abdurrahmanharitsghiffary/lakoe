@@ -8,12 +8,13 @@ import {
 } from './dto/create-auth.dto';
 
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
-// import { Throttle } from '@nestjs/throttler';
+import { hours, Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Throttle({ default: { ttl: hours(1), limit: 5 } })
   @Post('register')
   async create(
     @Body(new ZodValidationPipe(createAuthSchema)) response: CreateAuthDto,
@@ -21,19 +22,19 @@ export class AuthController {
     return await this.authService.register(response);
   }
 
-  // @Throttle({ default: { ttl: 60, limit: 3 } })
+  @Throttle({ default: { ttl: hours(1), limit: 5 } })
   @Post('login')
   async login(@Body(new ZodValidationPipe(loginSchema)) response: LoginDto) {
     return await this.authService.login(response);
   }
 
   @Post('forgot-password')
-  async forgotPassword(@Body() email: string) {
+  async forgotPassword(@Body('email') email: string) {
     return await this.authService.forgotPassword(email);
   }
 
   @Post('reset-password')
-  async resetPassword(@Body() email: string, newPassword: string) {
+  async resetPassword(@Body('token') email: string, newPassword: string) {
     return await this.authService.resetPassword(email, newPassword);
   }
 }
