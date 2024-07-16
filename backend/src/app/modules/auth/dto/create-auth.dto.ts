@@ -1,3 +1,4 @@
+import { Z } from 'src/common/libs/zod';
 import { z } from 'zod';
 
 export class CreateAuthDto {
@@ -21,7 +22,7 @@ export const loginSchema = z.object({
 export const createAuthSchema = z.object({
   fullName: z.string().min(1, 'Name cannot be empty').max(255),
   username: z.string().min(1, 'Username cannot be empty').max(255),
-  phone: z.string().min(1, 'Phone cannot be empty').max(255),
+  phone: Z.phone,
   email: z.string().min(1, 'Email cannot be empty').max(255),
   password: z.string().min(8, 'Password cannot be empty').max(30),
 });

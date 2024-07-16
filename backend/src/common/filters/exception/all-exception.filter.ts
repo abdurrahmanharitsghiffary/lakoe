@@ -4,6 +4,7 @@ import {
   ExceptionFilter,
   HttpException,
 } from '@nestjs/common';
+import { ThrottlerException } from '@nestjs/throttler';
 import { Response } from 'express';
 import { ZodError } from 'zod';
 
@@ -20,6 +21,15 @@ export class AllExceptionFilter<T> implements ExceptionFilter {
         name: exception.name,
         statusCode: 422,
         success: false,
+      });
+    }
+
+    if (exception instanceof ThrottlerException) {
+      return response.status(429).json({
+        success: false,
+        statusCodde: 429,
+        message: 'Too Many Requests.',
+        name: exception.name,
       });
     }
 

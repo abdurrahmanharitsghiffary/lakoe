@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto, LoginDto } from './dto/create-auth.dto';
@@ -16,8 +15,22 @@ export class AuthService {
     private prisma: PrismaService,
     private jwt: JwtService,
   ) {}
-  async register({ fullName, username, phone, ...response }: CreateAuthDto) {
-    response.password = await bcrypt.hash(response.password, 10);
+
+  async register({
+    fullName,
+    email,
+    username,
+    phone,
+    password,
+  }: CreateAuthDto) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const userWithSameEmail = await this.prisma.user.count({
+      where: { email },
+    });
+
+    if (userWithSameEmail < 1)
+      throw new BadRequestException('Email already taken.');
 
     const userWithSameUsername = await this.prisma.profile.count({
       where: {
@@ -25,21 +38,15 @@ export class AuthService {
       },
     });
 
-    if (userWithSameUsername != 0) {
-      throw new BadRequestException(`Username already exists`);
+    if (userWithSameUsername < 0) {
+      throw new BadRequestException('Username already taken.');
     }
 
     return await this.prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
-          ...response,
-          profile: {
-            create: {
-              fullName,
-              username,
-              phone,
-            },
-          },
+          password: hashedPassword,
+          email,
         },
         select: {
           id: true,
@@ -55,16 +62,31 @@ export class AuthService {
           },
         },
       });
+
+      const profile = await tx.profile.create({
+        data: {
+          userId: user.id,
+          fullName,
+          username,
+          phone,
+        },
+      });
+
       const payload = { id: user.id, role: user.role };
 
       const token = this.jwt.sign(payload);
 
       await tx.token.create({
-        data: { token, type: 'ACCESS_TOKEN', userId: user.id, expiresAt: 0 },
+        data: {
+          token,
+          type: 'ACCESS_TOKEN',
+          userId: user.id,
+          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        },
       });
 
       return {
-        user,
+        user: { ...user, ...profile },
         token,
       };
     });
@@ -78,14 +100,14 @@ export class AuthService {
         },
       });
 
-      if (!user) {
-        throw new NotFoundException(`User not found`);
+      if (!user || user?.providerType !== null) {
+        throw new UnauthorizedException('Invalid credentials.');
       }
 
       const isMatch = await bcrypt.compare(response.password, user.password);
 
       if (!isMatch) {
-        throw new UnauthorizedException('Invalid password');
+        throw new UnauthorizedException('Invalid credentials.');
       }
 
       const payload = { id: user.id, role: user.role };
@@ -93,7 +115,12 @@ export class AuthService {
       const token = this.jwt.sign(payload);
 
       await tx.token.create({
-        data: { token, type: 'ACCESS_TOKEN', userId: user.id, expiresAt: 0 },
+        data: {
+          token,
+          type: 'ACCESS_TOKEN',
+          userId: user.id,
+          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        },
       });
 
       return {

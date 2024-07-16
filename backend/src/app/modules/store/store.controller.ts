@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   UseInterceptors,
   UploadedFiles,
   HttpCode,
@@ -17,7 +16,6 @@ import { UpdateStoreDto } from './dto/update-store.dto';
 import { User } from '../../../common/decorators/user';
 import { UserPayload } from 'src/common/types';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
-import { StoreGuard } from './guards/store.guard';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { CloudinaryService } from 'src/common/services/cloudinary.service';

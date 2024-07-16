@@ -14,10 +14,13 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique @db.VarChar(255)
-  password String @db.VarChar(255)
-  role     Role?  @default(USER)
+  id           Int           @id @default(autoincrement())
+  email        String        @unique @db.VarChar(255)
+  password     String        @db.VarChar(255)
+  isVerified   Boolean       @default(false)
+  role         Role?         @default(USER)
+  providerId   String?
+  providerType ProviderType?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -34,6 +37,13 @@ model User {
   @@map("users")
 }
 
+enum ProviderType {
+  GOOGLE
+  GITHUB
+  FACEBOOK
+  TWITTER
+}
+
 // Proposal: add address table for profile
 
 model Profile {
@@ -42,7 +52,7 @@ model Profile {
   username       String    @unique @db.VarChar(125)
   profilePicture String?
   bio            String?
-  phone          String    @db.VarChar(30)
+  phone          String?   @db.VarChar(30)
   gender         Gender?
   birthDate      DateTime?
 
@@ -60,13 +70,25 @@ model Token {
   userId Int
   user   User @relation(fields: [userId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  expiresAt Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expiresAt DateTime?
 
-  revokedAt DateTime?
+  codes Code[]
 
   @@map("tokens")
+}
+
+model Code {
+  id   Int    @id @default(autoincrement())
+  code String @unique @db.VarChar(50)
+
+  token     Token    @relation(fields: [tokenId], references: [id])
+  tokenId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("codes")
 }
 
 enum TokenType {

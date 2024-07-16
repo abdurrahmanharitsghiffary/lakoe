@@ -9,12 +9,14 @@ import { JwtService } from '@nestjs/jwt';
 import { $Enums } from '@prisma/client';
 import { Request } from 'express';
 import { APP_CONFIG } from 'src/common/config/app.config';
+import { PrismaService } from 'src/common/services/prisma.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly jwtService: JwtService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -51,6 +53,13 @@ export class AuthGuard implements CanActivate {
         id: number;
         role: $Enums.Role;
       }>(token);
+
+      const tokenFromDb = await this.prismaService.token.findUnique({
+        where: { token, type: 'ACCESS_TOKEN' },
+      });
+
+      if (!tokenFromDb) throw new UnauthorizedException('Invalid token.');
+
       request.user = decoded;
     } catch (err) {
       if (authOptional) return true;

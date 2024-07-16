@@ -1,8 +1,9 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/common/services/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { selectUserSimplified } from 'src/common/query/user.select';
 
 @Injectable()
 export class UsersService {
@@ -13,12 +14,16 @@ export class UsersService {
 
     const newUser = await this.prisma.user.create({
       data: response,
+      select: selectUserSimplified,
     });
     return newUser;
   }
 
   async findAll() {
-    return await this.prisma.user.findMany();
+    return await this.prisma.user.findMany({
+      select: selectUserSimplified,
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+    });
   }
 
   async findOne(id: number) {
@@ -26,6 +31,7 @@ export class UsersService {
       where: {
         id,
       },
+      select: selectUserSimplified,
     });
   }
 
