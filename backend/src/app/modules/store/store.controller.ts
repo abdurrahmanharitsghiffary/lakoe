@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFiles,
   HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto, createStoreSchema } from './dto/create-store.dto';
@@ -81,7 +82,7 @@ export class StoreController {
   }
 
   @Patch(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'logo', maxCount: 1 },
@@ -123,7 +124,7 @@ export class StoreController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Roles(['ADMIN'])
   remove(@Param('id') id: string) {
     return this.storeService.remove(+id);

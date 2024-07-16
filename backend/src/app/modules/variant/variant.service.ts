@@ -7,8 +7,13 @@ import { PrismaService } from 'src/common/services/prisma.service';
 export class VariantService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create(createVariantDto: CreateVariantDto) {
-    return this.prismaService.variant.create({ data: createVariantDto });
+  createMany(createVariantDto: CreateVariantDto) {
+    return this.prismaService.variant.createMany({
+      data: createVariantDto.variants.map((variant) => ({
+        ...variant,
+        productId: createVariantDto.productId,
+      })),
+    });
   }
 
   findAll(productId: number) {

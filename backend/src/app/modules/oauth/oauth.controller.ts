@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   Query,
   Res,
@@ -24,15 +26,18 @@ export class OauthController {
   ) {}
 
   @Post('verify-code')
+  @HttpCode(HttpStatus.OK)
   async verifyCode(@Query('code') code: string) {
     const c = await this.prismaService.code.findUnique({
       where: { code },
       select: { token: { select: { token: true } }, id: true },
     });
-
+    console.log(code, 'CODE');
     if (!c) throw new UnauthorizedException('Invalid code.');
 
-    await this.prismaService.code.delete({ where: { id: c.id } });
+    await this.prismaService.code.delete({
+      where: { code: code.toString() },
+    });
 
     return c.token;
   }
@@ -60,7 +65,7 @@ export class OauthController {
       },
       select: { codes: { take: 1, select: { code: true } } },
     });
-
+    console.log(accessToken, 'ACCESS TOKEN');
     return res.redirect(
       `${process.env.BASE_CLIENT_URL}/oauth/callback?code=${accessToken?.codes?.[0]?.code}`,
     );

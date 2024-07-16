@@ -12,6 +12,7 @@ import {
   UploadedFiles,
   UseGuards,
   BadRequestException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import {
@@ -94,7 +95,7 @@ export class ProductController {
 
   @Patch(':id')
   @UseGuards(ProductGuard)
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   update(
     @Param('id') id: string,
     @Body(new ZodValidationPipe(updateProductSchema))
@@ -104,8 +105,8 @@ export class ProductController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(ProductGuard)
-  @HttpCode(204)
   remove(@Param('id') id: string) {
     return this.productService.remove(+id);
   }
