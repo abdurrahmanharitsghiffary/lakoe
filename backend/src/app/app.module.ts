@@ -13,6 +13,7 @@ import { AppController } from './app.controller';
 import { AddressModule } from './modules/address/address.module';
 import { TemplateModule } from './modules/template/template.module';
 import { CommonModule } from 'src/common/common.module';
+import { CartModule } from './modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { CommonModule } from 'src/common/common.module';
     PaymentModule,
     AddressModule,
     TemplateModule,
+    CartModule,
   ],
   controllers: [AppController],
 })
