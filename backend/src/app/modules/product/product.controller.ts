@@ -12,6 +12,7 @@ import {
   UploadedFiles,
   UseGuards,
   BadRequestException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import {
@@ -32,7 +33,9 @@ import { User } from '../../../common/decorators/user';
 import { UserPayload } from 'src/common/types';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { ProductGuard } from './guards/product.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Products')
 @Controller('products')
 export class ProductController {
   constructor(
@@ -94,7 +97,7 @@ export class ProductController {
 
   @Patch(':id')
   @UseGuards(ProductGuard)
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   update(
     @Param('id') id: string,
     @Body(new ZodValidationPipe(updateProductSchema))
@@ -104,8 +107,8 @@ export class ProductController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(ProductGuard)
-  @HttpCode(204)
   remove(@Param('id') id: string) {
     return this.productService.remove(+id);
   }

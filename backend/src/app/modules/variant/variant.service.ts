@@ -7,8 +7,13 @@ import { PrismaService } from 'src/common/services/prisma.service';
 export class VariantService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create(createVariantDto: CreateVariantDto) {
-    return this.prismaService.variant.create({ data: createVariantDto });
+  createMany(createVariantDto: CreateVariantDto) {
+    return this.prismaService.variant.createMany({
+      data: createVariantDto.variants.map((variant) => ({
+        ...variant,
+        productId: createVariantDto.productId,
+      })),
+    });
   }
 
   findAll(productId: number) {
@@ -27,7 +32,6 @@ export class VariantService {
   }
 
   async update(id: number, updateVariantDto: UpdateVariantDto) {
-    await this.findOne(id);
     return this.prismaService.variant.update({
       where: { id },
       data: updateVariantDto,
@@ -35,7 +39,6 @@ export class VariantService {
   }
 
   async remove(id: number) {
-    await this.findOne(id);
     return this.prismaService.variant.delete({ where: { id } });
   }
 }

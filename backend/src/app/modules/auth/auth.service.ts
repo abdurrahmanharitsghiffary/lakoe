@@ -29,7 +29,7 @@ export class AuthService {
       where: { email },
     });
 
-    if (userWithSameEmail < 1)
+    if (userWithSameEmail > 0)
       throw new BadRequestException('Email already taken.');
 
     const userWithSameUsername = await this.prisma.profile.count({
@@ -38,7 +38,7 @@ export class AuthService {
       },
     });
 
-    if (userWithSameUsername < 0) {
+    if (userWithSameUsername > 0) {
       throw new BadRequestException('Username already taken.');
     }
 

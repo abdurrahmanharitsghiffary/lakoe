@@ -19,9 +19,12 @@ import { UserPayload } from 'src/common/types';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { selectUser } from 'src/common/query/user.select';
 import { selectProfile } from 'src/common/query/profile.select';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 // GET STORES
 
+@ApiTags('Me')
+@ApiBearerAuth()
 @Controller('me')
 export class MeController {
   constructor(

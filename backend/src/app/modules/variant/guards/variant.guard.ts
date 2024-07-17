@@ -22,7 +22,7 @@ export class VariantGuard implements CanActivate {
 
     if (!variant) throw new NotFoundException('Product variant not found.');
 
-    if (variant.product.store.userId !== request.user.id) return false;
+    if (variant?.product?.store?.userId !== request?.user?.id) return false;
     return true;
   }
 }

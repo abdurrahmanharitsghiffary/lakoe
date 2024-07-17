@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/swagger';
 import { CreateProductDto } from './create-product.dto';
 import { z } from 'zod';
 
@@ -9,7 +9,7 @@ export const updateProductSchema = z.object({
   description: z.string().optional(),
   minimumOrder: z.number().min(1).positive().optional(),
   categories: z.array(z.string()).optional(),
-  weightInGram: z.number().min(1).positive().optional(),
-  stock: z.number().min(1).positive().optional(),
-  price: z.number().positive().optional(),
+  // weightInGram: z.number().min(1).positive().optional(),
+  // stock: z.number().min(1).positive().optional(),
+  // price: z.number().positive().optional(),
 });

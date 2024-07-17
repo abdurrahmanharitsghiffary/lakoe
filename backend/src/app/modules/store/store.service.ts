@@ -63,7 +63,6 @@ export class StoreService {
       bannerAttachment?: string;
     },
   ) {
-    await this.findOne(id);
     return this.prismaService.store.update({
       data: updateStoreDto,
       where: { id },
@@ -71,7 +70,6 @@ export class StoreService {
   }
 
   async remove(id: number) {
-    await this.findOne(id);
     return this.prismaService.store.delete({ where: { id } });
   }
 }

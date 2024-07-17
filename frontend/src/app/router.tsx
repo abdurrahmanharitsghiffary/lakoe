@@ -22,8 +22,12 @@ import { CreateProductPage } from "./pages/seller/create-product";
 import { CardOrderBuyer } from "@/features/orders/components/buyer/card-order";
 import { DashboardSeller } from "./pages/seller/dashboard";
 import { RegisterPage } from "./pages/auth/regist";
+
 import { Delivery } from "@/features/settings/components/delivery";
 import { PaymentMethod } from "@/features/settings/components/payment-method";
+
+import { OAuthCallback } from "./pages/oauth/callback";
+
 
 export const router = createBrowserRouter([
   {
@@ -95,6 +99,7 @@ export const router = createBrowserRouter([
           }
         ],
       },
+      { path: "oauth/callback", element: <OAuthCallback /> },
       {
         path: "*",
         element: <NotFoundPage />,
