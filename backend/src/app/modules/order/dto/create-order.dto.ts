@@ -1,57 +1,49 @@
-import {
-  IsInt,
-  IsOptional,
-  IsString,
-  IsDecimal,
-  IsNotEmpty,
-} from 'class-validator';
+import { Z } from 'src/common/libs/zod';
+import { z } from 'zod';
 
-export class CreateOrderDto {
-  @IsInt()
+type Product = {
+  id: number;
   qty: number;
+};
 
-  @IsDecimal()
-  pricePerProduct: number;
+export type CreateOrderDto = {
+  description?: string;
+  products: Product[];
+} & CreateInvoiceDto
 
-  @IsDecimal({ decimal_digits: '2,1' })
-  @IsOptional()
-  discount?: number;
+export const orderSchema = z.object({
+  description: z.string().optional(),
+  product: z.string()
+})
 
-  @IsString()
-  @IsNotEmpty()
+
+export type CreateInvoiceDto = {
+  receiverContactName: string;
+  receiverContactPhone: string;
+  receiverName: string;
+  receiverAddressPhone: string;
   receiverAddress: string;
-
-  @IsString()
-  @IsNotEmpty()
   receiverPostalCode: string;
-
-  @IsString()
-  @IsNotEmpty()
-  receiverCityDistrict: string;
-
-  @IsString()
-  @IsNotEmpty()
+  receiverCity: string;
+  receiverDistrict: string;
   receiverProvince: string;
+  receiverLatitude?: string;
+  receiverLongitude?: string;
+  paymentId: number;
+  courierId: number; 
+};
 
-  @IsString()
-  @IsNotEmpty()
-  receiverLatitude: string;
 
-  @IsString()
-  @IsNotEmpty()
-  receiverLongitude: string;
-
-  @IsInt()
-  productVariantId: number;
-
-  @IsInt()
-  userId: number;
-
-  @IsOptional()
-  courier?: {
-    courierCode: string;
-    courierServiceCode: string;
-    courierServiceName: string;
-    price: number;
-  };
-}
+export const invoiceSchema = z.object({
+  receiverContactName: z.string(),
+  receiverContactPhone: Z.phone,
+  receiverName: z.string(),
+  receiverAddressPhone: z.string(),
+  receiverAddress: z.string(),
+  receiverPostalCode: z.string().min(5),
+  receiverCity: z.string(),
+  receiverDistrict: z.string(),
+  receiverProvince: z.string(),
+  receiverLatitude: z.string().max(20),
+  receiverLongitude: z.string().max(20),
+});

@@ -90,6 +90,7 @@ export function Navigation() {
               <h1 className="text-base">Pengaturan</h1>
             </Button>
           </AccordionTrigger>
+
           <AccordionContent className="flex flex-col justify-center gap-4 ml-8">
             {accItems.map((item) => (
               <Link

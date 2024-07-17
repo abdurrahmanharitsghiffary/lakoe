@@ -23,10 +23,16 @@ import { CardOrderBuyer } from "@/features/orders/components/buyer/card-order";
 import { DashboardSeller } from "./pages/seller/dashboard";
 import { RegisterPage } from "./pages/auth/regist";
 
+
+import { Delivery } from "@/features/settings/components/delivery";
+import { PaymentMethod } from "@/features/settings/components/payment-method";
+
 import { ForgotPasswordPage } from "./pages/auth/forgot";
 import { ResetPasswordPage } from "./pages/auth/reset-password";
 
+
 import { OAuthCallback } from "./pages/oauth/callback";
+
 
 export const router = createBrowserRouter([
   {
@@ -90,6 +96,14 @@ export const router = createBrowserRouter([
             path: "settings/store",
             element: <SettingsPage />,
           },
+          {
+            path: "settings/delivery",
+            element: <Delivery />,
+          },
+          {
+            path: "settings/payment",
+            element: <PaymentMethod/>
+          }
         ],
       },
       { path: "oauth/callback", element: <OAuthCallback /> },
