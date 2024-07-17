@@ -27,8 +27,8 @@ export class EmailService {
   }
 
   async sendVerifyEmail(email: string, token: string) {
-    const frontEndUrl = process.env.BASE_CLIENT_URL;
-    const verifyUrl = `${frontEndUrl}/auth/verify-account/${token}`;
+    const backEndUrl = process.env.BASE_API_URL;
+    const verifyUrl = `${backEndUrl}/auth/verify-email/${token}`;
     const info = await this.transporter.sendMail({
       from: 'Lakoe <namikazeuzumaki43@gmail.com>', // sender address
       to: email, // list of receivers

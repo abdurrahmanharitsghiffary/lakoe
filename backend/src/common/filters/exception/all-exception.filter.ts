@@ -4,6 +4,7 @@ import {
   ExceptionFilter,
   HttpException,
 } from '@nestjs/common';
+import { JsonWebTokenError } from '@nestjs/jwt';
 import { ThrottlerException } from '@nestjs/throttler';
 import { Response } from 'express';
 import { ZodError } from 'zod';
@@ -21,6 +22,16 @@ export class AllExceptionFilter<T> implements ExceptionFilter {
         name: exception.name,
         statusCode: 422,
         success: false,
+        code: (exception as any)?.code,
+      });
+    }
+
+    if (exception instanceof JsonWebTokenError) {
+      return response.status(403).json({
+        success: false,
+        statusCode: 403,
+        message: exception?.message,
+        name: exception.name,
         code: (exception as any)?.code,
       });
     }

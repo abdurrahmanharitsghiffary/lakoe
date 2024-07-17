@@ -27,6 +27,11 @@ import { ForgotPasswordPage } from "./pages/auth/forgot";
 import { ResetPasswordPage } from "./pages/auth/reset-password";
 
 import { OAuthCallback } from "./pages/oauth/callback";
+import { VerifyPage } from "./pages/auth/verify";
+import { VerifiedPage } from "./pages/auth/verified";
+import { ResetSuccessPage } from "./pages/auth/reset-success";
+import { Authorize } from "@/components/authorize";
+import { StorePage } from "./pages/seller/store-page";
 
 export const router = createBrowserRouter([
   {
@@ -46,52 +51,73 @@ export const router = createBrowserRouter([
           { path: "login", element: <LoginPage /> },
           { path: "register", element: <RegisterPage /> },
           { path: "forgot-password", element: <ForgotPasswordPage /> },
-          { path: "reset-password", element: <ResetPasswordPage /> },
+          { path: "reset-password/:token", element: <ResetPasswordPage /> },
+          { path: "verify-account", element: <VerifyPage /> },
+          { path: "verified", element: <VerifiedPage /> },
+          { path: "reset-success", element: <ResetSuccessPage /> },
+          { path: "new-store", element: <StorePage /> },
         ],
       },
       {
-        path: "admin",
-        errorElement: <ErrorPage />,
-        element: <AdminLayout />,
+        path: "",
+        id: "private",
+        element: <Authorize />,
         children: [
-          { path: "", element: <AdminHomePage /> },
-          { path: "withdrawal", element: <WithdrawalPage /> },
-          { path: "withdrawal/pending", element: <PendingWithdrawalPage /> },
-          { path: "withdrawal/success", element: <SuccessWithdrawalPage /> },
-          { path: "withdrawal/rejected", element: <RejectedWithdrawalPage /> },
           {
-            path: "withdrawal/on-process",
-            element: <OnProcessWithdrawalPage />,
+            path: "admin",
+            errorElement: <ErrorPage />,
+            element: <AdminLayout />,
+            children: [
+              { path: "", element: <AdminHomePage /> },
+              { path: "withdrawal", element: <WithdrawalPage /> },
+              {
+                path: "withdrawal/pending",
+                element: <PendingWithdrawalPage />,
+              },
+              {
+                path: "withdrawal/success",
+                element: <SuccessWithdrawalPage />,
+              },
+              {
+                path: "withdrawal/rejected",
+                element: <RejectedWithdrawalPage />,
+              },
+              {
+                path: "withdrawal/on-process",
+                element: <OnProcessWithdrawalPage />,
+              },
+              { path: "withdrawal/:id", element: <WithdrawalDetails /> },
+            ],
           },
-          { path: "withdrawal/:id", element: <WithdrawalDetails /> },
+          {
+            path: "seller",
+            errorElement: <ErrorPage />,
+            element: <SellerLayout />,
+            children: [
+              { path: "", element: <HomePage /> },
+              { path: "dashboard", element: <DashboardSeller /> },
+              { path: "orders/:id", element: <OrderDetails /> },
+              {
+                path: "products",
+                element: <ProductsPage />,
+              },
+              {
+                path: "products/create",
+                element: <CreateProductPage />,
+              },
+              {
+                path: "orders",
+                element: <OrdersPage />,
+              },
+              {
+                path: "settings/store",
+                element: <SettingsPage />,
+              },
+            ],
+          },
         ],
       },
-      {
-        path: "seller",
-        errorElement: <ErrorPage />,
-        element: <SellerLayout />,
-        children: [
-          { path: "", element: <HomePage /> },
-          { path: "dashboard", element: <DashboardSeller /> },
-          { path: "orders/:id", element: <OrderDetails /> },
-          {
-            path: "products",
-            element: <ProductsPage />,
-          },
-          {
-            path: "products/create",
-            element: <CreateProductPage />,
-          },
-          {
-            path: "orders",
-            element: <OrdersPage />,
-          },
-          {
-            path: "settings/store",
-            element: <SettingsPage />,
-          },
-        ],
-      },
+
       { path: "oauth/callback", element: <OAuthCallback /> },
       {
         path: "*",

@@ -80,9 +80,8 @@ model Token {
 }
 
 model Code {
-  id   Int    @id @default(autoincrement())
-  code String @unique @db.VarChar(50)
-
+  id        Int      @id @default(autoincrement())
+  code      String   @unique @db.VarChar(50)
   token     Token    @relation(fields: [tokenId], references: [id], onDelete: Cascade)
   tokenId   Int
   createdAt DateTime @default(now())

@@ -38,7 +38,7 @@ export const useRegist = () => {
           variant: "default",
         });
       }
-      navigate("/seller");
+      navigate("/auth/verify-account");
     } catch (error) {
       console.log("register error:", error);
     }
