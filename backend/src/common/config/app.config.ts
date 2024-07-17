@@ -4,7 +4,7 @@ export const APP_CONFIG = {
     DISABLE_AUTH_IN_DEV: process.env.NODE_ENV === 'development',
     LOGIN_AS: {
       USER_1: false,
-      USER_1_NOT_ADMIN: true,
+      USER_1_NOT_ADMIN: false,
       USER_2: false,
     },
   },

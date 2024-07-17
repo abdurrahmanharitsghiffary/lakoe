@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto, LoginDto } from './dto/create-auth.dto';
@@ -33,7 +34,7 @@ export class AuthService {
       where: { email },
     });
 
-    if (userWithSameEmail < 1)
+    if (userWithSameEmail > 0)
       throw new BadRequestException('Email already taken.');
 
     const userWithSameUsername = await this.prisma.profile.count({
@@ -42,7 +43,7 @@ export class AuthService {
       },
     });
 
-    if (userWithSameUsername < 0) {
+    if (userWithSameUsername > 0) {
       throw new BadRequestException('Username already taken.');
     }
 
@@ -55,6 +56,7 @@ export class AuthService {
         select: {
           id: true,
           role: true,
+          isVerified: true,
           profile: {
             select: {
               fullName: true,
@@ -96,6 +98,68 @@ export class AuthService {
     });
   }
 
+  async verifyEmail(token: string) {
+    return await this.prisma.$transaction(async (tx) => {
+      const verifyToken = await tx.token.findUnique({
+        where: {
+          token,
+        },
+      });
+
+      if (
+        !verifyToken ||
+        verifyToken.type !== TokenType.VERIFY_TOKEN ||
+        verifyToken.expiresAt < new Date(Date.now())
+      ) {
+        throw new NotFoundException('Invalid token');
+      }
+
+      await tx.user.update({
+        where: {
+          id: verifyToken.userId,
+        },
+        data: {
+          isVerified: true,
+        },
+      });
+
+      await tx.token.delete({
+        where: {
+          id: verifyToken.id,
+        },
+      });
+      return {
+        message: 'Email verified successfully',
+      };
+    });
+  }
+
+  async reqVerifyToken(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    const token = uuidv4();
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 10);
+
+    await this.prisma.token.create({
+      data: {
+        token,
+        type: 'VERIFY_TOKEN',
+        userId: user.id,
+        expiresAt,
+      },
+    });
+
+    this.emailService.sendVerifyEmail(user.email, token);
+    return {
+      message:
+        'If your email is valid, verification request will been sent to your email. please check your inbox and follow the instruction to verify your account.',
+    };
+  }
+
   async login(response: LoginDto) {
     return await this.prisma.$transaction(async (tx) => {
       const user = await tx.user.findUnique({
@@ -128,7 +192,7 @@ export class AuthService {
       });
 
       return {
-        user,
+        message: 'Login successfully',
         token,
       };
     });
@@ -145,7 +209,7 @@ export class AuthService {
       }
 
       const token = uuidv4();
-      const expiresAt = Math.floor(Date.now() / 1000) + 60 * 60;
+      const expiresAt = new Date(Date.now() + 1000 * 60 * 10);
 
       await tx.token.create({
         data: {
@@ -159,8 +223,8 @@ export class AuthService {
       this.emailService.sendResetPassword(email, token);
 
       return {
-        user,
-        token,
+        message:
+          'If your email is valid, reset password request will been sent to your email. please check your inbox and follow the instruction to reset your password',
       };
     });
   }
@@ -176,8 +240,7 @@ export class AuthService {
       if (
         !resetToken ||
         resetToken.type !== TokenType.RESET_TOKEN ||
-        resetToken.expiresAt < Math.floor(Date.now() / 1000) ||
-        resetToken.revokedAt
+        resetToken.expiresAt < new Date(Date.now())
       ) {
         throw new UnauthorizedException('invalid expires reset password');
       }
@@ -193,16 +256,13 @@ export class AuthService {
         },
       });
 
-      await tx.token.update({
+      await tx.token.delete({
         where: {
           id: resetToken.id,
         },
-        data: {
-          revokedAt: new Date(),
-        },
       });
       return {
-        resetToken,
+        message: 'Password reset successfully',
       };
     });
   }

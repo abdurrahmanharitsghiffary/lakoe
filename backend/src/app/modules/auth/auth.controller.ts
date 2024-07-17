@@ -1,6 +1,7 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
+  authResetSchema,
   CreateAuthDto,
   createAuthSchema,
   LoginDto,
@@ -9,8 +10,11 @@ import {
 
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { hours, Throttle } from '@nestjs/throttler';
+import { z } from 'zod';
+import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 
 @Controller('auth')
+@SkipAuth()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -28,13 +32,30 @@ export class AuthController {
     return await this.authService.login(response);
   }
 
+  @Post('verify-email')
+  async sendVerifyEmail(
+    @Body('email', new ZodValidationPipe(z.string().email())) email: string,
+  ) {
+    return await this.authService.reqVerifyToken(email);
+  }
+
+  @Post('verify-email/:token')
+  async verifyEmail(@Param('token') token: string) {
+    return await this.authService.verifyEmail(token);
+  }
+
   @Post('forgot-password')
-  async forgotPassword(@Body('email') email: string) {
+  async forgotPassword(
+    @Body('email', new ZodValidationPipe(z.string().email())) email: string,
+  ) {
     return await this.authService.forgotPassword(email);
   }
 
-  @Post('reset-password')
-  async resetPassword(@Body('token') email: string, newPassword: string) {
-    return await this.authService.resetPassword(email, newPassword);
+  @Post('reset-password/:token')
+  async resetPassword(
+    @Param('token') token: string,
+    @Body(new ZodValidationPipe(authResetSchema)) body: { newPassword: string },
+  ) {
+    return await this.authService.resetPassword(token, body.newPassword);
   }
 }

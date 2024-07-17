@@ -22,6 +22,8 @@ import { CreateProductPage } from "./pages/seller/create-product";
 import { CardOrderBuyer } from "@/features/orders/components/buyer/card-order";
 import { DashboardSeller } from "./pages/seller/dashboard";
 import { RegisterPage } from "./pages/auth/regist";
+import { ForgotPasswordPage } from "./pages/auth/forgot";
+import { ResetPasswordPage } from "./pages/auth/reset-password";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +42,8 @@ export const router = createBrowserRouter([
         children: [
           { path: "login", element: <LoginPage /> },
           { path: "register", element: <RegisterPage /> },
+          { path: "forgot-password", element: <ForgotPasswordPage /> },
+          { path: "reset-password", element: <ResetPasswordPage /> },
         ],
       },
       {
