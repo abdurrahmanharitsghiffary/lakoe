@@ -59,9 +59,9 @@ export class OrderController {
   //   return this.orderService.update(+id, updateOrderDto);
   // }
 
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
-  }
+  // @Delete(':id')
+  // @HttpCode(HttpStatus.NO_CONTENT)
+  // remove(@Param('id') id: string) {
+  //   return this.orderService.remove(+id);
+  // }
 }
