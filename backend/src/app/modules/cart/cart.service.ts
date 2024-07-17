@@ -1,26 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
-import { UpdateCartDto } from './dto/update-cart.dto';
+import { PrismaService } from 'src/common/services/prisma.service';
 
 @Injectable()
 export class CartService {
-  create(createCartDto: CreateCartDto) {
-    return 'This action adds a new cart';
+  constructor(private readonly prismaService: PrismaService) {}
+
+  create(userId: number, createCartDto: CreateCartDto) {
+    return this.prismaService.cart.create({
+      data: {
+        qty: createCartDto.qty,
+        userId,
+        productVariantId: createCartDto.variantId,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all cart`;
+  findAllByUserId(userId: number) {
+    return this.prismaService.cart.findMany({ where: { userId } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cart`;
+  updateQty(userId: number, variantId: number, qty: number) {
+    return this.prismaService.cart.update({
+      data: { qty: { increment: qty } },
+      where: {
+        userId_productVariantId: { productVariantId: variantId, userId },
+      },
+    });
   }
 
-  update(id: number, updateCartDto: UpdateCartDto) {
-    return `This action updates a #${id} cart`;
+  async decrement(userId: number, variantId: number) {
+    await this.updateQty(userId, variantId, -1);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cart`;
+  async increment(userId: number, variantId: number) {
+    await this.updateQty(userId, variantId, 1);
+  }
+
+  remove(userId: number, variantId: number) {
+    return this.prismaService.cart.delete({
+      where: {
+        userId_productVariantId: { productVariantId: variantId, userId },
+      },
+    });
   }
 }

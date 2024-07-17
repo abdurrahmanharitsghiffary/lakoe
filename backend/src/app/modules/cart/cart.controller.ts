@@ -1,34 +1,61 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart.dto';
-import { UpdateCartDto } from './dto/update-cart.dto';
+import { User } from 'src/common/decorators/user';
+import { UserPayload } from 'src/common/types';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
+import { z } from 'zod';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('cart')
+@ApiTags('Carts')
+@Controller()
 export class CartController {
   constructor(private readonly cartService: CartService) {}
-
-  @Post()
-  create(@Body() createCartDto: CreateCartDto) {
-    return this.cartService.create(createCartDto);
+  @Post('carts')
+  create(@User() user: UserPayload, @Body() createCartDto: CreateCartDto) {
+    return this.cartService.create(user?.id, createCartDto);
   }
 
-  @Get()
-  findAll() {
-    return this.cartService.findAll();
+  @Get('me/carts')
+  findAll(@User() user: UserPayload) {
+    return this.cartService.findAllByUserId(user?.id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cartService.findOne(+id);
+  @Patch('carts/:variantId/decrement')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  decrementQty(@Param('variantId') id: string, @User() user: UserPayload) {
+    return this.cartService.decrement(user?.id, +id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
-    return this.cartService.update(+id, updateCartDto);
+  @Patch('carts/:variantId/increment')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  incrementQty(@Param('variantId') id: string, @User() user: UserPayload) {
+    return this.cartService.decrement(user?.id, +id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cartService.remove(+id);
+  @Patch('carts/:variantId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  updateQty(
+    @Param('variantId') id: string,
+    @User() user: UserPayload,
+    @Body('qty', new ZodValidationPipe(z.number())) qty: number,
+  ) {
+    return this.cartService.updateQty(user?.id, +id, qty);
+  }
+
+  @Delete('carts/:variantId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('variantId') id: string, @User() user: UserPayload) {
+    return this.cartService.remove(user?.id, +id);
   }
 }

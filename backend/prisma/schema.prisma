@@ -44,8 +44,6 @@ enum ProviderType {
   TWITTER
 }
 
-// Proposal: add address table for profile
-
 model Profile {
   id             Int       @id @default(autoincrement())
   fullName       String    @db.VarChar(255)
