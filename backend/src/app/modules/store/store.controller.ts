@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFiles,
   HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto, createStoreSchema } from './dto/create-store.dto';
@@ -20,7 +21,9 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { CloudinaryService } from 'src/common/services/cloudinary.service';
 import { Roles } from 'src/common/decorators/roles/roles';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Stores')
 @Controller('stores')
 export class StoreController {
   constructor(
@@ -81,7 +84,7 @@ export class StoreController {
   }
 
   @Patch(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'logo', maxCount: 1 },
@@ -98,6 +101,7 @@ export class StoreController {
       banner?: Express.Multer.File[];
     },
   ) {
+    await this.storeService.findOne(+id);
     console.log(updateStoreDto, 'UPDATE STORE DTO');
     let logoSrc: string;
     if (files?.logo?.[0]?.buffer) {
@@ -123,9 +127,10 @@ export class StoreController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Roles(['ADMIN'])
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
+    await this.storeService.findOne(+id);
     return this.storeService.remove(+id);
   }
 }

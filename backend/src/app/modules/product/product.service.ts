@@ -3,7 +3,6 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { productSelect } from './entities/product.entity';
-import { genSku } from 'src/common/utils/gen-sku';
 
 @Injectable()
 export class ProductService {
@@ -12,9 +11,9 @@ export class ProductService {
   create(
     storeId: number,
     {
-      price,
-      stock,
-      weightInGram,
+      // price,
+      // stock,
+      // weightInGram,
       categories,
       ...dto
     }: CreateProductDto & { attachments?: string[] },
@@ -27,16 +26,16 @@ export class ProductService {
         data: {
           ...dto,
           storeId,
-          variants: {
-            create: {
-              name: dto.name,
-              price,
-              stock,
-              weightInGram,
-              // generate the SKU
-              sku: genSku(dto.name, dto.name, weightInGram),
-            },
-          },
+          // variants: {
+          //   create: {
+          //     name: dto.name,
+          //     price,
+          //     stock,
+          //     weightInGram,
+          //     // generate the SKU
+          //     sku: genSku(dto.name, dto.name, weightInGram),
+          //   },
+          // },
           categories: {
             connectOrCreate: categories.map((category) => ({
               create: { name: category },
@@ -76,12 +75,7 @@ export class ProductService {
     return product;
   }
 
-  async update(
-    id: number,
-    { price, stock, weightInGram, categories, ...dto }: UpdateProductDto,
-  ) {
-    // find first the product if not found it will throw Exception
-    await this.findOne(id);
+  async update(id: number, { categories, ...dto }: UpdateProductDto) {
     // update using transation
     return await this.prismaService.$transaction(async (tx) => {
       // update the product and connect or create the categories
@@ -100,23 +94,21 @@ export class ProductService {
       });
 
       // find variant with name same as the product
-      const variant = await tx.product.findFirst({
-        where: { name: dto.name },
-      });
+      // const variant = await tx.product.findFirst({
+      //   where: { name: dto.name },
+      // });
 
       // update it if there are price, stock, or weight
-      await tx.variant.update({
-        data: { price, stock, weightInGram },
-        where: { id: variant.id },
-      });
+      // await tx.variant.update({
+      //   data: { price, stock, weightInGram },
+      //   where: { id: variant.id },
+      // });
 
       return updatedProducts;
     });
   }
 
   async remove(id: number) {
-    // find first the product if not found it will throw Exception
-    await this.findOne(id);
     // delete the product
     return await this.prismaService.product.delete({
       where: { id },

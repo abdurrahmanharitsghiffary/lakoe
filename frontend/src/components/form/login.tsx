@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLogin } from "@/hooks/use-login";
+import { cn } from "@/lib/utils";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
@@ -25,7 +26,10 @@ export function LoginForm() {
             </p>
           </div>
           <div className="grid gap-4">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-2"
+            >
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -55,10 +59,13 @@ export function LoginForm() {
               <Button type="submit" className="w-full">
                 Login
               </Button>
-              <Button variant="outline" className="w-full">
+              <Link
+                to={import.meta.env.VITE_BASE_API_URL + "/api/v1/oauth/google"}
+                className={cn("w-full", buttonVariants({ variant: "outline" }))}
+              >
                 <FcGoogle className="mr-2" />
-                Login with Google
-              </Button>
+                Continue with Google
+              </Link>
             </form>
           </div>
           <div className="mt-4 text-center text-sm">

@@ -22,8 +22,11 @@ import { CreateProductPage } from "./pages/seller/create-product";
 import { CardOrderBuyer } from "@/features/orders/components/buyer/card-order";
 import { DashboardSeller } from "./pages/seller/dashboard";
 import { RegisterPage } from "./pages/auth/regist";
+
 import { ForgotPasswordPage } from "./pages/auth/forgot";
 import { ResetPasswordPage } from "./pages/auth/reset-password";
+
+import { OAuthCallback } from "./pages/oauth/callback";
 
 export const router = createBrowserRouter([
   {
@@ -89,6 +92,7 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      { path: "oauth/callback", element: <OAuthCallback /> },
       {
         path: "*",
         element: <NotFoundPage />,

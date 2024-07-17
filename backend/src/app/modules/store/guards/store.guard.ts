@@ -14,13 +14,11 @@ export class StoreGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const id = Number(request.params.id) || -1;
-    console.log(id, 'ID');
+
     const store = await this.storeService.findOne(id);
 
     if (!store) throw new NotFoundException('Store not found.');
 
-    console.log(store, 'UID');
-    console.log(request?.user?.id, 'req user id');
     if (store?.user?.id !== request?.user?.id) return false;
     return true;
   }

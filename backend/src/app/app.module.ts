@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { CommonModule } from 'src/common/common.module';
 import { ProductModule } from './modules/product/product.module';
 import { UsersModule } from './modules/users/users.module';
 import { OrderModule } from './modules/order/order.module';
@@ -10,6 +9,10 @@ import { MeModule } from './modules/me/me.module';
 import { OauthModule } from './modules/oauth/oauth.module';
 import { CronModule } from './modules/cron/cron.module';
 import { PaymentModule } from './modules/payment/payment.module';
+import { AppController } from './app.controller';
+import { AddressModule } from './modules/address/address.module';
+import { TemplateModule } from './modules/template/template.module';
+import { CommonModule } from 'src/common/common.module';
 
 @Module({
   imports: [
@@ -24,6 +27,9 @@ import { PaymentModule } from './modules/payment/payment.module';
     OauthModule,
     CronModule,
     PaymentModule,
+    AddressModule,
+    TemplateModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
