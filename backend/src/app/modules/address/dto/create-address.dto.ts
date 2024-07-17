@@ -1,9 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { z } from 'zod';
 
 export class CreateAddressDto {
-  @ApiProperty()
-  name: string;
+  name: string = 'Address 1';
   address: string;
   postalCode: string;
   city: string;

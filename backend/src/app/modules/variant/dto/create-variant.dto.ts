@@ -1,15 +1,19 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { z } from 'zod';
+
+class Variant {
+  name: string;
+  isActive?: boolean;
+  weightInGram?: number;
+  stock?: number;
+  price?: number;
+}
 
 export class CreateVariantDto {
   productId: number;
   parentId?: number;
-  variants: {
-    name: string;
-    isActive?: boolean;
-    weightInGram?: number;
-    stock?: number;
-    price?: number;
-  }[];
+  @ApiProperty({ type: () => [Variant] })
+  variants: Variant[];
 }
 
 export const createVariantSchema = z.object({

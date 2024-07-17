@@ -32,7 +32,6 @@ export class VariantService {
   }
 
   async update(id: number, updateVariantDto: UpdateVariantDto) {
-    await this.findOne(id);
     return this.prismaService.variant.update({
       where: { id },
       data: updateVariantDto,
@@ -40,7 +39,6 @@ export class VariantService {
   }
 
   async remove(id: number) {
-    await this.findOne(id);
     return this.prismaService.variant.delete({ where: { id } });
   }
 }

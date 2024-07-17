@@ -15,6 +15,7 @@ const config = new DocumentBuilder()
   .addTag('Stores')
   .addTag('Templates')
   .addTag('Users')
+  .addBearerAuth()
   .build();
 
 export const document = (app: INestApplication<any>) =>

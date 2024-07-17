@@ -76,8 +76,6 @@ export class ProductService {
   }
 
   async update(id: number, { categories, ...dto }: UpdateProductDto) {
-    // find first the product if not found it will throw Exception
-    await this.findOne(id);
     // update using transation
     return await this.prismaService.$transaction(async (tx) => {
       // update the product and connect or create the categories
@@ -111,8 +109,6 @@ export class ProductService {
   }
 
   async remove(id: number) {
-    // find first the product if not found it will throw Exception
-    await this.findOne(id);
     // delete the product
     return await this.prismaService.product.delete({
       where: { id },

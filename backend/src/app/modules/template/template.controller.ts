@@ -23,8 +23,10 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validatio
 import { TemplateGuard } from './guards/template.guard';
 import { StoreGuard } from '../store/guards/store.guard';
 import { StoreService } from '../store/store.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller()
+@ApiTags('Templates')
 export class TemplateController {
   constructor(
     private readonly templateService: TemplateService,

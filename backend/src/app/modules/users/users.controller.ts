@@ -15,8 +15,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { createUserSchema } from './users.validation';
 import { Roles } from 'src/common/decorators/roles/role';
+import { ApiTags } from '@nestjs/swagger';
+import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -29,11 +32,13 @@ export class UsersController {
   }
 
   @Get()
+  @SkipAuth()
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
+  @SkipAuth()
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }

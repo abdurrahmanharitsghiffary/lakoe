@@ -2,14 +2,17 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import { document } from './common/libs/swagger';
+import helmet from 'helmet';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
+  app.use(helmet());
+  app.enableCors();
   app.setGlobalPrefix('/api/v1');
 
   SwaggerModule.setup('docs', app, document(app), {
     useGlobalPrefix: true,
-    explorer: true,
+    jsonDocumentUrl: '/api-json',
   });
 
   await app.listen(3000);

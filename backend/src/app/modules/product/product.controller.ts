@@ -33,7 +33,9 @@ import { User } from '../../../common/decorators/user';
 import { UserPayload } from 'src/common/types';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { ProductGuard } from './guards/product.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Products')
 @Controller('products')
 export class ProductController {
   constructor(

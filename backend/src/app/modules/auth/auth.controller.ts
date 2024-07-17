@@ -9,7 +9,11 @@ import {
 
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { hours, Throttle } from '@nestjs/throttler';
+import { ApiTags } from '@nestjs/swagger';
+import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 
+@ApiTags('Auth')
+@SkipAuth()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

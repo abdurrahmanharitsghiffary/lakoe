@@ -1,7 +1,9 @@
 import { Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { snap } from 'src/common/libs/midtrans';
 
 @Controller('payments')
+@ApiTags('Payments')
 export class PaymentController {
   @Post('pay')
   @HttpCode(HttpStatus.OK)

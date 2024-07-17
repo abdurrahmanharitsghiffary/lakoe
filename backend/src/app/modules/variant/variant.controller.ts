@@ -23,8 +23,10 @@ import { ProductGuard } from './guards/product.guard';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 import { ParentVariantGuard } from './guards/parent-variant.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller()
+@ApiTags('Variants')
 export class VariantController {
   constructor(
     private readonly variantService: VariantService,
@@ -82,14 +84,19 @@ export class VariantController {
   @Patch('variants/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(VariantGuard)
-  update(@Param('id') id: string, @Body() updateVariantDto: UpdateVariantDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateVariantDto: UpdateVariantDto,
+  ) {
+    await this.variantService.findOne(+id);
     return this.variantService.update(+id, updateVariantDto);
   }
 
   @Delete('variants/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(VariantGuard)
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
+    await this.variantService.findOne(+id);
     return this.variantService.remove(+id);
   }
 }

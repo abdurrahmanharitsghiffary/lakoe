@@ -16,8 +16,10 @@ import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 import { User } from 'src/common/decorators/user';
 import { PrismaService } from 'src/common/services/prisma.service';
 import * as crypto from 'crypto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('oauth')
+@ApiTags('OAuth')
 @SkipAuth()
 export class OauthController {
   constructor(
