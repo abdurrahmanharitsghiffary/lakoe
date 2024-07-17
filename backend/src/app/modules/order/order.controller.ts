@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { CreateInvoiceDto, CreateOrderDto } from './dto/create-order.dto';
 
 @Controller('order')
 export class OrderController {
@@ -26,8 +26,8 @@ export class OrderController {
   //   return this.orderService.update(+id, updateOrderDto);
   // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.orderService.remove(+id);
+  // }
 }

@@ -90,7 +90,7 @@ export const router = createBrowserRouter([
             element: <Delivery />,
           },
           {
-            path: "settings/paymentMethod",
+            path: "settings/payment",
             element: <PaymentMethod/>
           }
         ],

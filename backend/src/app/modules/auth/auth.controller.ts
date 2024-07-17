@@ -14,7 +14,7 @@ import { hours, Throttle } from '@nestjs/throttler';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Throttle({ default: { ttl: hours(1), limit: 5 } })
+  // @Throttle({ default: { ttl: hours(1), limit: 5 } })
   @Post('register')
   async create(
     @Body(new ZodValidationPipe(createAuthSchema)) response: CreateAuthDto,

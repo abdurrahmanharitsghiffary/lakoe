@@ -1,8 +1,8 @@
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
-import Typography from "@/components/ui/typography";
+import {Typography} from "@/components/ui/typography";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
-import { IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
 import { motion } from "framer-motion";
 
 type Courier = "jnt" | "jne" | "sicepat" | "tiki" | "grab" | "gosend";
@@ -89,7 +89,7 @@ export function Delivery() {
                     animate={{ rotate: isOpen.jnt ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <IoIosArrowUp className="w-5 h-5 m-5" />
+                    <IoIosArrowDown className="w-5 h-5 m-5" />
                   </motion.span>
                 </div>
 
@@ -148,7 +148,7 @@ export function Delivery() {
                     animate={{ rotate: isOpen.jne ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <IoIosArrowUp className="w-5 h-5 m-5" />
+                    <IoIosArrowDown className="w-5 h-5 m-5" />
                   </motion.span>
                 </div>
 
@@ -206,7 +206,7 @@ export function Delivery() {
                     animate={{ rotate: isOpen.sicepat ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <IoIosArrowUp className="w-5 h-5 m-5" />
+                    <IoIosArrowDown className="w-5 h-5 m-5" />
                   </motion.span>
                 </div>
 
@@ -266,7 +266,7 @@ export function Delivery() {
                       animate={{ rotate: isOpen.grab ? 180 : 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <IoIosArrowUp className="w-5 h-5 m-5" />
+                      <IoIosArrowDown className="w-5 h-5 m-5" />
                     </motion.span>
                   </div>
 
@@ -324,7 +324,7 @@ export function Delivery() {
                       animate={{ rotate: isOpen.gosend ? 180 : 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <IoIosArrowUp className="w-5 h-5 m-5" />
+                      <IoIosArrowDown className="w-5 h-5 m-5" />
                     </motion.span>
                   </div>
                 </div>
