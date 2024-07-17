@@ -9,6 +9,7 @@ import { RoleGuard } from './guards/role/role.guard';
 import { AuthGuard } from './guards/auth/auth.guard';
 import { minutes, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
+import { BiteShipService } from './services/biteship.service';
 
 @Global()
 @Module({
@@ -27,6 +28,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ]),
   ],
   providers: [
+    BiteShipService,
     PrismaService,
     CloudinaryService,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
@@ -35,6 +37,6 @@ import { ScheduleModule } from '@nestjs/schedule';
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
     { provide: APP_GUARD, useClass: RoleGuard },
   ],
-  exports: [PrismaService, CloudinaryService],
+  exports: [PrismaService, CloudinaryService, BiteShipService],
 })
 export class CommonModule {}

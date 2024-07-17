@@ -14,6 +14,15 @@ export class LoginDto {
   password: string;
 }
 
+export class ResetTokenDto {
+  email: string;
+}
+
+export class ResetPasswordDto {
+  token: string;
+  newPassword: string;
+}
+
 export const loginSchema = z.object({
   email: z.string().email({ message: 'Invalid email' }),
   password: z.string().min(8, 'Password min length is 8 characters').max(30),
@@ -26,3 +35,16 @@ export const createAuthSchema = z.object({
   email: z.string().min(1, 'Email cannot be empty').max(255),
   password: z.string().min(8, 'Password cannot be empty').max(30),
 });
+
+export const authResetSchema = z
+  .object({
+    newPassword: z
+      .string()
+      .min(8, 'Password min length is 8 characters')
+      .max(30),
+    confirmPassword: z.string(),
+  })
+  .refine((arg) => arg.newPassword === arg.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'Passwords do not match',
+  });

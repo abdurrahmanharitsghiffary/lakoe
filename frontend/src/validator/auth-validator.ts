@@ -13,3 +13,7 @@ export const loginSchema: ZodType<Login> = z.object({
   email: z.string().email({ message: "Invalid email" }),
   password: z.string().min(8, "Password min length is 8 characters").max(30),
 });
+
+export const forgotSchema = z.object({
+  email: z.string().email({ message: "Invalid email" }),
+});
