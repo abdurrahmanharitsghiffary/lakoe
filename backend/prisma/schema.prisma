@@ -44,8 +44,6 @@ enum ProviderType {
   TWITTER
 }
 
-// Proposal: add address table for profile
-
 model Profile {
   id             Int       @id @default(autoincrement())
   fullName       String    @db.VarChar(255)
@@ -107,28 +105,25 @@ enum Role {
 }
 
 model Cart {
-  id       Int     @id @default(autoincrement())
-  prices   Decimal @db.Decimal(10, 2)
-  discount Decimal @db.Decimal(10, 2)
+  qty Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId    Int
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  storeId   Int
-  store     Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  cartItems CartItem[]
+  userId           Int
+  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productVariantId Int
+  productVariant   Variant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
 
+  @@id([userId, productVariantId])
   @@map("carts")
 }
 
 model Invoice {
   id                   Int      @id @default(autoincrement())
   prices               Decimal  @db.Decimal(10, 2)
-  serviceChange        String
+  serviceCharge        Decimal? @db.Decimal(10, 2)
   status               String
-  discount             Decimal? @db.Decimal(2, 1)
   receiverContactName  String
   receiverContactPhone String
   receiverName         String
@@ -155,11 +150,6 @@ model Invoice {
   invoiceHistories     InvoiceHistory[]
   confirmationPayments ConfirmationPayment[]
 
-  // userId    Int
-  // user      User    @relation(fields: [userId], references: [id])
-  // cart                 Cart                  @relation(fields: [cartId], references: [id])
-  // cartId               Int                   @unique
-
   @@map("invoices")
 }
 
@@ -180,25 +170,6 @@ model Payment {
 
   @@map("payments")
 }
-
-// model Payment {
-//   id     Int     @id @default(autoincrement())
-//   bank   String
-//   amount Decimal @db.Decimal(10, 2)
-//   status String
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   // user    User     @relation(fields: [userId], references: [id])
-//   // userId  Int
-//   invoice Invoice?
-//   Order   Order[]
-
-//   @@map("payments")
-// }
-
-// d
 
 model InvoiceHistory {
   id     Int    @id @default(autoincrement())
@@ -257,29 +228,12 @@ model Store {
   user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId           Int               @unique
   bankAccounts     BankAccount[]
-  carts            Cart[]
   messageTemplates MessageTemplate[]
   products         Product[]
   addresses        Address[]
-  // storeOnDecorations StoreOnDecoration[]
-  // cartItems          CartItem[]
 
   @@map("stores")
 }
-
-// model StoreOnDecoration {
-//   id Int @id @default(autoincrement())
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   decorationId Int
-//   decoration   Decoration @relation(fields: [decorationId], references: [id])
-//   storeId      Int
-//   store        Store      @relation(fields: [storeId], references: [id])
-
-//   @@map("store_on_decorations")
-// }
 
 model MessageTemplate {
   id      Int    @id @default(autoincrement())
@@ -293,18 +247,6 @@ model MessageTemplate {
 
   @@map("message_templates")
 }
-
-// model Decoration {
-//   id   Int    @id @default(autoincrement())
-//   type String
-
-//   updatedAt DateTime @updatedAt
-//   createdAt DateTime @default(now())
-
-//   storeOnDecorations StoreOnDecoration[]
-
-//   @@map("decorations")
-// }
 
 model BankAccount {
   id        Int    @id @default(autoincrement())
@@ -324,7 +266,7 @@ model BankAccount {
 model Product {
   id           Int      @id @default(autoincrement())
   name         String   @db.VarChar(125)
-  description  String   @db.Text
+  description  String?  @db.Text
   attachments  String[]
   isActive     Boolean  @default(false)
   minimumOrder Int
@@ -359,6 +301,7 @@ model Variant {
   id           Int      @id @default(autoincrement())
   name         String   @db.VarChar(125)
   isActive     Boolean  @default(false)
+  discount     Decimal? @db.Decimal(2, 1)
   sku          String?
   weightInGram Int?
   stock        Int?
@@ -372,32 +315,39 @@ model Variant {
   product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
   parentVariant Variant?      @relation("Variant", fields: [parentId], references: [id], onDelete: Cascade)
   subVariants   Variant[]     @relation("Variant")
-  cartItems     CartItem[]
   orderDetails  OrderDetail[]
+  carts         Cart[]
 
   @@unique([name, productId])
   @@map("product_variants")
 }
 
-model CartItem {
-  qty   Int
-  price Decimal @db.Decimal(10, 2)
+// model Variant {
+//   id Int @id @default(autoincrement())
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+//   product   Product @relation(fields: [productId], references: [id])
+//   productId Int
 
-  cartId         Int
-  cart           Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  variantId      Int
-  productVariant Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
-  // user           User    @relation(fields: [userId], references: [id])
-  // userId         Int
-  // storeId Int
-  // store   Store @relation(fields: [storeId], references: [id])
+//   Cart                Cart[]
+//   OrderDetail         OrderDetail[]
+// }
 
-  @@id([cartId, variantId])
-  @@map("cart_items")
-}
+// model VariantValue {
+//  variantId 
+//  variant Variant
+// }
+
+// model OptionValue {
+
+// }
+
+// model Option {
+
+// }
+
+// model ProductOption {
+
+// }
 
 model Address {
   id             Int     @id @default(autoincrement())
@@ -451,10 +401,6 @@ model Order {
   histories    OrderHistory[]
   orderDetails OrderDetail[]
   invoice      Invoice?
-  // paymentId    Int            @unique
-  // payment      Payment        @relation(fields: [paymentId], references: [id])
-  // courier      Courier        @relation(fields: [courierId], references: [id])
-  // courierId    Int            @unique
 
   @@map("orders")
 }
@@ -468,6 +414,18 @@ enum OrderStatus {
   CANCELLED
 }
 
+// model Decoration {
+//   id   Int    @id @default(autoincrement())
+//   type String
+
+//   updatedAt DateTime @updatedAt
+//   createdAt DateTime @default(now())
+
+//   storeOnDecorations StoreOnDecoration[]
+
+//   @@map("decorations")
+// }
+
 // model Transaction {
 //   id                    Int      @id @default(autoincrement())
 //   midtransTransactionId Int
@@ -478,4 +436,18 @@ enum OrderStatus {
 //   createdAt             DateTime @default(now())
 //   updatedAt             DateTime @updatedAt
 //   // Timestamp of the transaction
+// }
+
+// model StoreOnDecoration {
+//   id Int @id @default(autoincrement())
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   decorationId Int
+//   decoration   Decoration @relation(fields: [decorationId], references: [id])
+//   storeId      Int
+//   store        Store      @relation(fields: [storeId], references: [id])
+
+//   @@map("store_on_decorations")
 // }

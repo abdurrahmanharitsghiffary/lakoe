@@ -22,6 +22,7 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validatio
 import { CloudinaryService } from 'src/common/services/cloudinary.service';
 import { Roles } from 'src/common/decorators/roles/roles';
 import { ApiTags } from '@nestjs/swagger';
+import { ProductService } from '../product/product.service';
 
 @ApiTags('Stores')
 @Controller('stores')
@@ -29,6 +30,7 @@ export class StoreController {
   constructor(
     private readonly storeService: StoreService,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly productService: ProductService,
   ) {}
 
   @Post()
@@ -69,6 +71,12 @@ export class StoreController {
       bannerAttachment: bannerSrc,
       logoAttachment: logoSrc,
     });
+  }
+
+  @Get(':id/products')
+  @SkipAuth()
+  async findAllByStoreId(@Param('id') id: string) {
+    return this.productService.findAllByStoreId(+id);
   }
 
   @Get()

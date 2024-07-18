@@ -49,9 +49,14 @@ export class ProductService {
     });
   }
 
+  findAllByStoreId(storeId: number = -1, active: boolean = undefined) {
+    return this.prismaService.product.findMany({
+      where: { isActive: active, storeId },
+      select: productSelect,
+    });
+  }
+
   findAll(active: boolean = undefined) {
-    console.log(active, 'Is ACtive');
-    // select all product with isActive the same as active
     return this.prismaService.product.findMany({
       where: { isActive: active },
       select: productSelect,
