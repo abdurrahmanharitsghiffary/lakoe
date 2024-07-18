@@ -38,7 +38,7 @@ export const useLogin = () => {
           variant: "default",
         });
       }
-      navigate("/seller");
+      navigate("/seller/dashboard");
     } catch (error) {
       console.log("register error:", error);
     }

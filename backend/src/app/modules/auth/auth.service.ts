@@ -127,16 +127,17 @@ export class AuthService {
           id: verifyToken.id,
         },
       });
+
       return {
         message: 'Email verified successfully',
       };
     });
   }
 
-  async reqVerifyToken(email: string) {
+  async reqVerifyToken(userId: number) {
     const user = await this.prisma.user.findUnique({
       where: {
-        email,
+        id: userId,
       },
     });
 

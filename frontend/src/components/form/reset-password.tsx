@@ -1,10 +1,12 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axios } from "@/lib/axios";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 const resetSchema = z
   .object({
@@ -21,6 +23,8 @@ const resetSchema = z
 
 type Reset = z.infer<typeof resetSchema>;
 export function ResetForm() {
+  const navigate = useNavigate();
+  const { token } = useParams();
   const { register, handleSubmit } = useForm<Reset>({
     mode: "onChange",
     resolver: zodResolver(resetSchema),
@@ -28,8 +32,14 @@ export function ResetForm() {
 
   const onSubmit: SubmitHandler<Reset> = async (data) => {
     try {
-      const response = await axios.post("auth/reset-password", data);
+      const response = await axios.post(`auth/reset-password/${token}`, data);
       console.log("reset success", response.data);
+
+      if (!response || !response.data) {
+        throw new Error("Something went wrong");
+      }
+
+      navigate("/auth/reset-success");
     } catch (error) {
       console.error("reset error", error);
     }
@@ -45,7 +55,7 @@ export function ResetForm() {
           <div className="grid gap-4">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid gap-2">
-                <Label htmlFor="newPassword">Password</Label>
+                <Label htmlFor="newPassword">New Password</Label>
                 <Input
                   type="password"
                   placeholder="••••••••"
@@ -67,9 +77,15 @@ export function ResetForm() {
                 <Button type="submit" className="w-full mb-2">
                   Submit
                 </Button>
-                <Button variant="outline" className="w-full">
-                  Back to login
-                </Button>
+                <Link
+                  to={"/auth/login"}
+                  className={cn(
+                    "w-full mb-2",
+                    buttonVariants({ variant: "lakoePrimary" })
+                  )}
+                >
+                  Back to Login
+                </Link>
               </div>
             </form>
           </div>

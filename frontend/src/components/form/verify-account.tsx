@@ -9,14 +9,12 @@ const verifySchema = z.object({
 
 type Verify = z.infer<typeof verifySchema>;
 
-export function ForgotForm() {
+export function VerifyForm() {
   const { handleSubmit } = useForm<Verify>();
 
   const onSubmit: SubmitHandler<Verify> = async (data) => {
     try {
-      const response = await axios.post("/auth/verify-email", {
-        email: data.email,
-      });
+      const response = await axios.post("/auth/verify-email");
       console.log("verify: ", response.data);
     } catch (error) {
       console.error("verify error: ", error);
