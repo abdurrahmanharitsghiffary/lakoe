@@ -141,12 +141,12 @@ model Invoice {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  paymentId Int     @unique
-  payment   Payment @relation(fields: [paymentId], references: [id])
-  courierId Int     @unique
-  courier   Courier @relation(fields: [courierId], references: [id])
-  orderId   Int     @unique
-  order     Order   @relation(fields: [orderId], references: [id])
+  paymentId Int?     @unique
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+  courierId Int?     @unique
+  courier   Courier? @relation(fields: [courierId], references: [id])
+  orderId   Int      @unique
+  order     Order    @relation(fields: [orderId], references: [id])
 
   invoiceHistories     InvoiceHistory[]
   confirmationPayments ConfirmationPayment[]
@@ -204,12 +204,17 @@ model Courier {
   courierCode        String  @db.VarChar(30)
   courierServiceCode String  @db.VarChar(30)
   courierServiceName String  @db.VarChar(50)
+  biteshipOrderId    String  @db.VarChar(150)
+  biteshipTrackingId String  @db.VarChar(150)
+  biteshipWaybillId  String? @db.VarChar(150)
   price              Decimal @db.Decimal(10, 2)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  invoice Invoice?
+  invoice Order?   @relation(fields: [orderId], references: [id])
+  Invoice Invoice?
+  orderId Int?
 
   @@map("couriers")
 }
@@ -232,8 +237,23 @@ model Store {
   messageTemplates MessageTemplate[]
   products         Product[]
   addresses        Address[]
+  courierServices  CourierService[]
+  orders           Order[]
 
   @@map("stores")
+}
+
+model CourierService {
+  id                 Int    @id @default(autoincrement())
+  courierCode        String @db.VarChar(30)
+  courierServiceCode String @db.VarChar(30)
+  courierServiceName String @db.VarChar(50)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store   Store @relation(fields: [storeId], references: [id])
+  storeId Int
 }
 
 model MessageTemplate {
@@ -399,9 +419,12 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  histories    OrderHistory[]
-  orderDetails OrderDetail[]
-  invoice      Invoice?
+  storeId   Int?
+  store     Store?         @relation(fields: [storeId], references: [id])
+  histories OrderHistory[]
+  products  OrderDetail[]
+  invoice   Invoice?
+  Courier   Courier[]
 
   @@map("orders")
 }

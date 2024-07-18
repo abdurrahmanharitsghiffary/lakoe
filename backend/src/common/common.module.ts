@@ -9,11 +9,12 @@ import { RoleGuard } from './guards/role/role.guard';
 import { AuthGuard } from './guards/auth/auth.guard';
 import { minutes, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
-import { BiteShipService } from './services/biteship.service';
+import { BiteshipModule } from './modules/biteship/biteship.module';
 
 @Global()
 @Module({
   imports: [
+    BiteshipModule,
     ScheduleModule.forRoot(),
     JwtModule.register({
       global: true,
@@ -28,7 +29,6 @@ import { BiteShipService } from './services/biteship.service';
     ]),
   ],
   providers: [
-    BiteShipService,
     PrismaService,
     CloudinaryService,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
@@ -37,6 +37,6 @@ import { BiteShipService } from './services/biteship.service';
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
     { provide: APP_GUARD, useClass: RoleGuard },
   ],
-  exports: [PrismaService, CloudinaryService, BiteShipService],
+  exports: [PrismaService, CloudinaryService, BiteshipModule],
 })
 export class CommonModule {}

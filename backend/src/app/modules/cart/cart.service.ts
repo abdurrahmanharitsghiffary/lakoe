@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { PrismaService } from 'src/common/services/prisma.service';
+import { selectCart } from 'src/common/query/cart.select';
 
 @Injectable()
 export class CartService {
@@ -13,11 +14,15 @@ export class CartService {
         userId,
         productVariantId: createCartDto.variantId,
       },
+      select: selectCart,
     });
   }
 
   findAllByUserId(userId: number) {
-    return this.prismaService.cart.findMany({ where: { userId } });
+    return this.prismaService.cart.findMany({
+      where: { userId },
+      select: selectCart,
+    });
   }
 
   updateQty(userId: number, variantId: number, qty: number) {
@@ -26,6 +31,7 @@ export class CartService {
       where: {
         userId_productVariantId: { productVariantId: variantId, userId },
       },
+      select: selectCart,
     });
   }
 
@@ -42,6 +48,7 @@ export class CartService {
       where: {
         userId_productVariantId: { productVariantId: variantId, userId },
       },
+      select: selectCart,
     });
   }
 }

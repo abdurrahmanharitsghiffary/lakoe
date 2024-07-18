@@ -14,14 +14,10 @@ import {
   LoginDto,
   loginSchema,
 } from './dto/create-auth.dto';
-
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { hours, Throttle } from '@nestjs/throttler';
-
 import { z } from 'zod';
-
 import { ApiTags } from '@nestjs/swagger';
-
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 
 @ApiTags('Auth')

@@ -10,7 +10,7 @@ import { ActivationDto, activationSchema } from './app.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { z } from 'zod';
 import { PrismaService } from 'src/common/services/prisma.service';
-import { User } from 'src/common/decorators/user';
+import { User } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/common/types';
 
 @Controller()

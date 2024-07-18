@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart.dto';
-import { User } from 'src/common/decorators/user';
+import { User } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/common/types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { z } from 'zod';
