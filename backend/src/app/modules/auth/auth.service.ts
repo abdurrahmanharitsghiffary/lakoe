@@ -5,7 +5,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto, LoginDto } from './dto/create-auth.dto';
-
 import { PrismaService } from 'src/common/services/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
@@ -128,16 +127,17 @@ export class AuthService {
           id: verifyToken.id,
         },
       });
+
       return {
         message: 'Email verified successfully',
       };
     });
   }
 
-  async reqVerifyToken(email: string) {
+  async reqVerifyToken(userId: number) {
     const user = await this.prisma.user.findUnique({
       where: {
-        email,
+        id: userId,
       },
     });
 

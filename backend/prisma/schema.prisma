@@ -78,9 +78,8 @@ model Token {
 }
 
 model Code {
-  id   Int    @id @default(autoincrement())
-  code String @unique @db.VarChar(50)
-
+  id        Int      @id @default(autoincrement())
+  code      String   @unique @db.VarChar(50)
   token     Token    @relation(fields: [tokenId], references: [id], onDelete: Cascade)
   tokenId   Int
   createdAt DateTime @default(now())
@@ -141,12 +140,12 @@ model Invoice {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  paymentId Int     @unique
-  payment   Payment @relation(fields: [paymentId], references: [id])
-  courierId Int     @unique
-  courier   Courier @relation(fields: [courierId], references: [id])
-  orderId   Int     @unique
-  order     Order   @relation(fields: [orderId], references: [id])
+  paymentId Int?     @unique
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+  courierId Int?     @unique
+  courier   Courier? @relation(fields: [courierId], references: [id])
+  orderId   Int      @unique
+  order     Order    @relation(fields: [orderId], references: [id])
 
   invoiceHistories     InvoiceHistory[]
   confirmationPayments ConfirmationPayment[]
@@ -204,12 +203,17 @@ model Courier {
   courierCode        String  @db.VarChar(30)
   courierServiceCode String  @db.VarChar(30)
   courierServiceName String  @db.VarChar(50)
+  biteshipOrderId    String  @db.VarChar(150)
+  biteshipTrackingId String  @db.VarChar(150)
+  biteshipWaybillId  String? @db.VarChar(150)
   price              Decimal @db.Decimal(10, 2)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  invoice Invoice?
+  invoice Order?   @relation(fields: [orderId], references: [id])
+  Invoice Invoice?
+  orderId Int?
 
   @@map("couriers")
 }
@@ -232,8 +236,23 @@ model Store {
   messageTemplates MessageTemplate[]
   products         Product[]
   addresses        Address[]
+  courierServices  CourierService[]
+  orders           Order[]
 
   @@map("stores")
+}
+
+model CourierService {
+  id                 Int    @id @default(autoincrement())
+  courierCode        String @db.VarChar(30)
+  courierServiceCode String @db.VarChar(30)
+  courierServiceName String @db.VarChar(50)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId Int
 }
 
 model MessageTemplate {
@@ -290,7 +309,7 @@ model Category {
   products Product[]
 
   parentCategoryId Int?
-  parentCategory   Category?  @relation("Category", fields: [parentCategoryId], references: [id])
+  parentCategory   Category?  @relation("Category", fields: [parentCategoryId], references: [id], onDelete: Cascade)
   subCategories    Category[] @relation("Category")
 
   @@map("categories")
@@ -322,33 +341,6 @@ model Variant {
   @@unique([name, productId])
   @@map("product_variants")
 }
-
-// model Variant {
-//   id Int @id @default(autoincrement())
-
-//   product   Product @relation(fields: [productId], references: [id])
-//   productId Int
-
-//   Cart                Cart[]
-//   OrderDetail         OrderDetail[]
-// }
-
-// model VariantValue {
-//  variantId 
-//  variant Variant
-// }
-
-// model OptionValue {
-
-// }
-
-// model Option {
-
-// }
-
-// model ProductOption {
-
-// }
 
 model Address {
   id             Int     @id @default(autoincrement())
@@ -384,9 +376,9 @@ model OrderDetail {
   pricePerProduct        Decimal @db.Decimal(10, 2)
   weightPerProductInGram Int
   orderId                Int
-  order                  Order   @relation(fields: [orderId], references: [id])
+  order                  Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productVariantId       Int
-  productVariant         Variant @relation(fields: [productVariantId], references: [id])
+  productVariant         Variant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
 
   @@id([productVariantId, orderId])
 }
@@ -399,9 +391,12 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  histories    OrderHistory[]
-  orderDetails OrderDetail[]
-  invoice      Invoice?
+  storeId   Int?
+  store     Store?         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  histories OrderHistory[]
+  products  OrderDetail[]
+  invoice   Invoice?
+  Courier   Courier[]
 
   @@map("orders")
 }
@@ -414,41 +409,3 @@ enum OrderStatus {
   SUCCESS
   CANCELLED
 }
-
-// model Decoration {
-//   id   Int    @id @default(autoincrement())
-//   type String
-
-//   updatedAt DateTime @updatedAt
-//   createdAt DateTime @default(now())
-
-//   storeOnDecorations StoreOnDecoration[]
-
-//   @@map("decorations")
-// }
-
-// model Transaction {
-//   id                    Int      @id @default(autoincrement())
-//   midtransTransactionId Int
-//   paymentType           String
-//   status                String
-//   amount                Int
-//   currency              String
-//   createdAt             DateTime @default(now())
-//   updatedAt             DateTime @updatedAt
-//   // Timestamp of the transaction
-// }
-
-// model StoreOnDecoration {
-//   id Int @id @default(autoincrement())
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   decorationId Int
-//   decoration   Decoration @relation(fields: [decorationId], references: [id])
-//   storeId      Int
-//   store        Store      @relation(fields: [storeId], references: [id])
-
-//   @@map("store_on_decorations")
-// }

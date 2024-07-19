@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 import { badgeVariants } from "@/components/ui/badge";
 import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { BiTrash } from "react-icons/bi";
 
 const OPTIONS: Option[] = [
   { label: "Red", value: "red" },
@@ -34,7 +36,11 @@ export function VariantForms() {
     resolver: zodResolver(z.object({ variants: z.array(variantSchema) })),
   });
 
-  const { fields, append } = useFieldArray({
+  const variants = form.watch("variants");
+
+  console.log(JSON.stringify(form.watch("variants")));
+
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "variants",
   });
@@ -44,7 +50,7 @@ export function VariantForms() {
     if (options) {
       const lastOption = (Array.from(options) ?? []).slice(-1);
       console.log(lastOption, "LAST OPTIONS");
-      if (lastOption) {
+      if (lastOption && lastOption?.[0]?.label) {
         append({
           isActive: false,
           name: lastOption?.[0]?.label ?? "",
@@ -70,11 +76,21 @@ export function VariantForms() {
         />
 
         {fields.map((field, i) => (
-          <div key={field?.id} className="flex flex-col gap-2">
-            <h2 className="font-semibold text-xl flex gap-4 items-center text-center">
-              <span>{field.name}</span>
-              <Switch {...form.register(`variants.${i}.isActive`)} />
-            </h2>
+          <div key={field?.id} className="flex flex-col">
+            <div className="font-semibold text-xl flex gap-4 items-center text-center justify-between">
+              <h2 className="capitalize">{variants?.[i]?.name}</h2>
+              <div className="flex gap-4 items-center">
+                <Switch {...form.register(`variants.${i}.isActive`)} />
+                <Button
+                  type="button"
+                  onClick={() => remove(i)}
+                  variant="outline"
+                  size="icon"
+                >
+                  <BiTrash size={18} />
+                </Button>
+              </div>
+            </div>
             <div className="flex justify-start gap-2 w-full mb-2">
               <ShadcnControlled
                 label="Name"
@@ -82,6 +98,7 @@ export function VariantForms() {
                 name={`variants.${i}.name`}
               />
               <ShadcnControlled
+                type="number"
                 label="Stock"
                 startAdornment="Rp."
                 control={form.control}
@@ -90,11 +107,13 @@ export function VariantForms() {
             </div>
             <div className="flex justify-start gap-2">
               <ShadcnControlled
+                type="number"
                 label="Price"
                 control={form.control}
                 name={`variants.${i}.price`}
               />
               <ShadcnControlled
+                type="number"
                 label="Weight"
                 endAdornment="gram"
                 control={form.control}

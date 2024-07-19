@@ -16,26 +16,36 @@ export class EmailService {
   async sendResetPassword(email: string, token: string) {
     const frontEndUrl = process.env.BASE_CLIENT_URL;
     const resetUrl = `${frontEndUrl}/auth/reset-password/${token}`;
-    const info = await this.transporter.sendMail({
-      from: 'Lakoe <namikazeuzumaki43@gmail.com>', // sender address
-      to: email, // list of receivers
-      subject: 'Verification Link', // Subject line
-      html: `<a href="${resetUrl}">Reset Password!</a>`, // html body
-    });
-
-    return info;
+    try {
+      const info = await this.transporter.sendMail({
+        from: 'Lakoe <namikazeuzumaki43@gmail.com>', // sender address
+        to: email, // list of receivers
+        subject: 'Verification Link', // Subject line
+        html: `<a href="${resetUrl}">Reset Password!</a>`, // html body
+      });
+      console.log(info);
+      return info;
+    } catch (err) {
+      console.error(err, 'EMAIL SERVICE ERROR');
+      return false;
+    }
   }
 
   async sendVerifyEmail(email: string, token: string) {
-    const frontEndUrl = process.env.BASE_CLIENT_URL;
-    const verifyUrl = `${frontEndUrl}/auth/verify-account/${token}`;
-    const info = await this.transporter.sendMail({
-      from: 'Lakoe <namikazeuzumaki43@gmail.com>', // sender address
-      to: email, // list of receivers
-      subject: 'Verification Link', // Subject line
-      html: `<a href="${verifyUrl}">Verification Email!</a>`, // html body
-    });
-
-    return info;
+    const backEndUrl = process.env.BASE_API_URL;
+    const verifyUrl = `${backEndUrl}/auth/verify-email/${token}`;
+    try {
+      const info = await this.transporter.sendMail({
+        from: 'Lakoe <namikazeuzumaki43@gmail.com>', // sender address
+        to: email, // list of receivers
+        subject: 'Verification Link', // Subject line
+        html: `<a href="${verifyUrl}">Verification Email!</a>`, // html body
+      });
+      console.log(info);
+      return info;
+    } catch (err) {
+      console.error(err, 'EMAIL SERVICE ERROR');
+      return false;
+    }
   }
 }

@@ -5,10 +5,12 @@ import { loginSchema } from "@/validator/auth-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useSessionActions } from "./use-session";
 
 export const useLogin = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { login } = useSessionActions();
 
   const {
     register,
@@ -28,7 +30,7 @@ export const useLogin = () => {
       const user = response.data.user;
 
       if (token) {
-        localStorage.setItem("token", token);
+        login(token);
       }
 
       if (user) {
@@ -38,7 +40,7 @@ export const useLogin = () => {
           variant: "default",
         });
       }
-      navigate("/seller");
+      navigate("/seller/dashboard");
     } catch (error) {
       console.log("register error:", error);
     }

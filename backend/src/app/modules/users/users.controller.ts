@@ -10,11 +10,10 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, createUserSchema } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
-import { createUserSchema } from './users.validation';
-import { Roles } from 'src/common/decorators/roles/role';
+import { Roles } from 'src/common/decorators/roles/roles.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 

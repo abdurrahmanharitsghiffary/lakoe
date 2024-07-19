@@ -1,38 +1,36 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Z } from 'src/common/libs/zod';
 import { z } from 'zod';
 
-type Product = {
-  id: number;
-  qty: number;
-};
-
-export type CreateOrderDto = {
-  description?: string;
-  products: Product[];
-} & CreateInvoiceDto
+export class Product {
+  id: number = 6;
+  qty: number = 2;
+}
 
 export const orderSchema = z.object({
   description: z.string().optional(),
-  product: z.string()
-})
+  product: z.string(),
+});
 
+export class CreateInvoiceDto {
+  receiverContactName: string = 'John Doe';
+  receiverContactPhone: string = '08170032123';
+  receiverName: string = 'John Doe';
+  receiverAddressPhone: string = '08170032123';
+  receiverAddress: string = 'Jakarta lb bulus';
+  receiverPostalCode: string = '12950';
+  receiverCity: string = 'Bogor';
+  receiverDistrict: string = 'Parung';
+  receiverProvince: string = 'Jawa Barat';
+  receiverLatitude?: string = '-6.436870204535388';
+  receiverLongitude?: string = '106.7109946274437';
+}
 
-export type CreateInvoiceDto = {
-  receiverContactName: string;
-  receiverContactPhone: string;
-  receiverName: string;
-  receiverAddressPhone: string;
-  receiverAddress: string;
-  receiverPostalCode: string;
-  receiverCity: string;
-  receiverDistrict: string;
-  receiverProvince: string;
-  receiverLatitude?: string;
-  receiverLongitude?: string;
-  paymentId: number;
-  courierId: number; 
-};
-
+export class CreateOrderDto extends CreateInvoiceDto {
+  description?: string;
+  @ApiProperty({ type: () => [Product] })
+  products: Product[];
+}
 
 export const invoiceSchema = z.object({
   receiverContactName: z.string(),

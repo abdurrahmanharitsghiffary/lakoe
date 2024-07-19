@@ -1,39 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { Prisma } from '@prisma/client';
+import { BiteshipService } from 'src/common/modules/biteship/biteship.service';
+import { ERROR_CODE } from 'src/common/constants';
+import {
+  selectOrder,
+  selectOrderSimplified,
+} from 'src/common/query/order.select';
+import { FindAllOptions } from './dto/index.dto';
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly biteshipService: BiteshipService,
+  ) {}
 
   async create(createOrderDto: CreateOrderDto) {
-    console.log("createOrderDto", createOrderDto);
-    const { products, description, ...invoiceData} = createOrderDto;
+    console.log('createOrderDto', createOrderDto);
+    const { products, description, ...invoiceData } = createOrderDto;
 
-    console.log("invoice", invoiceData);
+    console.log('invoice', invoiceData);
 
-    return this.prisma.$transaction(async (tx) => {
-      // 1. Buat order
-      const order = await tx.order.create({
-        data: {
-          description,
-          status: 'NOT_PAID',
-        },
-      });
-
-      console.log("order", order);
-
-      // 2. Ambil data produk variant berdasarkan ID produk dari DTO
+    return this.prismaService.$transaction(async (tx) => {
+      const storeIds = new Set();
       const productIds = products.map((p) => p.id);
-      console.log("productIds", productIds);
 
       const productVariants = await tx.variant.findMany({
         where: { id: { in: productIds } },
+        include: { product: { select: { storeId: true, isActive: true } } },
       });
-      console.log("productVariant", productVariants);
 
-      // 3. Validasi produk variant
+      productVariants.forEach((p) => {
+        storeIds.add(p.product.storeId);
+      });
+
+      if (storeIds.size > 1)
+        throw new BadRequestException(
+          'You cannot order products from multiple stores in a single transaction.',
+        );
+
       const errors = [];
 
       products.forEach((product) => {
@@ -42,7 +52,8 @@ export class OrderService {
         if (!productVariant) {
           errors.push({
             id: product.id,
-            message: 'Product variant not found',
+            message: 'Product variant not found.',
+            code: ERROR_CODE.NOT_FOUND,
           });
           return;
         }
@@ -50,27 +61,42 @@ export class OrderService {
         if (productVariant.stock < product.qty) {
           errors.push({
             id: product.id,
-            message: 'Insufficient stock',
+            message: 'Insufficient stock.',
+            code: ERROR_CODE.INSUFFICIENT_STOCK,
+          });
+        }
+
+        if (!productVariant.product.isActive) {
+          errors.push({
+            id: product.id,
+            message: 'Product is inactive.',
+            code: ERROR_CODE.NOT_ACTIVE,
           });
         }
 
         if (!productVariant.isActive) {
           errors.push({
             id: product.id,
-            message: 'Product variant is inactive',
-            type: 'variant',
+            message: 'Product variant is inactive.',
+            code: ERROR_CODE.NOT_ACTIVE,
           });
         }
       });
 
       if (errors.length > 0) {
-        throw {
+        throw new BadRequestException({
+          success: false,
+          message: 'Failed to create an order.',
           errors,
-          statusCode: 422,
-        };
+        });
       }
 
-      // 4. Buat order details untuk setiap produk
+      const order = await tx.order.create({
+        data: { storeId: storeIds?.[0], description, status: 'NOT_PAID' },
+      });
+
+      console.log('productVariant', productVariants);
+
       const orderDetails = products.map((product) => {
         const productVariant = productVariants.find((p) => p.id === product.id);
         return {
@@ -81,14 +107,18 @@ export class OrderService {
           weightPerProductInGram: productVariant.weightInGram,
         };
       });
-      console.log("orderDetails", orderDetails);
+      console.log('orderDetails', orderDetails);
 
-      // 5. Buat order detail di database
-      await tx.orderDetail.createMany({
+      const createdOrder = await tx.orderDetail.createManyAndReturn({
         data: orderDetails,
+        select: {
+          qty: true,
+          pricePerProduct: true,
+          weightPerProductInGram: true,
+          productVariant: { select: { name: true, price: true } },
+        },
       });
 
-      // 6. Update stok produk variant
       for (const product of products) {
         await tx.variant.update({
           where: { id: product.id },
@@ -96,20 +126,17 @@ export class OrderService {
         });
       }
 
-      // 7. Hitung total harga semua produk
       const totalPrice = orderDetails.reduce((total, detail) => {
         return total + +detail.pricePerProduct * detail.qty;
       }, 0);
 
-      console.log("totalprice", totalPrice);
+      console.log('totalprice', totalPrice);
 
-      // 8. Buat invoice dengan harga total
-      await tx.invoice.create({
+      const invoice = await tx.invoice.create({
         data: {
+          status: 'idk',
           prices: totalPrice,
-          serviceChange: 'Your service charge',
-          status: 'NOT_PAID',
-          discount: null, // atau nilainya sesuai dengan kondisi Anda
+          serviceCharge: 0,
           receiverContactName: invoiceData.receiverContactName,
           receiverContactPhone: invoiceData.receiverContactPhone,
           receiverName: invoiceData.receiverName,
@@ -121,10 +148,55 @@ export class OrderService {
           receiverProvince: invoiceData.receiverProvince,
           receiverLatitude: invoiceData.receiverLatitude,
           receiverLongitude: invoiceData.receiverLongitude,
-          invoiceNumber: 'INV-' + new Date().getTime(),
-          payment: { connect: { id: invoiceData.paymentId } }, //invoiceData.paymentId
-          courier: { connect: { id: invoiceData.courierId } }, //invoiceData.courierId
+          invoiceNumber: 'INV-' + Date.now(),
           order: { connect: { id: order.id } },
+        },
+      });
+
+      const biteshipOrder = await this.biteshipService.createOrder({
+        courier_company: 'jne',
+        courier_type: 'reg',
+        order_note: order.description,
+        delivery_type: 'now',
+        reference_id: Date.now().toString(),
+        destination_note: 'Hello world',
+        destination_address: invoice.receiverAddress,
+        destination_contact_name: invoice.receiverContactName,
+        destination_contact_phone: invoice.receiverContactPhone,
+        destination_coordinate: {
+          latitude: +invoice.receiverLatitude,
+          longitude: +invoice.receiverLongitude,
+        },
+        origin_postal_code: 16330,
+        origin_coordinate: {
+          latitude: -6.439818032404368,
+          longitude: 106.69847946516565,
+        },
+        origin_address: 'Lebak Bulus MRT...',
+        origin_contact_name: 'JAMAL BOOLEAN',
+        origin_contact_phone: '+6285612122121',
+        items: createdOrder.map((order) => ({
+          name: order.productVariant.name,
+          quantity: order.qty,
+          value: +order.pricePerProduct,
+          weight: order.weightPerProductInGram,
+        })),
+      });
+
+      await tx.invoice.update({
+        where: { id: invoice.id },
+        data: { status: biteshipOrder.status },
+      });
+
+      await tx.courier.create({
+        data: {
+          invoice: { connect: { id: invoice.id } },
+          biteshipOrderId: biteshipOrder.id,
+          biteshipTrackingId: biteshipOrder.courier.tracking_id,
+          courierCode: biteshipOrder.courier.company,
+          courierServiceCode: biteshipOrder.courier.type,
+          courierServiceName: 'PLACEHOLDER DATA',
+          price: biteshipOrder.price,
         },
       });
 
@@ -132,40 +204,171 @@ export class OrderService {
     });
   }
 
-  async findAll() {
-    return await this.prisma.order.findMany();
+  async getOrderTracking(orderId: number) {
+    const order = await this.findOne(orderId);
+
+    return await this.biteshipService.getTracking(
+      order.invoice.courier.biteshipTrackingId,
+    );
   }
 
-  async findById(id: number) {
-    return this.prisma.order.findUnique({
+  async getOrderPublicTracking(orderId: number) {
+    const order = await this.findOne(orderId);
+
+    return await this.biteshipService.getPublicTracking(
+      order.invoice.courier.biteshipWaybillId,
+      order.invoice.courier.courierCode,
+    );
+  }
+
+  async findOne(id: number) {
+    const order = await this.prismaService.order.findUnique({
       where: { id },
+      select: selectOrder,
+    });
+
+    if (!order) throw new NotFoundException('Order not found.');
+    return {
+      ...order,
+      products: order.products.map((product) => product.productVariant),
+    };
+  }
+
+  async getAllStatusCount(storeId: number) {
+    const [
+      cancelledCount,
+      newOrderCount,
+      notPaidCount,
+      onDeliveryCount,
+      readyToDeliverCount,
+      successCount,
+    ] = await this.prismaService.$transaction([
+      this.prismaService.order.count({
+        where: { storeId, status: 'CANCELLED' },
+      }),
+      this.prismaService.order.count({
+        where: { storeId, status: 'NEW_ORDER' },
+      }),
+      this.prismaService.order.count({
+        where: { storeId, status: 'NOT_PAID' },
+      }),
+      this.prismaService.order.count({
+        where: { storeId, status: 'ON_DELIVERY' },
+      }),
+      this.prismaService.order.count({
+        where: { storeId, status: 'READY_TO_DELIVER' },
+      }),
+      this.prismaService.order.count({ where: { storeId, status: 'SUCCESS' } }),
+    ]);
+
+    return {
+      _count: {
+        CANCELLED: cancelledCount,
+        NEW_ORDER: newOrderCount,
+        NOT_PAID: notPaidCount,
+        ON_DELIVERY: onDeliveryCount,
+        READY_TO_DELIVER: readyToDeliverCount,
+        SUCCESS: successCount,
+      },
+    };
+  }
+
+  async findAllByStoreId(storeId: number, options: FindAllOptions) {
+    let createdDateSortOption: 'desc' | 'asc' = 'desc';
+
+    switch (options?.sort_by) {
+      case 'oldest':
+        createdDateSortOption = 'asc';
+        break;
+      case 'latest':
+        createdDateSortOption = 'desc';
+        break;
+    }
+
+    const counts = await this.prismaService.order.count({
+      select: { status: true },
+    });
+
+    console.log(counts);
+
+    const orders = await this.prismaService.order.findMany({
+      where: {
+        storeId,
+        description: { contains: options?.q ?? '' },
+        invoice: {
+          courier: { courierCode: { in: options?.couriers?.split(',') } },
+        },
+        status: { in: options?.status?.split(',') as any },
+      },
+      orderBy: [{ createdAt: createdDateSortOption }, { id: 'asc' }],
+      select: selectOrderSimplified,
+    });
+
+    return orders.map((order) => ({
+      ...order,
+      products: order.products.map((product) => product.productVariant),
+    }));
+  }
+
+  async getShippingRates(orderId: number) {
+    const order = await this.prismaService.order.findUnique({
+      where: { id: orderId },
       select: {
-        status: true,
-        orderDetails: true,
-        createdAt: true,
-        updatedAt: true,
+        storeId: true,
+        invoice: true,
+        store: {
+          select: {
+            addresses: { take: 1, orderBy: { isMainLocation: 'desc' } },
+          },
+        },
+        products: {
+          select: {
+            qty: true,
+            pricePerProduct: true,
+            productVariantId: true,
+            orderId: true,
+            weightPerProductInGram: true,
+            productVariant: {
+              select: {
+                product: { select: { storeId: true, description: true } },
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
+
+    const availableCouriers = await this.prismaService.courierService.findMany({
+      where: {
+        storeId: order?.storeId,
+      },
+    });
+
+    const couriersCode = availableCouriers.map(
+      (courier) => courier.courierCode,
+    );
+
+    const storeAddress = order.store.addresses?.[0];
+    console.log(storeAddress, 'STORE ADDRESS');
+    console.log(order?.invoice, 'INVOICE');
+    const response = await this.biteshipService.getShippingRates({
+      couriers: couriersCode as any,
+      items: order.products.map((orderDetail) => ({
+        name: orderDetail.productVariant.name,
+        quantity: orderDetail.qty,
+        value: +orderDetail.pricePerProduct,
+        weight: orderDetail.weightPerProductInGram,
+        description: orderDetail.productVariant.product.description,
+      })),
+      destination_postal_code: +order?.invoice?.receiverPostalCode,
+      origin_postal_code: +storeAddress?.postalCode,
+      destination_latitude: +order?.invoice?.receiverLatitude,
+      destination_longitude: +order?.invoice?.receiverLongitude,
+      origin_latitude: +storeAddress?.latitude,
+      origin_longitude: +storeAddress?.longitude,
+    });
+
+    return response?.pricing;
   }
-
-  // async update(id: number, updateOrderDto: UpdateOrderDto) {
-  //   return await this.prisma.order.update({
-  //     where: {id},
-  //     data: updateOrderDto,
-  //   })
-  // }
-
-  // async remove(id: number) {
-  //   return this.prisma.$transaction(async (tx) => {
-  //     // Hapus semua order details yang berhubungan dengan order yang akan dihapus
-  //     await tx.orderDetail.deleteMany({
-  //       where: { orderId: id },
-  //     });
-
-  //     // Setelah order details dihapus, hapus order-nya
-  //     return await tx.order.delete({
-  //       where: { id },
-  //     });
-  //   });
-  // }
 }

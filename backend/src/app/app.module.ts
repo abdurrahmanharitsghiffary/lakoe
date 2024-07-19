@@ -14,6 +14,7 @@ import { AddressModule } from './modules/address/address.module';
 import { TemplateModule } from './modules/template/template.module';
 import { CommonModule } from 'src/common/common.module';
 import { CartModule } from './modules/cart/cart.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CartModule } from './modules/cart/cart.module';
     AddressModule,
     TemplateModule,
     CartModule,
+    CategoryModule,
   ],
   controllers: [AppController],
 })

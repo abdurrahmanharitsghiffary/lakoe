@@ -10,19 +10,26 @@ import {
   UploadedFiles,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { StoreService } from './store.service';
-import { CreateStoreDto, createStoreSchema } from './dto/create-store.dto';
+import {
+  CreateStoreDto,
+  createStoreSchema,
+  GetShippingRatesDto,
+} from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
-import { User } from '../../../common/decorators/user';
+import { User } from '../../../common/decorators/user.decorator';
 import { UserPayload } from 'src/common/types';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { CloudinaryService } from 'src/common/services/cloudinary.service';
-import { Roles } from 'src/common/decorators/roles/roles';
+import { Roles } from 'src/common/decorators/roles/roles.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { ProductService } from '../product/product.service';
+import { OrderService } from '../order/order.service';
+import { FindAllOptions } from '../order/dto/index.dto';
 
 @ApiTags('Stores')
 @Controller('stores')
@@ -31,6 +38,7 @@ export class StoreController {
     private readonly storeService: StoreService,
     private readonly cloudinaryService: CloudinaryService,
     private readonly productService: ProductService,
+    private readonly orderService: OrderService,
   ) {}
 
   @Post()
@@ -73,10 +81,33 @@ export class StoreController {
     });
   }
 
+  @Get(':id/orders')
+  @SkipAuth()
+  async findOrdersByStoreId(
+    @Param('id') id: string,
+    @Query() options: FindAllOptions,
+  ) {
+    return this.orderService.findAllByStoreId(+id, options);
+  }
+
   @Get(':id/products')
   @SkipAuth()
   async findAllByStoreId(@Param('id') id: string) {
     return this.productService.findAllByStoreId(+id);
+  }
+
+  @Post(':id/shipping-rates')
+  @HttpCode(HttpStatus.OK)
+  @SkipAuth()
+  async getStoreShippingRates(
+    @Body() getShippingRateDto: GetShippingRatesDto,
+    @Param('id') id: string,
+  ) {
+    return this.storeService.getShippingRates(
+      +id,
+      getShippingRateDto.address,
+      getShippingRateDto.products,
+    );
   }
 
   @Get()

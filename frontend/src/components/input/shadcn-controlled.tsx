@@ -26,11 +26,19 @@ export const ShadcnControlled = <T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field: { onChange, ...field } }) => (
         <FormItem>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input {...props} {...field} />
+            <Input
+              {...props}
+              {...field}
+              onChange={(e) => {
+                if (props.type === "number")
+                  return onChange(Number(e.target.value));
+                onChange(e.target.value);
+              }}
+            />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />

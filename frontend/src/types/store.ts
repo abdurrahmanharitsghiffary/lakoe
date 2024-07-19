@@ -3,5 +3,6 @@ export type Store = {
   name: string;
   description: string;
   slogan: string;
-  logoAttachment: string;
+  logoAttachment: File | null;
+  bannerAttachment: File | null;
 };

@@ -14,14 +14,11 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UpdateStoreDto } from '../store/dto/update-store.dto';
 import { CloudinaryService } from 'src/common/services/cloudinary.service';
 import { StoreService } from '../store/store.service';
-import { User } from 'src/common/decorators/user';
+import { User } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/common/types';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { selectUser } from 'src/common/query/user.select';
-import { selectProfile } from 'src/common/query/profile.select';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-
-// GET STORES
 
 @ApiTags('Me')
 @ApiBearerAuth()
@@ -37,12 +34,7 @@ export class MeController {
   async getProfile(@User() user: UserPayload) {
     return this.prismaService.user.findUnique({
       where: { id: user?.id },
-      select: {
-        ...selectUser,
-        email: true,
-        isVerified: true,
-        profile: { select: { ...selectProfile, phone: true } },
-      },
+      select: selectUser,
     });
   }
 

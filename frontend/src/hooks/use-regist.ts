@@ -5,9 +5,11 @@ import { registerSchema } from "@/validator/auth-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useSessionActions } from "./use-session";
 
 export const useRegist = () => {
   const { toast } = useToast();
+  const { login } = useSessionActions();
   const navigate = useNavigate();
 
   const {
@@ -28,7 +30,7 @@ export const useRegist = () => {
       const user = response.data.user;
 
       if (token) {
-        localStorage.setItem("token", token);
+        login(token);
       }
 
       if (user) {
@@ -38,7 +40,7 @@ export const useRegist = () => {
           variant: "default",
         });
       }
-      navigate("/seller");
+      navigate("/auth/verify-account");
     } catch (error) {
       console.log("register error:", error);
     }

@@ -28,6 +28,7 @@ import { DescInput } from "@/components/input/desc-input";
 
 import { BiTrash } from "react-icons/bi";
 import { MdAddCircleOutline } from "react-icons/md";
+import { VariantForms } from "./input/variant-form";
 
 export function FormProduct() {
   const { form, onSubmit } = useAddProduct();
@@ -185,9 +186,9 @@ export function FormProduct() {
                 Buat Tipe Varian
               </Button>
             </div>
-            {/* <div className="relative">
+            <div className="relative">
               <VariantForms />
-            </div> */}
+            </div>
           </Card>
 
           <div className="flex justify-center">

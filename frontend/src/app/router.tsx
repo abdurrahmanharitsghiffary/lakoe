@@ -22,14 +22,15 @@ import { CreateProductPage } from "./pages/seller/create-product";
 import { CardOrderBuyer } from "@/features/orders/components/buyer/card-order";
 import { DashboardSeller } from "./pages/seller/dashboard";
 import { RegisterPage } from "./pages/auth/regist";
+
+
 import { Delivery } from "@/features/settings/components/delivery";
 import { PaymentMethod } from "@/features/settings/components/payment-method";
 import { ForgotPasswordPage } from "./pages/auth/forgot";
 import { ResetPasswordPage } from "./pages/auth/reset-password";
+
+
 import { OAuthCallback } from "./pages/oauth/callback";
-import { ProfileForm } from "@/features/profile/profile-form"
-import { Profile } from "@/features/profile/profile";
-import { ProfileLayout } from "./pages/profile/layout";
 
 
 export const router = createBrowserRouter([
@@ -46,53 +47,85 @@ export const router = createBrowserRouter([
       {
         path: "auth",
         errorElement: <ErrorPage />,
+        children: [{ path: "new-store", element: <StorePage /> }],
+      },
+      {
+        path: "auth",
+        element: <AuthLayout />,
+        errorElement: <ErrorPage />,
         children: [
           { path: "login", element: <LoginPage /> },
           { path: "register", element: <RegisterPage /> },
           { path: "forgot-password", element: <ForgotPasswordPage /> },
-          { path: "reset-password", element: <ResetPasswordPage /> },
+          { path: "reset-password/:token", element: <ResetPasswordPage /> },
+          { path: "verify-account", element: <VerifyPage /> },
+          { path: "verified", element: <VerifiedPage /> },
+          { path: "reset-success", element: <ResetSuccessPage /> },
         ],
       },
       {
-        path: "admin",
-        errorElement: <ErrorPage />,
-        element: <AdminLayout />,
+        path: "",
+        id: "private-admin-only",
+        element: <Authorize roles={["ADMIN", "USER"]} />,
         children: [
-          { path: "", element: <AdminHomePage /> },
-          { path: "withdrawal", element: <WithdrawalPage /> },
-          { path: "withdrawal/pending", element: <PendingWithdrawalPage /> },
-          { path: "withdrawal/success", element: <SuccessWithdrawalPage /> },
-          { path: "withdrawal/rejected", element: <RejectedWithdrawalPage /> },
           {
-            path: "withdrawal/on-process",
-            element: <OnProcessWithdrawalPage />,
+            path: "admin",
+            errorElement: <ErrorPage />,
+            element: <AdminLayout />,
+            children: [
+              { path: "", element: <AdminHomePage /> },
+              { path: "withdrawal", element: <WithdrawalPage /> },
+              {
+                path: "withdrawal/pending",
+                element: <PendingWithdrawalPage />,
+              },
+              {
+                path: "withdrawal/success",
+                element: <SuccessWithdrawalPage />,
+              },
+              {
+                path: "withdrawal/rejected",
+                element: <RejectedWithdrawalPage />,
+              },
+              {
+                path: "withdrawal/on-process",
+                element: <OnProcessWithdrawalPage />,
+              },
+              { path: "withdrawal/:id", element: <WithdrawalDetails /> },
+            ],
           },
-          { path: "withdrawal/:id", element: <WithdrawalDetails /> },
         ],
       },
       {
-        path: "seller",
-        errorElement: <ErrorPage />,
-        element: <SellerLayout />,
+        path: "",
+        id: "private",
+        element: <Authorize />,
         children: [
-          { path: "", element: <HomePage /> },
-          { path: "dashboard", element: <DashboardSeller /> },
-          { path: "orders/:id", element: <OrderDetails /> },
           {
-            path: "products",
-            element: <ProductsPage />,
-          },
-          {
-            path: "products/create",
-            element: <CreateProductPage />,
-          },
-          {
-            path: "orders",
-            element: <OrdersPage />,
-          },
-          {
-            path: "settings/store",
-            element: <SettingsPage />,
+            path: "seller",
+            errorElement: <ErrorPage />,
+            element: <SellerLayout />,
+            children: [
+              { path: "", element: <HomePage /> },
+              { path: "dashboard", element: <DashboardSeller /> },
+              { path: "orders/:id", element: <OrderDetails /> },
+              {
+                path: "products",
+                element: <ProductsPage />,
+              },
+              {
+                path: "products/create",
+                element: <CreateProductPage />,
+              },
+              {
+                path: "orders",
+                element: <OrdersPage />,
+              },
+              {
+                path: "settings/store",
+                element: <SettingsPage />,
+              },
+            ],
           },
           {
             path: "settings/delivery",
@@ -101,27 +134,9 @@ export const router = createBrowserRouter([
           {
             path: "settings/payment",
             element: <PaymentMethod/>
-          },
-          {
-            path: "profile", 
-            element: <Profile/>,
-            children: []
-          },
-          {
-            path: "edit-profile", 
-            element: <ProfileForm/>
-          },
+          }
         ],
       },
-      // {
-      //   path: "profile",
-      //   errorElement: <ErrorPage />,
-      //   element: <ProfileLayout/>,
-      //   children: [
-      //     {path: "", element: <Profile/>},
-      //     {path: "edit-profile", element: <ProfileForm/>}
-      //   ]
-      // },
       { path: "oauth/callback", element: <OAuthCallback /> },
       {
         path: "*",
