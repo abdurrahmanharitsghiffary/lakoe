@@ -22,16 +22,17 @@ import { CreateProductPage } from "./pages/seller/create-product";
 import { CardOrderBuyer } from "@/features/orders/components/buyer/card-order";
 import { DashboardSeller } from "./pages/seller/dashboard";
 import { RegisterPage } from "./pages/auth/regist";
-
-
 import { Delivery } from "@/features/settings/components/delivery";
 import { PaymentMethod } from "@/features/settings/components/payment-method";
 import { ForgotPasswordPage } from "./pages/auth/forgot";
 import { ResetPasswordPage } from "./pages/auth/reset-password";
-
-
 import { OAuthCallback } from "./pages/oauth/callback";
-
+import { Authorize } from "@/components/authorize";
+import { AuthLayout } from "./pages/auth/layout";
+import { ResetSuccessPage } from "./pages/auth/reset-success";
+import { VerifiedPage } from "./pages/auth/verified";
+import { VerifyPage } from "./pages/auth/verify";
+import { StorePage } from "./pages/seller/store-page";
 
 export const router = createBrowserRouter([
   {
@@ -133,8 +134,8 @@ export const router = createBrowserRouter([
           },
           {
             path: "settings/payment",
-            element: <PaymentMethod/>
-          }
+            element: <PaymentMethod />,
+          },
         ],
       },
       { path: "oauth/callback", element: <OAuthCallback /> },
