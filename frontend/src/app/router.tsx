@@ -31,6 +31,12 @@ import { ResetPasswordPage } from "./pages/auth/reset-password";
 
 
 import { OAuthCallback } from "./pages/oauth/callback";
+import { StorePage } from "./pages/seller/store-page";
+import { AuthLayout } from "./pages/auth/layout";
+import { VerifyPage } from "./pages/auth/verify";
+import { VerifiedPage } from "./pages/auth/verified";
+import { ResetSuccessPage } from "./pages/auth/reset-success";
+import { Authorize } from "@/components/authorize";
 
 
 export const router = createBrowserRouter([
