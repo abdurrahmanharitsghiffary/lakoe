@@ -49,7 +49,7 @@ export function Profile() {
             <CardTitle className="flex items-center gap-2 text-xl font-semibold text-gray-900">
               @{profile.username}
               <Link
-                to="/seller/edit-profile"
+                to="/seller/profile/edit"
                 className="mt-1 text-blue-500 hover:text-blue-700"
               >
                 <FiEdit3 />

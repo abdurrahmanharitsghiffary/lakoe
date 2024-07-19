@@ -120,9 +120,12 @@ export function ProductsPage() {
 
   const handleValueChange = (type: string) => {
     searchParams.set("active", type);
-    navigate({
-      search: "?" + getAllSearchParams(searchParams),
-    });
+    navigate(
+      {
+        search: "?" + getAllSearchParams(searchParams),
+      },
+      { replace: true }
+    );
   };
 
   const handleCheckedChange = (checked: boolean) => {
@@ -135,7 +138,10 @@ export function ProductsPage() {
 
   useEffect(() => {
     searchParams.set("q", dS);
-    navigate({ search: "?" + getAllSearchParams(searchParams) });
+    navigate(
+      { search: "?" + getAllSearchParams(searchParams) },
+      { replace: true }
+    );
   }, [dS]);
 
   const handleDeleteAllClick = async () => {
