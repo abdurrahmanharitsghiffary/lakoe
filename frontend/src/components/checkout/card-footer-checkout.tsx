@@ -52,7 +52,7 @@ export function CardFooterCheckout() {
       <Card className="flex w-full h-auto py-4">
         <div className="flex flex-col px-8 gap-2">
           <h1 className="text-2xl font-bold mx-3">Metode Pengiriman</h1>
-          {!deliveryMethod? (
+          {!deliveryMethod ? (
             <Button
               onClick={() => setIsSendOpen(true)}
               className="bg-blue-600 text-lg py-7 mx-3"
@@ -77,7 +77,7 @@ export function CardFooterCheckout() {
                 </div>
                 <div className="flex flex-row py-3 items-center">
                   <span className="text-blue-600 text-lg">
-                      Rp.{deliveryMethod.harga}
+                    Rp.{deliveryMethod.harga}
                   </span>
                   <TiArrowSortedDown />
                 </div>
@@ -108,7 +108,7 @@ export function CardFooterCheckout() {
                     key={data.nama}
                     onClick={() => {
                       setIsSendOpen(false);
-                      console.log("ini data",data)
+                      console.log("ini data", data);
                       setDeliveryMethod({
                         harga: data.harga,
                         image: data.image,
@@ -116,7 +116,7 @@ export function CardFooterCheckout() {
                         nama: data.nama,
                       });
                     }}
-                    className="bg-white  h-14 hover:bg-blue-200 rounded-sm text-black-0" 
+                    className="bg-white  h-14 hover:bg-blue-200 rounded-sm text-black-0"
                   >
                     <div className="flex items-center w-full space-x-4 ">
                       <RadioGroupItem
@@ -135,12 +135,12 @@ export function CardFooterCheckout() {
                             className="h-[50px]"
                           />
                           <p className="text-lg mt-[10px] mx-[10px] text-black-0">
-                               {data.nama}
+                            {data.nama}
                           </p>
                         </div>
                         <div className="flex flex-row ">
                           <p className="text-xl text-blue-500">
-                              Rp.{data.harga}
+                            Rp.{data.harga}
                           </p>
                         </div>
                       </Label>

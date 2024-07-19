@@ -73,14 +73,14 @@ export function RightCard() {
             <h1 className="text-2xl font-bold text-gray-400">(Pilihan)</h1>
           </div>
           <div className="flex flex-col w-full mt-8 float-right">
-                <Textarea
-                  id="note"
-                  {...register("note")}
-                  placeholder="Tuliskan Catatan di sini"
-                  className="text-lg h-12"
-                  onChange={(e) => setInput(e.target.value.length)}
-                  maxLength={150}
-                />
+            <Textarea
+              id="note"
+              {...register("note")}
+              placeholder="Tuliskan Catatan di sini"
+              className="text-lg h-12"
+              onChange={(e) => setInput(e.target.value.length)}
+              maxLength={150}
+            />
             {errors.note && <p>{errors.note.message}</p>}
             <div className="flex w-full justify-end">
               <span className="text-lg">{Input}/150</span>
