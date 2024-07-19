@@ -22,16 +22,14 @@ import { CreateProductPage } from "./pages/seller/create-product";
 import { CardOrderBuyer } from "@/features/orders/components/buyer/card-order";
 import { DashboardSeller } from "./pages/seller/dashboard";
 import { RegisterPage } from "./pages/auth/regist";
-
-
 import { Delivery } from "@/features/settings/components/delivery";
 import { PaymentMethod } from "@/features/settings/components/payment-method";
-
 import { ForgotPasswordPage } from "./pages/auth/forgot";
 import { ResetPasswordPage } from "./pages/auth/reset-password";
-
-
 import { OAuthCallback } from "./pages/oauth/callback";
+import { ProfileForm } from "@/features/profile/profile-form"
+import { Profile } from "@/features/profile/profile";
+import { ProfileLayout } from "./pages/profile/layout";
 
 
 export const router = createBrowserRouter([
@@ -103,9 +101,27 @@ export const router = createBrowserRouter([
           {
             path: "settings/payment",
             element: <PaymentMethod/>
-          }
+          },
+          {
+            path: "profile", 
+            element: <Profile/>,
+            children: []
+          },
+          {
+            path: "edit-profile", 
+            element: <ProfileForm/>
+          },
         ],
       },
+      // {
+      //   path: "profile",
+      //   errorElement: <ErrorPage />,
+      //   element: <ProfileLayout/>,
+      //   children: [
+      //     {path: "", element: <Profile/>},
+      //     {path: "edit-profile", element: <ProfileForm/>}
+      //   ]
+      // },
       { path: "oauth/callback", element: <OAuthCallback /> },
       {
         path: "*",

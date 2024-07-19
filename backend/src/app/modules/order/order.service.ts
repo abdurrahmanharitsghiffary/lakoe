@@ -21,11 +21,13 @@ export class OrderService {
           status: 'NOT_PAID',
         },
       });
+
       console.log("order", order);
 
       // 2. Ambil data produk variant berdasarkan ID produk dari DTO
       const productIds = products.map((p) => p.id);
       console.log("productIds", productIds);
+
       const productVariants = await tx.variant.findMany({
         where: { id: { in: productIds } },
       });
