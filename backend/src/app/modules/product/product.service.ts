@@ -2,7 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/common/services/prisma.service';
-import { productSelect } from './entities/product.entity';
+import { productSelect } from 'src/common/query/product.select';
+import { GetProductsSchema } from './schema/get-products';
+import { parseStringBool } from 'src/common/utils/parse-string-bool';
 
 @Injectable()
 export class ProductService {
@@ -11,31 +13,17 @@ export class ProductService {
   create(
     storeId: number,
     {
-      // price,
-      // stock,
-      // weightInGram,
       categories,
+      variants,
       ...dto
     }: CreateProductDto & { attachments?: string[] },
   ) {
     return this.prismaService.$transaction(async (tx) => {
-      // create the product with variants
-      // product will have only one variant with name the same as product
-      // also connect relationship with categories if they are found or create of not found
       const createdProduct = await tx.product.create({
         data: {
           ...dto,
           storeId,
-          // variants: {
-          //   create: {
-          //     name: dto.name,
-          //     price,
-          //     stock,
-          //     weightInGram,
-          //     // generate the SKU
-          //     sku: genSku(dto.name, dto.name, weightInGram),
-          //   },
-          // },
+          variants: { createMany: { data: variants } },
           categories: {
             connectOrCreate: categories.map((category) => ({
               create: { name: category },
@@ -56,22 +44,75 @@ export class ProductService {
     });
   }
 
-  findAll(active: boolean = undefined) {
+  findAll() {
     return this.prismaService.product.findMany({
-      where: { isActive: active },
       select: productSelect,
     });
   }
 
-  search(q: string, isActive: boolean) {
-    return this.prismaService.product.findMany({
-      where: { isActive, name: { contains: q, mode: 'insensitive' } },
-      select: productSelect,
+  async search({ q, active, categories, sort_by }: GetProductsSchema) {
+    let priceSortOptions;
+    let stockSortOptions;
+    switch (sort_by) {
+      case 'highest_price': {
+        priceSortOptions = 'desc';
+        break;
+      }
+      case 'lowest_price': {
+        priceSortOptions = 'asc';
+        break;
+      }
+      case 'highest_stock': {
+        stockSortOptions = 'desc';
+        break;
+      }
+      case 'lowest_stock': {
+        stockSortOptions = 'asc';
+        break;
+      }
+    }
+
+    const results = await this.prismaService.product.findMany({
+      where: {
+        isActive: parseStringBool(active),
+        categories: { some: { name: { in: categories?.split(',') } } },
+        name: { contains: q, mode: 'insensitive' },
+      },
+      select: {
+        ...productSelect,
+        variants: {
+          select: { ...productSelect.variants.select },
+          orderBy: [{ price: { sort: 'desc' } }],
+        },
+      },
+    });
+
+    const sortedResults = results.slice();
+
+    if (['highest_stock', 'lowest_stock'].includes(sort_by)) {
+      return sortedResults.sort((a, b) => {
+        const totalStockA = a.variants.reduce(
+          (prev, { stock }) => prev + stock,
+          0,
+        );
+        const totalStockB = b.variants.reduce(
+          (prev, { stock }) => prev + stock,
+          0,
+        );
+
+        if (stockSortOptions === 'asc') return totalStockA - totalStockB;
+        return totalStockB - totalStockA;
+      });
+    }
+
+    return sortedResults.sort((a, b) => {
+      if (priceSortOptions === 'desc')
+        return +b?.variants?.[0]?.price - +a?.variants?.[0]?.price;
+      return +a?.variants?.[0]?.price - +b?.variants?.[0]?.price;
     });
   }
 
   async findOne(id: number) {
-    // Get product bt id and if not found throw Exception
     const product = await this.prismaService.product.findUnique({
       where: { id },
       select: productSelect,
@@ -81,42 +122,28 @@ export class ProductService {
   }
 
   async update(id: number, { categories, ...dto }: UpdateProductDto) {
-    // update using transation
-    return await this.prismaService.$transaction(async (tx) => {
-      // update the product and connect or create the categories
-      const updatedProducts = await tx.product.update({
-        where: { id },
-        data: {
-          storeId: 1,
-          ...dto,
-          categories: {
-            connectOrCreate: categories.map((category) => ({
-              create: { name: category },
-              where: { name: category },
-            })),
-          },
+    const updatedProducts = await this.prismaService.product.update({
+      where: { id },
+      data: {
+        storeId: 1,
+        ...dto,
+        categories: {
+          connectOrCreate: categories.map((category) => ({
+            create: { name: category },
+            where: { name: category },
+          })),
         },
-      });
-
-      // find variant with name same as the product
-      // const variant = await tx.product.findFirst({
-      //   where: { name: dto.name },
-      // });
-
-      // update it if there are price, stock, or weight
-      // await tx.variant.update({
-      //   data: { price, stock, weightInGram },
-      //   where: { id: variant.id },
-      // });
-
-      return updatedProducts;
+      },
+      select: productSelect,
     });
+
+    return updatedProducts;
   }
 
   async remove(id: number) {
-    // delete the product
     return await this.prismaService.product.delete({
       where: { id },
+      select: productSelect,
     });
   }
 }

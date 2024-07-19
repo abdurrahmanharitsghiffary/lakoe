@@ -24,12 +24,11 @@ import {
   updateProductSchema,
 } from './dto/update-product.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
-import { parseStringBool } from 'src/common/utils/parse-string-bool';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 import { GetProductsSchema, getProductsSchema } from './schema/get-products';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from 'src/common/services/cloudinary.service';
-import { User } from '../../../common/decorators/user';
+import { User } from '../../../common/decorators/user.decorator';
 import { UserPayload } from 'src/common/types';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { ProductGuard } from './guards/product.guard';
@@ -84,9 +83,9 @@ export class ProductController {
   @SkipAuth()
   findAll(
     @Query(new ZodValidationPipe(getProductsSchema))
-    { active, q }: GetProductsSchema,
+    options: GetProductsSchema,
   ) {
-    return this.productService.search(q, parseStringBool(active));
+    return this.productService.search(options);
   }
 
   @Get(':id')

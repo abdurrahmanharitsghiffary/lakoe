@@ -1,25 +1,16 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
-import { BiteShipService } from 'src/common/services/biteship.service';
+import { BiteshipService } from 'src/common/modules/biteship/biteship.service';
 
 @Controller('orders')
 @ApiTags('Orders')
 export class OrderController {
   constructor(
     private readonly orderService: OrderService,
-    private readonly biteshipService: BiteShipService,
+    private readonly biteshipService: BiteshipService,
   ) {}
 
   @Post()
@@ -27,41 +18,35 @@ export class OrderController {
     return await this.orderService.create(createOrderDto);
   }
 
-  @Get()
-  @SkipAuth()
-  async findAll() {
-    const areaId = await this.biteshipService.getAreaID({
-      countries: 'ID',
-      input: 'Jakarta',
-      type: 'single',
-    });
-    return {
-      ...(await this.biteshipService.getShippingRates({
-        origin_postal_code: 16330,
-        destination_postal_code: 25000,
-        couriers: ['jne', 'jnt', 'anteraja', 'gojek', 'grab'],
-        items: [
-          { name: 'JAMAL DOLL', quantity: 100, value: 10000, weight: 10 },
-        ],
-      })),
-      areaId,
-    };
-  }
-
   @Get(':id')
-  @SkipAuth()
   findById(@Param('id') id: string) {
-    return this.orderService.findById(+id);
+    return this.orderService.findOne(+id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-  //   return this.orderService.update(+id, updateOrderDto);
-  // }
+  @Get(':id/shipping-rates')
+  @SkipAuth()
+  getOrderShippingRates(@Param('id') id: string) {
+    return this.orderService.getShippingRates(+id);
+  }
 
-  // @Delete(':id')
-  // @HttpCode(HttpStatus.NO_CONTENT)
-  // remove(@Param('id') id: string) {
-  //   return this.orderService.remove(+id);
-  // }
+  @Get(':id/trackings')
+  @SkipAuth()
+  async findTrackingByOrderId(@Param('id') id: string) {
+    const response = await this.orderService.getOrderTracking(+id);
+    console.log(response, 'TRACKING RESPONSE');
+    return response?.history ?? [];
+  }
+
+  @Get(':id/public-trackings')
+  @SkipAuth()
+  async findPublicTrackingByOrderId(@Param('id') id: string) {
+    const response = await this.orderService.getOrderPublicTracking(+id);
+    console.log(response, 'TRACKING RESPONSE');
+    return response?.history ?? [];
+  }
+
+  @Get('bts/:id')
+  testBiteship(@Param('id') id: string) {
+    return this.biteshipService.getOrder(id);
+  }
 }

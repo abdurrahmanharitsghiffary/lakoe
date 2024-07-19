@@ -1,6 +1,15 @@
 import { VerifiedAccount } from "@/components/form/verified";
+import { getMeOptions } from "@/features/me/api/me-api";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export function VerifiedPage() {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: getMeOptions().queryKey });
+  }, []);
+
   return (
     <>
       <VerifiedAccount />
