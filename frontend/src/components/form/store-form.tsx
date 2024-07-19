@@ -8,7 +8,8 @@ import { useStore } from "@/hooks/use-store";
 export function StoreForm() {
   const { register, handleSubmit, errors, onSubmit } = useStore();
   console.log(errors);
-  const { onChange, ...bannerField } = register("bannerAttachment");
+
+  // const { onChange, ...bannerField } = register("bannerAttachment");
 
   return (
     <>
@@ -27,16 +28,17 @@ export function StoreForm() {
                 className="flex flex-col gap-2"
               >
                 <div className="flex justify-center">
-                  <AvatarInput {...register("logoAttachment")} />
+                  <AvatarInput {...register("logo")} />
                 </div>
                 <div>
                   <BannerInput
-                  // {...bannerField}
-                  // onChange={(e) => {
-                  //   const file = e.target?.files?.[0];
-                  //   onChange(file);
-                  //   e.target.value = "";
-                  // }}
+                    {...register("banner")}
+                    // {...bannerField}
+                    // onChange={(e) => {
+                    //   const file = e.target?.files?.[0];
+                    //   onChange(file);
+                    //   e.target.value = "";
+                    // }}
                   />
                 </div>
                 <div className="grid gap-2">

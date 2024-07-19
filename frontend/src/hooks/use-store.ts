@@ -17,11 +17,24 @@ export const useStore = () => {
     resolver: zodResolver(storeSchema),
   });
 
-  console.log("watch:", watch("bannerAttachment"));
+  console.log("watch:", watch("banner"));
 
   const onSubmit: SubmitHandler<Store> = async (data) => {
     try {
-      const response = await axios.post("/stores", data, {
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("description", data.description);
+      formData.append("slogan", data.slogan);
+      if (data.logo) {
+        formData.append("logo", data.logo[0]);
+      }
+      if (data.banner) {
+        formData.append("banner", data.banner[0]);
+      }
+
+      console.log("logo:", data?.logo?.[0]);
+      console.log("banner:", data?.banner?.[0]);
+      const response = await axios.post("/stores", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

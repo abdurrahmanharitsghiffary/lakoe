@@ -14,7 +14,7 @@ export const iframeHeight = "800px";
 export const containerClassName = "w-full h-full p-4 lg:p-0";
 
 export function LoginForm() {
-  const { register, handleSubmit, onSubmit, errors } = useLogin();
+  const { register, handleSubmit, onSubmit } = useLogin();
   return (
     <>
       <div className="grid gap-2 text-center">

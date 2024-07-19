@@ -35,6 +35,7 @@ import { VerifyPage } from "./pages/auth/verify";
 import { StorePage } from "./pages/seller/store-page";
 import { ProfilePage } from "./pages/profile/profile";
 import { EditProfilePage } from "./pages/profile/edit-profile";
+import { CheckoutPage } from "./pages/buyer/checkout/checkout";
 
 export const router = createBrowserRouter([
   {
@@ -43,7 +44,10 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        children: [{ path: "", element: <CardOrderBuyer /> }],
+        children: [
+          { path: "", element: <CardOrderBuyer /> },
+          { path: "checkout", element: <CheckoutPage /> },
+        ],
         element: <BuyerLayout />,
         errorElement: <ErrorPage />,
       },
@@ -128,17 +132,18 @@ export const router = createBrowserRouter([
                 path: "settings/store",
                 element: <SettingsPage />,
               },
+
+              {
+                path: "settings/delivery",
+                element: <Delivery />,
+              },
+              {
+                path: "settings/payment",
+                element: <PaymentMethod />,
+              },
               { path: "profile", element: <ProfilePage /> },
               { path: "profile/edit", element: <EditProfilePage /> },
             ],
-          },
-          {
-            path: "settings/delivery",
-            element: <Delivery />,
-          },
-          {
-            path: "settings/payment",
-            element: <PaymentMethod />,
           },
         ],
       },
