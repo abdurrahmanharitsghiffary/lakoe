@@ -14,7 +14,6 @@ export type UserSimplified = Prisma.UserGetPayload<{
 
 export const selectUser = {
   ...selectUserSimplified,
-  password: true,
   email: true,
   role: true,
   isVerified: true,

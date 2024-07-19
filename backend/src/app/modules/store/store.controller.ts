@@ -82,6 +82,7 @@ export class StoreController {
   }
 
   @Get(':id/orders')
+  @SkipAuth()
   async findOrdersByStoreId(
     @Param('id') id: string,
     @Query() options: FindAllOptions,

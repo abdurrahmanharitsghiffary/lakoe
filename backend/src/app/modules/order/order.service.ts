@@ -6,7 +6,7 @@ import {
 import { PrismaService } from 'src/common/services/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { BiteshipService } from 'src/common/modules/biteship/biteship.service';
-import { ERROR_CODE } from 'src/common/contants';
+import { ERROR_CODE } from 'src/common/constants';
 import {
   selectOrder,
   selectOrderSimplified,
@@ -234,6 +234,45 @@ export class OrderService {
     };
   }
 
+  async getAllStatusCount(storeId: number) {
+    const [
+      cancelledCount,
+      newOrderCount,
+      notPaidCount,
+      onDeliveryCount,
+      readyToDeliverCount,
+      successCount,
+    ] = await this.prismaService.$transaction([
+      this.prismaService.order.count({
+        where: { storeId, status: 'CANCELLED' },
+      }),
+      this.prismaService.order.count({
+        where: { storeId, status: 'NEW_ORDER' },
+      }),
+      this.prismaService.order.count({
+        where: { storeId, status: 'NOT_PAID' },
+      }),
+      this.prismaService.order.count({
+        where: { storeId, status: 'ON_DELIVERY' },
+      }),
+      this.prismaService.order.count({
+        where: { storeId, status: 'READY_TO_DELIVER' },
+      }),
+      this.prismaService.order.count({ where: { storeId, status: 'SUCCESS' } }),
+    ]);
+
+    return {
+      _count: {
+        CANCELLED: cancelledCount,
+        NEW_ORDER: newOrderCount,
+        NOT_PAID: notPaidCount,
+        ON_DELIVERY: onDeliveryCount,
+        READY_TO_DELIVER: readyToDeliverCount,
+        SUCCESS: successCount,
+      },
+    };
+  }
+
   async findAllByStoreId(storeId: number, options: FindAllOptions) {
     let createdDateSortOption: 'desc' | 'asc' = 'desc';
 
@@ -245,6 +284,12 @@ export class OrderService {
         createdDateSortOption = 'desc';
         break;
     }
+
+    const counts = await this.prismaService.order.count({
+      select: { status: true },
+    });
+
+    console.log(counts);
 
     const orders = await this.prismaService.order.findMany({
       where: {

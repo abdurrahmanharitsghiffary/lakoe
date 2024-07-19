@@ -35,6 +35,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import { inputVariantProps } from "@/features/products/components/input/input-form";
 import { TabItem, Tabs } from "@/components/tabs";
+import { useGetCategories } from "@/features/categories/api/get-categories";
 
 const getCheckedProducts = (products: Product[]) => {
   return products.map((product) => ({
@@ -43,13 +44,13 @@ const getCheckedProducts = (products: Product[]) => {
   }));
 };
 
-const categoryOptions: Option[] = [
-  { label: "Pakaian", value: "pakaian" },
-  { label: "Celana", value: "celana" },
-  { label: "Elektronik", value: "elektronik" },
-  { label: "Makanan", value: "makanan" },
-  { label: "Minuman", value: "minuman" },
-];
+// const categoryOptions: Option[] = [
+//   { label: "Pakaian", value: "pakaian" },
+//   { label: "Celana", value: "celana" },
+//   { label: "Elektronik", value: "elektronik" },
+//   { label: "Makanan", value: "makanan" },
+//   { label: "Minuman", value: "minuman" },
+// ];
 
 const tabs: TabItem[] = [
   { label: "Semua", value: "all" },
@@ -62,6 +63,26 @@ export function ProductsPage() {
   const confirmNonactive = useConfirmNonactiveProduct();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [sortBy, setSortBy] = useState("lowest_price");
+  const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
+  const { data: categoryData } = useGetCategories();
+
+  const categories = categoryData?.data ?? [];
+
+  const categoryOptions = categories.map((category) => ({
+    value: category,
+    label: category,
+  }));
+  console.log(selectedCategories, "CATEGORY");
+  const searchCategories = (value: string) => {
+    return new Promise<Option[]>((resolve) => {
+      resolve(
+        categoryOptions.filter((option) =>
+          option?.label?.toLowerCase()?.includes(value?.toLowerCase())
+        )
+      );
+    });
+  };
 
   const q = searchParams.get("q") || "";
   const [s, setS] = useState(q);
@@ -71,7 +92,11 @@ export function ProductsPage() {
   const { data, isLoading } = useGetProducts({
     options: {
       q,
-      isActive: active === "all" ? undefined : parseStrBool(active),
+      categories: selectedCategories
+        .map((category) => category.value)
+        .join(","),
+      sort_by: sortBy,
+      active: active === "all" ? undefined : parseStrBool(active),
     },
   });
 
@@ -141,6 +166,10 @@ export function ProductsPage() {
     []
   );
 
+  const handleSelectChange = (value: string) => {
+    setSortBy(value);
+  };
+
   const productFallback = q ? (
     <ProductNotFoundFallback />
   ) : parseStrBool(active) ? (
@@ -188,22 +217,26 @@ export function ProductsPage() {
             <MultipleSelector
               maxSelected={3}
               hidePlaceholderWhenSelected
-              emptyIndicator="Semua kategori sudah terpilih."
               className={cn(
                 inputVariantProps({ focus: "lakoePrimary" }),
                 "flex-wrap"
               )}
+              onChange={setSelectedCategories}
+              options={categoryOptions}
+              onSearch={searchCategories}
+              delay={300}
               placeholder="Semua Kategori"
               commandProps={{ style: { flex: 1 } }}
-              defaultOptions={categoryOptions}
             />
-            <Select>
+            <Select onValueChange={handleSelectChange} value={sortBy}>
               <SelectTrigger style={{ flex: 1 }}>
                 <SelectValue placeholder="Urutkan" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="date">Hari</SelectItem>
-                <SelectItem value="month">Bulan</SelectItem>
+                <SelectItem value="highest_price">Harga Termahal</SelectItem>
+                <SelectItem value="lowest_price">Harga Terendah</SelectItem>
+                <SelectItem value="highest_stock">Stock Terbanyak</SelectItem>
+                <SelectItem value="lowest_stock">Stock Terendah</SelectItem>
               </SelectContent>
             </Select>
           </div>

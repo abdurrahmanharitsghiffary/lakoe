@@ -21,7 +21,7 @@ import { hours, Throttle } from '@nestjs/throttler';
 import { z } from 'zod';
 import { ApiTags } from '@nestjs/swagger';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
-import { User } from 'src/common/decorators/user';
+import { User } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/common/types';
 
 @ApiTags('Auth')
@@ -54,7 +54,7 @@ export class AuthController {
   }
 
   @SkipAuth()
-  @Redirect(`${process.env.BASE_CLIENT_URL}/auth/verified`, 302)
+  @Redirect(`${process.env.BASE_CLIENT_URL}/auth/verified`, HttpStatus.FOUND)
   @Get('verify-email/:token')
   async verifyEmail(@Param('token') token: string) {
     return await this.authService.verifyEmail(token);

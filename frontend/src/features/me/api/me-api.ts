@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 
 export const getMe = async () => {
   const response = await axios.get<ApiResponse<Profile>>("/me");
-
+  console.log(response, "RES");
   return response.data;
 };
 
@@ -20,6 +20,5 @@ export const getMeOptions = () => {
 export const useGetMe = () => {
   return useQuery({
     ...getMeOptions(),
-    retry: 0,
   });
 };

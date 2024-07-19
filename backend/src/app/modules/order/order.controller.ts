@@ -19,7 +19,6 @@ export class OrderController {
   }
 
   @Get(':id')
-  @SkipAuth()
   findById(@Param('id') id: string) {
     return this.orderService.findOne(+id);
   }

@@ -46,59 +46,47 @@ export function ResetForm() {
   };
 
   return (
-    <div className="w-full lg:grid lg:grid-cols-2 min-h-[100dvh]">
-      <div className="flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[350px] gap-6">
-          <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Reset Password?</h1>
+    <>
+      <div className="grid gap-2 text-center">
+        <h1 className="text-3xl font-bold">Reset Password?</h1>
+      </div>
+      <div className="grid gap-4">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid gap-2">
+            <Label htmlFor="newPassword">New Password</Label>
+            <Input
+              type="password"
+              placeholder="••••••••"
+              {...register("newPassword")}
+              required
+            />
           </div>
-          <div className="grid gap-4">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="grid gap-2">
-                <Label htmlFor="newPassword">New Password</Label>
-                <Input
-                  type="password"
-                  placeholder="••••••••"
-                  {...register("newPassword")}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  type="password"
-                  placeholder="••••••••"
-                  {...register("confirmPassword")}
-                  required
-                />
-              </div>
+          <div className="grid gap-2">
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Input
+              type="password"
+              placeholder="••••••••"
+              {...register("confirmPassword")}
+              required
+            />
+          </div>
 
-              <div className="mt-3">
-                <Button type="submit" className="w-full mb-2">
-                  Submit
-                </Button>
-                <Link
-                  to={"/auth/login"}
-                  className={cn(
-                    "w-full mb-2",
-                    buttonVariants({ variant: "lakoePrimary" })
-                  )}
-                >
-                  Back to Login
-                </Link>
-              </div>
-            </form>
+          <div className="mt-3">
+            <Button type="submit" className="w-full mb-2">
+              Submit
+            </Button>
+            <Link
+              to={"/auth/login"}
+              className={cn(
+                "w-full mb-2",
+                buttonVariants({ variant: "lakoePrimary" })
+              )}
+            >
+              Back to Login
+            </Link>
           </div>
-        </div>
+        </form>
       </div>
-      <div className="hidden bg-muted lg:block">
-        <img
-          src="/assets/placeholder.png"
-          alt="Image"
-          width="1920"
-          className="h-full w-full object-cover dark:brightness-[0.2] object-right dark:grayscale"
-        />
-      </div>
-    </div>
+    </>
   );
 }
