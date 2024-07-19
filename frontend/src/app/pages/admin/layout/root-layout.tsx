@@ -8,7 +8,7 @@ import { PiHandWithdrawBold } from "react-icons/pi";
 import { IoAnalytics, IoSettingsOutline } from "react-icons/io5";
 import { TiCancel } from "react-icons/ti";
 import { DiTerminal } from "react-icons/di";
-import Sidebar, { NavItem } from "@/components/sidebar/sidebar";
+import { Sidebar, NavItem } from "@/components/sidebar/sidebar";
 import { Helmet } from "react-helmet-async";
 
 const navItems: NavItem[] = [

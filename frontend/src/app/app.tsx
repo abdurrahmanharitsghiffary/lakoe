@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
-import AppProvider from "./app-providers";
+import { AppProvider } from "./app-providers";
 
-export default function App() {
+export function App() {
   return (
     <AppProvider>
       <Outlet />

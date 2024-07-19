@@ -1,10 +1,10 @@
 import { Button, buttonVariants } from "@/components/ui/button";
-import Typography from "@/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function ErrorPage() {
+export function ErrorPage() {
   const navigate = useNavigate();
 
   return (

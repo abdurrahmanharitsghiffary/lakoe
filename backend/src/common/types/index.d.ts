@@ -1,8 +1,9 @@
-/* eslint-disable @typescript-eslint/no-namespace */
-declare global {
-  namespace Express {
-    export interface Request {
-      user?: any;
-    }
+import { $Enums } from '@prisma/client';
+
+export type UserPayload = { id: number; role: $Enums.Role };
+
+declare module 'express' {
+  export interface Request {
+    user?: UserPayload;
   }
 }

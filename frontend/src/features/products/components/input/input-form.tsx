@@ -1,23 +1,25 @@
 import { Input, InputProps } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cva } from "class-variance-authority";
-import { forwardRef } from "react";
+import { cn } from "@/lib/utils";
+import { cva, type VariantProps } from "class-variance-authority";
+import React from "react";
 
 interface InputFormProps
   extends InputProps,
+    VariantProps<typeof inputVariantProps>,
     React.RefAttributes<HTMLInputElement> {
   label?: string;
-  placeholder: string;
+  placeholder?: string;
   startAdornment?: string;
   endAdornment?: string;
   className?: string;
   isRequired?: boolean;
 }
 
-const inputFormVariants = cva("relative", {
+const labelVariantProps = cva("relative", {
   variants: {
     isRequired: {
-      true: "after:content-['*'] after:text-destructive after:absolute after:-right-3 after:text-md after:-bottom-2 after:text-xl",
+      true: "after:content-['*'] after:text-destructive after:text-md after:ms-1",
       false: "",
     },
   },
@@ -26,7 +28,16 @@ const inputFormVariants = cva("relative", {
   },
 });
 
-const InputForm = forwardRef<HTMLInputElement, InputFormProps>(
+export const inputVariantProps = cva("", {
+  variants: {
+    focus: {
+      lakoePrimary:
+        "has-[:focus]:ring-lakoe-primary has-[:focus]:ring-2 focus:ring-offset-2 focus:outline-none focus:rounded-md",
+    },
+  },
+});
+
+const InputForm = React.forwardRef<HTMLInputElement, InputFormProps>(
   (
     {
       label,
@@ -35,20 +46,21 @@ const InputForm = forwardRef<HTMLInputElement, InputFormProps>(
       endAdornment,
       className,
       isRequired,
+      focus,
       ...props
     },
     ref
   ) => {
     return (
       <>
-        <div className="m-3">
-          <Label className={inputFormVariants({ isRequired })}>{label}</Label>
+        <div className="flex flex-col gap-2">
+          <Label className={labelVariantProps({ isRequired })}>{label}</Label>
           <Input
             ref={ref}
+            className={cn(inputVariantProps({ focus }), className)}
             placeholder={placeholder}
             startAdornment={startAdornment}
             endAdornment={endAdornment}
-            className={className}
             {...props}
           />
         </div>
@@ -57,4 +69,31 @@ const InputForm = forwardRef<HTMLInputElement, InputFormProps>(
   }
 );
 
+InputForm.displayName = "InputForm";
 export { InputForm };
+
+// export function InputForm({
+//   label,
+//   placeholder,
+//   startAdornment,
+//   endAdornment,
+//   className,
+//   isRequired,
+//   focus,
+//   ...props
+// }: InputFormProps) {
+//   return (
+//     <>
+//       <div className="flex flex-col gap-2">
+//         <Label className={labelVariantProps({ isRequired })}>{label}</Label>
+//         <Input
+//           className={cn(inputVariantProps({ focus }), className)}
+//           placeholder={placeholder}
+//           startAdornment={startAdornment}
+//           endAdornment={endAdornment}
+//           {...props}
+//         />
+//       </div>
+//     </>
+//   );
+// }

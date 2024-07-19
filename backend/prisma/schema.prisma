@@ -14,24 +14,89 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String @db.VarChar(125)
-  email    String @unique @db.VarChar(255)
-  phone    String @db.VarChar(30)
-  password String @db.VarChar(50)
-  role     Role   @default(USER)
+  id           Int           @id @default(autoincrement())
+  email        String        @unique @db.VarChar(255)
+  password     String        @db.VarChar(255)
+  isVerified   Boolean       @default(false)
+  role         Role?         @default(USER)
+  providerId   String?
+  providerType ProviderType?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  carts     Cart[]
-  invoices  Invoice[]
-  payments  Payment[]
-  orders    Order[]
-  addresses Address[]
-  // cartItems CartItem[]
+  carts   Cart[]
+  store   Store?
+  profile Profile?
+  token   Token[]
+
+  // invoices Invoice[]
+  // addresses Address[]
+  // payments Payment[]
 
   @@map("users")
+}
+
+enum ProviderType {
+  GOOGLE
+  GITHUB
+  FACEBOOK
+  TWITTER
+}
+
+model Profile {
+  id             Int       @id @default(autoincrement())
+  fullName       String    @db.VarChar(255)
+  username       String    @unique @db.VarChar(125)
+  profilePicture String?
+  bio            String?
+  phone          String?   @db.VarChar(30)
+  gender         Gender?
+  birthDate      DateTime?
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Token {
+  id    Int       @id @default(autoincrement())
+  token String    @unique
+  type  TokenType
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expiresAt DateTime?
+
+  codes Code[]
+
+  @@map("tokens")
+}
+
+model Code {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique @db.VarChar(50)
+  token     Token    @relation(fields: [tokenId], references: [id], onDelete: Cascade)
+  tokenId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("codes")
+}
+
+enum TokenType {
+  ACCESS_TOKEN
+  VERIFY_TOKEN
+  RESET_TOKEN
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }
 
 enum Role {
@@ -40,75 +105,71 @@ enum Role {
 }
 
 model Cart {
-  id       Int     @id @default(autoincrement())
-  prices   Decimal @db.Decimal(10, 2)
-  discount Decimal @db.Decimal(10, 2)
+  qty Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId    Int
-  user      User       @relation(fields: [userId], references: [id])
-  storeId   Int
-  store     Store      @relation(fields: [storeId], references: [id])
-  cartItems CartItem[]
-  Invoice   Invoice? // E: 1 to n or 1 to 1
+  userId           Int
+  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productVariantId Int
+  productVariant   Variant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
 
+  @@id([userId, productVariantId])
   @@map("carts")
 }
 
-// d
-
 model Invoice {
-  id                Int     @id @default(autoincrement())
-  prices            Decimal @db.Decimal(10, 2)
-  serviceChange     String
-  status            String
-  receiverLongitude String  @db.VarChar(20)
-  receiverLatitude  String  @db.VarChar(20)
-  receiverDistrict  String
-  receiverPhone     String
-  receiverAddress   String
-  receiverName      String
-  invoiceNumber     Int
+  id                   Int      @id @default(autoincrement())
+  prices               Decimal  @db.Decimal(10, 2)
+  serviceCharge        Decimal? @db.Decimal(10, 2)
+  status               String
+  receiverContactName  String
+  receiverContactPhone String
+  receiverName         String
+  receiverAddressPhone String
+  receiverAddress      String
+  receiverPostalCode   String
+  receiverCity         String
+  receiverDistrict     String
+  receiverProvince     String
+  receiverLatitude     String   @db.VarChar(20)
+  receiverLongitude    String   @db.VarChar(20)
+  invoiceNumber        String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  cartId               Int                   @unique
-  cart                 Cart                  @relation(fields: [cartId], references: [id])
-  paymentId            Int                   @unique
-  payment              Payment               @relation(fields: [paymentId], references: [id])
-  userId               Int
-  user                 User                  @relation(fields: [userId], references: [id])
-  confirmationPayments ConfirmationPayment[]
+  paymentId Int?     @unique
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+  courierId Int?     @unique
+  courier   Courier? @relation(fields: [courierId], references: [id])
+  orderId   Int      @unique
+  order     Order    @relation(fields: [orderId], references: [id])
+
   invoiceHistories     InvoiceHistory[]
-  // courierId            Int                   @unique
-  // courier              Courier               @relation(fields: [courierId], references: [id])
+  confirmationPayments ConfirmationPayment[]
 
   @@map("invoices")
 }
 
-// d?
-
 model Payment {
-  id                 Int     @id @default(autoincrement())
-  bank               String
-  amount             Decimal @db.Decimal(10, 2)
-  status             String
-  mootaTransactionId Int
+  id                    Int     @id @default(autoincrement())
+  midtransTransactionId String
+  midtransOrderId       String
+  bank                  String
+  paymentType           String
+  status                String
+  amount                Decimal @db.Decimal(10, 2)
+  currency              String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user    User     @relation(fields: [userId], references: [id])
-  userId  Int
-  invoice Invoice?
+  Invoice Invoice?
 
   @@map("payments")
 }
-
-// d
 
 model InvoiceHistory {
   id     Int    @id @default(autoincrement())
@@ -123,11 +184,9 @@ model InvoiceHistory {
   @@map("invoice_histories")
 }
 
-// d
-
 model ConfirmationPayment {
-  id     Int    @id @default(autoincrement())
-  amount Int
+  id     Int     @id @default(autoincrement())
+  amount Decimal @db.Decimal(10, 2)
   bank   String
 
   createdAt DateTime @default(now())
@@ -139,115 +198,75 @@ model ConfirmationPayment {
   @@map("confirmation_payments")
 }
 
-// d
-
 model Courier {
   id                 Int     @id @default(autoincrement())
   courierCode        String  @db.VarChar(30)
   courierServiceCode String  @db.VarChar(30)
   courierServiceName String  @db.VarChar(50)
+  biteshipOrderId    String  @db.VarChar(150)
+  biteshipTrackingId String  @db.VarChar(150)
+  biteshipWaybillId  String? @db.VarChar(150)
   price              Decimal @db.Decimal(10, 2)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // invoice            Invoice?
-  order   Order @relation(fields: [orderId], references: [id])
-  orderId Int   @unique
+  invoice Order?   @relation(fields: [orderId], references: [id])
+  Invoice Invoice?
+  orderId Int?
 
   @@map("couriers")
 }
 
-// d
-
 model Store {
-  id               Int    @id @default(autoincrement())
-  name             String @db.VarChar(125)
-  slogan           String @db.VarChar(125)
-  description      String @db.Text
-  domain           String @db.VarChar(125)
-  logoAttachment   String
-  bannerAttachment String
+  id               Int     @id @default(autoincrement())
+  name             String  @db.VarChar(125)
+  slogan           String  @db.VarChar(125)
+  description      String  @db.Text
+  domain           String  @db.VarChar(125)
+  logoAttachment   String?
+  bannerAttachment String?
 
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
-  bankAccounts       BankAccount[]
-  carts              Cart[]
-  storeOnDecorations StoreOnDecoration[]
-  messageTemplates   MessageTemplate[]
-  products           Product[]
-  operationHours     OperationHour[]
-  storeAddresses     Address[]
-  // cartItems          CartItem[]
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int               @unique
+  bankAccounts     BankAccount[]
+  messageTemplates MessageTemplate[]
+  products         Product[]
+  addresses        Address[]
+  courierServices  CourierService[]
+  orders           Order[]
 
   @@map("stores")
 }
 
-// d
-
-model StoreOnDecoration {
-  id Int @id @default(autoincrement())
+model CourierService {
+  id                 Int    @id @default(autoincrement())
+  courierCode        String @db.VarChar(30)
+  courierServiceCode String @db.VarChar(30)
+  courierServiceName String @db.VarChar(50)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  decorationId Int
-  decoration   Decoration @relation(fields: [decorationId], references: [id])
-  storeId      Int
-  store        Store      @relation(fields: [storeId], references: [id])
-
-  @@map("store_on_decorations")
-}
-
-// d
-
-model OperationHour {
-  id      Int      @id @default(autoincrement())
-  day     String
-  openAt  DateTime
-  closeAt DateTime
-  isOff   Boolean
-
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-
+  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId Int
-  store   Store @relation(fields: [storeId], references: [id])
-
-  @@map("operation_hours")
 }
-
-// d
 
 model MessageTemplate {
   id      Int    @id @default(autoincrement())
   name    String @db.VarChar(125)
   content String @db.Text
   storeId Int
-  store   Store  @relation(fields: [storeId], references: [id])
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
   @@map("message_templates")
 }
-
-// d
-
-model Decoration {
-  id   Int    @id @default(autoincrement())
-  type String
-
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-
-  storeOnDecorations StoreOnDecoration[]
-
-  @@map("decorations")
-}
-
-// d
 
 model BankAccount {
   id        Int    @id @default(autoincrement())
@@ -259,17 +278,15 @@ model BankAccount {
   createdAt DateTime @default(now())
 
   storeId Int
-  store   Store @relation(fields: [storeId], references: [id])
+  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
   @@map("bank_accounts")
 }
 
-// d
-
 model Product {
   id           Int      @id @default(autoincrement())
   name         String   @db.VarChar(125)
-  description  String   @db.Text
+  description  String?  @db.Text
   attachments  String[]
   isActive     Boolean  @default(false)
   minimumOrder Int
@@ -291,6 +308,10 @@ model Category {
 
   products Product[]
 
+  parentCategoryId Int?
+  parentCategory   Category?  @relation("Category", fields: [parentCategoryId], references: [id], onDelete: Cascade)
+  subCategories    Category[] @relation("Category")
+
   @@map("categories")
 }
 
@@ -299,8 +320,8 @@ model Category {
 model Variant {
   id           Int      @id @default(autoincrement())
   name         String   @db.VarChar(125)
-  image        String?
   isActive     Boolean  @default(false)
+  discount     Decimal? @db.Decimal(2, 1)
   sku          String?
   weightInGram Int?
   stock        Int?
@@ -311,109 +332,71 @@ model Variant {
   updatedAt DateTime @updatedAt
 
   productId     Int
-  product       Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
-  parentVariant Variant?   @relation("Variant", fields: [parentId], references: [id], onDelete: Cascade)
-  subVariants   Variant[]  @relation("Variant")
-  cartItems     CartItem[]
-  orders        Order[]
+  product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  parentVariant Variant?      @relation("Variant", fields: [parentId], references: [id], onDelete: Cascade)
+  subVariants   Variant[]     @relation("Variant")
+  orderDetails  OrderDetail[]
+  carts         Cart[]
 
-  // isForSale     Boolean   @default(false)
-  // VariantOption VariantOption[]
-
+  @@unique([name, productId])
   @@map("product_variants")
 }
-
-// model VariantOption {
-//   id                  Int                   @id @default(autoincrement())
-//   name                String
-//   variantId           Int
-//   variant             Variant               @relation(fields: [variantId], references: [id])
-//   VariantOptionValues VariantOptionValues[]
-// }
-
-// // d
-
-// model VariantOptionValues {
-//   id              Int           @id @default(autoincrement())
-//   sku             String
-//   weight          String
-//   stock           Int
-//   price           Int
-//   isActive        Boolean
-//   variantOptionId Int
-//   variantOption   VariantOption @relation(fields: [variantOptionId], references: [id])
-// }
-
-// d
-
-model CartItem {
-  // id             Int     @id @default(autoincrement())
-  qty   Int
-  price Decimal @db.Decimal(10, 2)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  cartId         Int
-  cart           Cart    @relation(fields: [cartId], references: [id])
-  variantId      Int
-  productVariant Variant @relation(fields: [variantId], references: [id])
-  // user           User    @relation(fields: [userId], references: [id])
-  // userId         Int
-  // storeId Int
-  // store   Store @relation(fields: [storeId], references: [id])
-
-  @@id([cartId, variantId])
-  @@map("cart_items")
-}
-
-// d
 
 model Address {
   id             Int     @id @default(autoincrement())
   name           String
   address        String
   postalCode     String  @db.VarChar(50)
-  cityDistrict   String
+  city           String
+  district       String
   province       String
   latitude       String  @db.VarChar(20)
   longitude      String  @db.VarChar(20)
   isMainLocation Boolean
-  isStoreAddress Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  storeId Int?
-  store   Store? @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  userId  Int?
-  user    User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storeId Int
+  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
 }
 
-// d
+model OrderHistory {
+  id      Int    @id @default(autoincrement())
+  content String @db.Text
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderDetail {
+  qty                    Int
+  pricePerProduct        Decimal @db.Decimal(10, 2)
+  weightPerProductInGram Int
+  orderId                Int
+  order                  Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productVariantId       Int
+  productVariant         Variant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+
+  @@id([productVariantId, orderId])
+}
 
 model Order {
-  id                   Int         @id @default(autoincrement())
-  status               OrderStatus @default(NOT_PAID)
-  qty                  Int
-  pricePerProduct      Decimal     @db.Decimal(10, 2)
-  discount             Decimal?    @db.Decimal(2, 1)
-  receiverAddress      String
-  receiverPostalCode   String
-  receiverCityDistrict String
-  receiverProvince     String
-  receiverLatitude     String      @db.VarChar(20)
-  receiverLongitude    String      @db.VarChar(20)
+  id          Int         @id @default(autoincrement())
+  status      OrderStatus @default(NOT_PAID)
+  description String?     @db.Text
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // ONGOING
-  userId           Int?
-  user             User?    @relation(fields: [userId], references: [id])
-  productVariantId Int
-  productVariant   Variant  @relation(fields: [productVariantId], references: [id])
-  courier          Courier?
+  storeId   Int?
+  store     Store?         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  histories OrderHistory[]
+  products  OrderDetail[]
+  invoice   Invoice?
+  Courier   Courier[]
 
   @@map("orders")
 }
@@ -426,4 +409,3 @@ enum OrderStatus {
   SUCCESS
   CANCELLED
 }
-

@@ -1,57 +1,47 @@
-import {
-    IsInt,
-    IsOptional,
-    IsString,
-    IsDecimal,
-    IsNotEmpty
-} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Z } from 'src/common/libs/zod';
+import { z } from 'zod';
 
-export class CreateOrderDto {
-    @IsInt()
-    qty: number;
-
-    @IsDecimal()
-    pricePerProduct: number;
-
-    @IsDecimal({ decimal_digits: '2,1' })
-    @IsOptional()
-    discount?: number;
-
-    @IsString()
-    @IsNotEmpty()
-    receiverAddress: string;
-
-    @IsString()
-    @IsNotEmpty()
-    receiverPostalCode: string;
-
-    @IsString()
-    @IsNotEmpty()
-    receiverCityDistrict: string;
-
-    @IsString()
-    @IsNotEmpty()
-    receiverProvince: string;
-
-    @IsString()
-    @IsNotEmpty()
-    receiverLatitude: string;
-
-    @IsString()
-    @IsNotEmpty()
-    receiverLongitude: string;
-
-    @IsInt()
-    productVariantId: number;
-
-    @IsInt()
-    userId: number;
-
-    @IsOptional()
-    courier?: {
-        courierCode: string;
-        courierServiceCode: string;
-        courierServiceName: string;
-        price: number;
-    };
+export class Product {
+  id: number = 6;
+  qty: number = 2;
 }
+
+export const orderSchema = z.object({
+  description: z.string().optional(),
+  product: z.string(),
+});
+
+export class CreateInvoiceDto {
+  receiverContactName: string = 'John Doe';
+  receiverContactPhone: string = '08170032123';
+  receiverName: string = 'John Doe';
+  receiverAddressPhone: string = '08170032123';
+  receiverAddress: string = 'Jakarta lb bulus';
+  receiverPostalCode: string = '12950';
+  receiverCity: string = 'Bogor';
+  receiverDistrict: string = 'Parung';
+  receiverProvince: string = 'Jawa Barat';
+  receiverLatitude?: string = '-6.436870204535388';
+  receiverLongitude?: string = '106.7109946274437';
+}
+
+export class CreateOrderDto extends CreateInvoiceDto {
+  description?: string;
+  @ApiProperty({ type: () => [Product] })
+  products: Product[];
+}
+
+export const invoiceSchema = z.object({
+  receiverContactName: z.string(),
+  receiverContactPhone: Z.phone,
+  receiverName: z.string(),
+  receiverAddressPhone: z.string(),
+  receiverAddress: z.string(),
+  receiverPostalCode: z.string().min(5),
+  receiverCity: z.string(),
+  receiverDistrict: z.string(),
+  receiverProvince: z.string(),
+  receiverLatitude: z.string().max(20),
+  receiverLongitude: z.string().max(20),
+});

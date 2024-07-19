@@ -9,7 +9,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+
 import { SelectValue } from "@radix-ui/react-select";
 // import { CiCirclePlus } from "react-icons/ci";
 import { InputForm } from "./input/input-form";
@@ -23,8 +23,12 @@ import {
 } from "@/components/ui/form";
 import { ProductFileInput } from "@/components/input/product-input";
 import { useAddProduct } from "../hooks/use-add-product";
+
+import { DescInput } from "@/components/input/desc-input";
+
 import { BiTrash } from "react-icons/bi";
 import { MdAddCircleOutline } from "react-icons/md";
+import { VariantForms } from "./input/variant-form";
 
 export function FormProduct() {
   const { form, onSubmit } = useAddProduct();
@@ -36,50 +40,55 @@ export function FormProduct() {
           className="flex flex-col gap-4"
         >
           <div className="flex justify-center">
-            <Card className="w-full">
-              <h1 className="m-4 font-bold text-xl">Informasi Produk</h1>
+            <Card className="p-4 w-full flex flex-col gap-4">
+              <h1 className="font-bold text-xl">Informasi Produk</h1>
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
                         <InputForm
                           label="Nama Produk"
                           placeholder="Masukkan Nama"
+                          isRequired
+                          focus={"lakoePrimary"}
                           {...field}
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-4"></FormMessage>
-                  </>
+                    <FormMessage></FormMessage>
+                  </div>
                 )}
               />
               <FormField
                 control={form.control}
                 name="url"
                 render={({ field }) => (
-                  <>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
                         <InputForm
                           label="URL halaman checkout"
                           placeholder="Masukkan URL halaman checkout"
                           startAdornment="lakoe.store/"
+                          isRequired
+                          focus={"lakoePrimary"}
                           {...field}
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-4"></FormMessage>
-                  </>
+                    <FormMessage></FormMessage>
+                  </div>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="category"
                 render={({ field: { onChange, value, ...field } }) => (
-                  <div className="m-3">
+                  <div className="flex flex-col gap-2">
                     <Label>Kategori</Label>
                     <FormItem>
                       <FormControl>
@@ -98,7 +107,7 @@ export function FormProduct() {
                         </Select>
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-2" />
+                    <FormMessage />
                   </div>
                 )}
               />
@@ -106,32 +115,32 @@ export function FormProduct() {
           </div>
 
           <div className="flex justify-center">
-            <Card className="w-full relative">
-              <h1 className="m-4 font-bold text-xl ">Detail Produk</h1>
+            <Card className="p-4 w-full relative flex flex-col gap-4">
+              <h1 className="font-bold text-xl ">Detail Produk</h1>
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <div className="m-3">
-                    <Label>Deskripsi</Label>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
-                        <Textarea
-                          placeholder="Masukkan Deskripsi Lengkap Produk Kamu"
-                          className="resize-none h-32"
+                        <DescInput
+                          label="Deskripsi"
+                          placeholder="Masukkan deskripsi produk"
+                          isRequired
                           {...field}
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className=" mt-2" />
+                    <FormMessage />
                   </div>
                 )}
               />
               <FormField
                 control={form.control}
                 name="attachments"
-                render={({ field }) => (
-                  <div className="m-3">
+                render={() => (
+                  <div className="flex flex-col gap-3">
                     <Label>Foto Produk</Label>
                     <div className="flex gap-2 overflow-x-auto hide-sc">
                       <ProductFileInput>Foto 1</ProductFileInput>
@@ -140,7 +149,7 @@ export function FormProduct() {
                       <ProductFileInput>Foto 4</ProductFileInput>
                       <ProductFileInput>Foto 5</ProductFileInput>
                     </div>
-                    <FormMessage className="pt-2" />
+                    <FormMessage />
                   </div>
                 )}
               />
@@ -177,19 +186,19 @@ export function FormProduct() {
                 Buat Tipe Varian
               </Button>
             </div>
-            {/* <div className="relative">
+            <div className="relative">
               <VariantForms />
-            </div> */}
+            </div>
           </Card>
 
           <div className="flex justify-center">
-            <Card className="w-full">
-              <h1 className="m-4 font-bold text-xl">Harga</h1>
+            <Card className="w-full flex flex-col gap-4 p-4">
+              <h1 className="font-bold text-xl">Harga</h1>
               <FormField
                 control={form.control}
                 name="price"
                 render={({ field: { onChange, ...field } }) => (
-                  <>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
                         <InputForm
@@ -199,25 +208,26 @@ export function FormProduct() {
                           onChange={(e) => onChange(+e.target.value)}
                           placeholder="Masukkan Harga Satuan Barang"
                           startAdornment="Rp."
+                          focus={"lakoePrimary"}
                           {...field}
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-4 mb-2" />
-                  </>
+                    <FormMessage />
+                  </div>
                 )}
               />
             </Card>
           </div>
 
           <div className="flex justify-center">
-            <Card className="w-full">
-              <h1 className="m-4 font-bold text-xl">Minimal Pembelian</h1>
+            <Card className="w-full p-4 flex flex-col gap-4">
+              <h1 className="font-bold text-xl">Minimal Pembelian</h1>
               <FormField
                 control={form.control}
                 name="minimumOrder"
                 render={({ field: { onChange, ...field } }) => (
-                  <>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
                         <InputForm
@@ -227,57 +237,59 @@ export function FormProduct() {
                           type="number"
                           onChange={(e) => onChange(+e.target.value)}
                           endAdornment="Produk"
+                          focus={"lakoePrimary"}
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-4 mb-2" />
-                  </>
+                    <FormMessage />
+                  </div>
                 )}
               />
             </Card>
           </div>
 
           <div className="flex justify-center">
-            <Card className="w-full h-44 relative">
-              <h1 className="m-4  font-bold text-xl ">Pengelolaan Produk</h1>
-              <div className="flex justify-between">
-                <FormField
-                  control={form.control}
-                  name="stock"
-                  render={({ field: { onChange, ...field } }) => (
-                    <>
-                      <FormItem>
-                        <FormControl>
-                          <InputForm
-                            type="number"
-                            label="Stok Produk"
-                            onChange={(e) => onChange(+e.target.value)}
-                            placeholder="Masukkan jumlah stok"
-                            className="w-full"
-                            {...field}
-                          />
-                        </FormControl>
-                      </FormItem>
-                      <FormMessage className="absolute  bottom-2 left-3 " />
-                    </>
-                  )}
-                />
-                {/* <InputForm
+            <Card className="p-4 w-full relative flex flex-col gap-4">
+              <h1 className="font-bold text-xl">Pengelolaan Produk</h1>
+              <FormField
+                control={form.control}
+                name="stock"
+                render={({ field: { onChange, ...field } }) => (
+                  <div className="flex flex-col">
+                    <FormItem>
+                      <FormControl>
+                        <InputForm
+                          type="number"
+                          label="Stok Produk"
+                          onChange={(e) => onChange(+e.target.value)}
+                          placeholder="Masukkan jumlah stok"
+                          className="w-full"
+                          isRequired
+                          focus={"lakoePrimary"}
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                    <FormMessage />
+                  </div>
+                )}
+              />
+
+              {/* <InputForm
                   label="SKU (Stock Keeping Unit)"
                   placeholder="Masukkan Jumlah SKU"
                 /> */}
-              </div>
             </Card>
           </div>
 
           <div className="flex justify-center w-full">
-            <Card className="w-full">
-              <h1 className="m-4 font-bold text-xl ">Berat dan Pengiriman</h1>
+            <Card className="w-full p-4 flex flex-col gap-4">
+              <h1 className="font-bold text-xl ">Berat dan Pengiriman</h1>
               <FormField
                 control={form.control}
                 name="weightInGram"
                 render={({ field: { onChange, ...field } }) => (
-                  <div>
+                  <div className="flex flex-col">
                     <FormItem>
                       <FormControl>
                         <InputForm
@@ -286,42 +298,47 @@ export function FormProduct() {
                           label="Berat Produk"
                           placeholder="Masukkan berat produk"
                           endAdornment="Gram"
+                          isRequired
+                          focus={"lakoePrimary"}
                           {...field}
                         />
                       </FormControl>
                     </FormItem>
-                    <FormMessage className="ms-4" />
+                    <FormMessage />
                   </div>
                 )}
               />
-              <div className="flex flex-wrap">
+              <div className="flex flex-wrap gap-4">
                 <InputForm
-                  label="Ukuran Produk"
+                  label="Panjang"
                   placeholder="Masukkan panjang"
                   endAdornment="cm"
+                  focus={"lakoePrimary"}
                 />
                 <InputForm
-                  className="mt-6"
+                  label="Lebar"
                   placeholder="Masukkan lebar"
                   endAdornment="cm"
+                  focus={"lakoePrimary"}
                 />
                 <InputForm
-                  className="mt-6"
+                  label="Tinggi"
                   placeholder="Masukkan tinggi"
                   endAdornment="cm"
+                  focus={"lakoePrimary"}
                 />
               </div>
             </Card>
           </div>
 
           <div className="flex justify-center ">
-            <Card className="w-full">
+            <Card className="w-full p-4">
               <div className="flex justify-between">
-                <Button className="m-4 border bg-white text-black rounded-full hover:bg-black hover:text-white text-xs">
+                <Button variant={"outline"} className="rounded-full">
                   Preview Halaman Checkout
                 </Button>
-                <div className="flex  m-4 gap-2 ">
-                  <Button className="rounded-full bg-white text-black hover:bg-black hover:text-white">
+                <div className="flex gap-2">
+                  <Button variant={"outline"} className="rounded-full ">
                     Batal
                   </Button>
                   <Button

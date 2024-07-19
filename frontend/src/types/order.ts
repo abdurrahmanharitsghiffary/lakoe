@@ -21,7 +21,7 @@ export type Order = {
   courier: Courier;
 };
 
-type OrderStatus =
+export type OrderStatus =
   | "NOT_PAID"
   | "NEW_ORDER"
   | "READY_TO_DELIVER"

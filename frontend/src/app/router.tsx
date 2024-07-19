@@ -1,24 +1,40 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "./app";
+import { App } from "./app";
 import { ProductsPage } from "./pages/seller/products";
-import { FormProduct } from "@/features/products/components/form-product";
-import HomePage from "./pages/seller/home";
-import OrdersPage from "./pages/seller/orders";
+import { HomePage } from "./pages/seller/home";
+import { OrdersPage } from "./pages/seller/orders";
 import { SettingsPage } from "./pages/seller/settings";
-import OrderDetails from "./pages/seller/orders-detail";
-import { CardOrderBuyer } from "@/features/orders/buyer/components/card-order";
+import { OrderDetails } from "./pages/seller/orders-detail";
 import { SellerLayout } from "./pages/seller/layout";
 import { BuyerLayout } from "./pages/buyer/layout";
 import { AdminLayout } from "./pages/admin/layout/root-layout";
-import NotFoundPage from "./pages/fallback/404";
-import ErrorPage from "./pages/fallback/error";
+import { NotFoundPage } from "./pages/fallback/not-found";
+import { ErrorPage } from "./pages/fallback/error";
 import { AdminHomePage } from "./pages/admin/home";
-import WithdrawalPage from "./pages/admin/withdrawal";
-import PendingWithdrawalPage from "./pages/admin/withdrawal/pending";
+import { WithdrawalPage } from "./pages/admin/withdrawal";
+import { PendingWithdrawalPage } from "./pages/admin/withdrawal/pending";
 import { WithdrawalDetails } from "./pages/admin/withdrawal/details";
-import SuccessWithdrawalPage from "./pages/admin/withdrawal/success";
-import RejectedWithdrawalPage from "./pages/admin/withdrawal/rejected";
-import OnProcessWithdrawalPage from "./pages/admin/withdrawal/on-process";
+import { SuccessWithdrawalPage } from "./pages/admin/withdrawal/success";
+import { RejectedWithdrawalPage } from "./pages/admin/withdrawal/rejected";
+import { OnProcessWithdrawalPage } from "./pages/admin/withdrawal/on-process";
+import { LoginPage } from "./pages/auth/login";
+import { CreateProductPage } from "./pages/seller/create-product";
+import { CardOrderBuyer } from "@/features/orders/components/buyer/card-order";
+import { DashboardSeller } from "./pages/seller/dashboard";
+import { RegisterPage } from "./pages/auth/regist";
+import { Delivery } from "@/features/settings/components/delivery";
+import { PaymentMethod } from "@/features/settings/components/payment-method";
+import { ForgotPasswordPage } from "./pages/auth/forgot";
+import { ResetPasswordPage } from "./pages/auth/reset-password";
+import { OAuthCallback } from "./pages/oauth/callback";
+import { Authorize } from "@/components/authorize";
+import { AuthLayout } from "./pages/auth/layout";
+import { ResetSuccessPage } from "./pages/auth/reset-success";
+import { VerifiedPage } from "./pages/auth/verified";
+import { VerifyPage } from "./pages/auth/verify";
+import { StorePage } from "./pages/seller/store-page";
+import { ProfilePage } from "./pages/profile/profile";
+import { EditProfilePage } from "./pages/profile/edit-profile";
 
 export const router = createBrowserRouter([
   {
@@ -32,47 +48,101 @@ export const router = createBrowserRouter([
         errorElement: <ErrorPage />,
       },
       {
-        path: "admin",
+        path: "auth",
         errorElement: <ErrorPage />,
-        element: <AdminLayout />,
+        children: [{ path: "new-store", element: <StorePage /> }],
+      },
+      {
+        path: "auth",
+        element: <AuthLayout />,
+        errorElement: <ErrorPage />,
         children: [
-          { path: "", element: <AdminHomePage /> },
-          { path: "withdrawal", element: <WithdrawalPage /> },
-          { path: "withdrawal/pending", element: <PendingWithdrawalPage /> },
-          { path: "withdrawal/success", element: <SuccessWithdrawalPage /> },
-          { path: "withdrawal/rejected", element: <RejectedWithdrawalPage /> },
-          {
-            path: "withdrawal/on-process",
-            element: <OnProcessWithdrawalPage />,
-          },
-          { path: "withdrawal/:id", element: <WithdrawalDetails /> },
+          { path: "login", element: <LoginPage /> },
+          { path: "register", element: <RegisterPage /> },
+          { path: "forgot-password", element: <ForgotPasswordPage /> },
+          { path: "reset-password/:token", element: <ResetPasswordPage /> },
+          { path: "verify-account", element: <VerifyPage /> },
+          { path: "verified", element: <VerifiedPage /> },
+          { path: "reset-success", element: <ResetSuccessPage /> },
         ],
       },
       {
-        path: "seller",
-        errorElement: <ErrorPage />,
-        element: <SellerLayout />,
+        path: "",
+        id: "private-admin-only",
+        element: <Authorize roles={["ADMIN", "USER"]} />,
         children: [
-          { path: "", element: <HomePage /> },
-          { path: "orders/:id", element: <OrderDetails /> },
           {
-            path: "products",
-            element: <ProductsPage />,
-          },
-          {
-            path: "products/create",
-            element: <FormProduct />,
-          },
-          {
-            path: "orders",
-            element: <OrdersPage />,
-          },
-          {
-            path: "settings",
-            element: <SettingsPage />,
+            path: "admin",
+            errorElement: <ErrorPage />,
+            element: <AdminLayout />,
+            children: [
+              { path: "", element: <AdminHomePage /> },
+              { path: "withdrawal", element: <WithdrawalPage /> },
+              {
+                path: "withdrawal/pending",
+                element: <PendingWithdrawalPage />,
+              },
+              {
+                path: "withdrawal/success",
+                element: <SuccessWithdrawalPage />,
+              },
+              {
+                path: "withdrawal/rejected",
+                element: <RejectedWithdrawalPage />,
+              },
+              {
+                path: "withdrawal/on-process",
+                element: <OnProcessWithdrawalPage />,
+              },
+              { path: "withdrawal/:id", element: <WithdrawalDetails /> },
+            ],
           },
         ],
       },
+      {
+        path: "",
+        id: "private",
+        element: <Authorize />,
+        children: [
+          {
+            path: "seller",
+            errorElement: <ErrorPage />,
+            element: <SellerLayout />,
+            children: [
+              { path: "", element: <HomePage /> },
+              { path: "dashboard", element: <DashboardSeller /> },
+              { path: "orders/:id", element: <OrderDetails /> },
+              {
+                path: "products",
+                element: <ProductsPage />,
+              },
+              {
+                path: "products/create",
+                element: <CreateProductPage />,
+              },
+              {
+                path: "orders",
+                element: <OrdersPage />,
+              },
+              {
+                path: "settings/store",
+                element: <SettingsPage />,
+              },
+              { path: "profile", element: <ProfilePage /> },
+              { path: "profile/edit", element: <EditProfilePage /> },
+            ],
+          },
+          {
+            path: "settings/delivery",
+            element: <Delivery />,
+          },
+          {
+            path: "settings/payment",
+            element: <PaymentMethod />,
+          },
+        ],
+      },
+      { path: "oauth/callback", element: <OAuthCallback /> },
       {
         path: "*",
         element: <NotFoundPage />,

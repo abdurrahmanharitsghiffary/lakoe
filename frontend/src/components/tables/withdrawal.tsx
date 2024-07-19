@@ -69,7 +69,7 @@ export function WithdrawalTable({
             <TableCell className="text-right">
               {witdrawal.status === "ON_PROCESS" && (
                 <Button className="mr-2" variant="destructive">
-                  Reject
+                  Cancel
                 </Button>
               )}
               {witdrawal.status === "PENDING" && (

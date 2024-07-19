@@ -27,4 +27,4 @@ const InputFileHidden = forwardRef<
 
 InputFileHidden.displayName = "InputFileHidden";
 
-export default InputFileHidden;
+export { InputFileHidden };

@@ -13,14 +13,16 @@ import { cn } from "@/lib/utils";
 
 const navItems: { label: string; href?: string }[] = [
   {
-   
     label: "Dashboard",
     href: "/dashboard",
   },
-  {  label: "Produk", href: "/products" },
+  { label: "Produk", href: "/products" },
 ];
 
-function DashboardNavigation() {
+/**
+ * @deprecated since version 2.0
+ */
+export function DashboardNavigation() {
   const { pathname } = useLocation();
 
   return (
@@ -45,8 +47,13 @@ function DashboardNavigation() {
           </h1>
         </Link>
       ))}
-      <Accordion type='single' collapsible style={{ marginTop: "-15px" }} className="flex gap-5">
-        <AccordionItem className="border-b-0"value="item-1">
+      <Accordion
+        type="single"
+        collapsible
+        style={{ marginTop: "-15px" }}
+        className="flex gap-5"
+      >
+        <AccordionItem className="border-b-0" value="item-1">
           <AccordionTrigger>
             <Button
               variant="ghost"
@@ -134,9 +141,8 @@ function DashboardNavigation() {
       <Button
         size="lg"
         className="flex px-5 justify-start items-center"
-        style={{backgroundColor:"orange"}}
+        style={{ backgroundColor: "orange" }}
       >
-        
         <h1 className="text-lg">+ Tambahkan Produk </h1>
       </Button>
       <Button
@@ -156,5 +162,3 @@ function DashboardNavigation() {
     </div>
   );
 }
-
-export default DashboardNavigation;

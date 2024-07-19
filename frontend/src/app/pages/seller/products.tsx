@@ -1,17 +1,11 @@
-import LakoeCheckbox from "@/components/checkbox/lakoe";
-import List from "@/components/list.";
+import { LakoeCheckbox } from "@/components/checkbox/lakoe";
+import { List } from "@/components/list";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
+import { MultipleSelector, Option } from "@/components/ui/multi-select";
 import { LoadingSpinner } from "@/components/ui/spinner";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Typography from "@/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import { useGetProducts } from "@/features/products/api/get-products";
 import { CardProduct } from "@/features/products/components/card-product";
 import {
@@ -25,14 +19,23 @@ import { cn } from "@/lib/utils";
 import { Product } from "@/types/product";
 import { getAllSearchParams } from "@/utils/get-all-search-param";
 import { parseStrBool } from "@/utils/parse-str-bool";
-import { SelectValue } from "@radix-ui/react-select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { BiTrash } from "react-icons/bi";
-import { CiCirclePlus } from "react-icons/ci";
+import { GoPlusCircle } from "react-icons/go";
 import { LuPackageSearch } from "react-icons/lu";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
+import { inputVariantProps } from "@/features/products/components/input/input-form";
+import { TabItem, Tabs } from "@/components/tabs";
+import { useGetCategories } from "@/features/categories/api/get-categories";
 
 const getCheckedProducts = (products: Product[]) => {
   return products.map((product) => ({
@@ -41,21 +44,59 @@ const getCheckedProducts = (products: Product[]) => {
   }));
 };
 
+// const categoryOptions: Option[] = [
+//   { label: "Pakaian", value: "pakaian" },
+//   { label: "Celana", value: "celana" },
+//   { label: "Elektronik", value: "elektronik" },
+//   { label: "Makanan", value: "makanan" },
+//   { label: "Minuman", value: "minuman" },
+// ];
+
+const tabs: TabItem[] = [
+  { label: "Semua", value: "all" },
+  { label: "Aktif", value: "true" },
+  { label: "Nonaktif", value: "false" },
+];
+
 export function ProductsPage() {
   const confirm = useConfirmDeleteProduct();
   const confirmNonactive = useConfirmNonactiveProduct();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [sortBy, setSortBy] = useState("lowest_price");
+  const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
+  const { data: categoryData } = useGetCategories();
+
+  const categories = categoryData?.data ?? [];
+
+  const categoryOptions = categories.map((category) => ({
+    value: category,
+    label: category,
+  }));
+  console.log(selectedCategories, "CATEGORY");
+  const searchCategories = (value: string) => {
+    return new Promise<Option[]>((resolve) => {
+      resolve(
+        categoryOptions.filter((option) =>
+          option?.label?.toLowerCase()?.includes(value?.toLowerCase())
+        )
+      );
+    });
+  };
 
   const q = searchParams.get("q") || "";
   const [s, setS] = useState(q);
   const [dS] = useDebounce(s, 300);
-  const active = searchParams.get("active") || "";
+  const active = searchParams.get("active") || "all";
 
   const { data, isLoading } = useGetProducts({
     options: {
       q,
-      isActive: active === "all" ? undefined : parseStrBool(active),
+      categories: selectedCategories
+        .map((category) => category.value)
+        .join(","),
+      sort_by: sortBy,
+      active: active === "all" ? undefined : parseStrBool(active),
     },
   });
 
@@ -77,17 +118,14 @@ export function ProductsPage() {
     [checkedProducts]
   );
 
-  useEffect(() => {
-    if (data?.data) {
-      setCheckedProducts(getCheckedProducts(data?.data ?? []));
-    }
-  }, [data?.data]);
-
   const handleValueChange = (type: string) => {
     searchParams.set("active", type);
-    navigate({
-      search: "?" + getAllSearchParams(searchParams),
-    });
+    navigate(
+      {
+        search: "?" + getAllSearchParams(searchParams),
+      },
+      { replace: true }
+    );
   };
 
   const handleCheckedChange = (checked: boolean) => {
@@ -100,7 +138,10 @@ export function ProductsPage() {
 
   useEffect(() => {
     searchParams.set("q", dS);
-    navigate({ search: "?" + getAllSearchParams(searchParams) });
+    navigate(
+      { search: "?" + getAllSearchParams(searchParams) },
+      { replace: true }
+    );
   }, [dS]);
 
   const handleDeleteAllClick = async () => {
@@ -110,6 +151,15 @@ export function ProductsPage() {
   const handleUnactiveAllClick = async () => {
     await confirmNonactive(checkedProductLength);
   };
+
+  const getIsProductChecked = useCallback(
+    (product: Product) => {
+      return checkedProducts.find((d) => d.id === product.id)?.isChecked
+        ? true
+        : false;
+    },
+    [checkedProducts]
+  );
 
   const handleProductCheckedChange = useCallback(
     (state: { isChecked: boolean; id: number }) =>
@@ -121,6 +171,10 @@ export function ProductsPage() {
       }),
     []
   );
+
+  const handleSelectChange = (value: string) => {
+    setSortBy(value);
+  };
 
   const productFallback = q ? (
     <ProductNotFoundFallback />
@@ -142,65 +196,53 @@ export function ProductsPage() {
             <Link
               to="/seller/products/create"
               className={cn(
-                buttonVariants(),
-                "m-4 bg-btn-primary rounded-full"
+                buttonVariants({ variant: "lakoePrimary" }),
+                "m-4 rounded-full"
               )}
             >
-              <CiCirclePlus size={25} />
+              <GoPlusCircle size={25} />
               <span className="ml-2">Tambah Produk</span>
             </Link>
           </div>
           <Tabs
+            key="productTabs"
+            items={tabs}
             defaultValue="all"
             onValueChange={handleValueChange}
             value={active}
-          >
-            <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
-              <TabsTrigger
-                value="all"
-                className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-lakoe-primary data-[state=active]:text-lakoe-primary data-[state=active]:shadow-none "
-              >
-                Semua
-              </TabsTrigger>
-              <TabsTrigger
-                value="true"
-                className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-lakoe-primary data-[state=active]:text-lakoe-primary data-[state=active]:shadow-none "
-              >
-                Aktif
-              </TabsTrigger>
-              <TabsTrigger
-                value="false"
-                className="relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-lakoe-primary data-[state=active]:text-lakoe-primary data-[state=active]:shadow-none "
-              >
-                Nonaktif
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          />
           <div className="flex justify-between m-3 gap-4">
             <Input
+              className={inputVariantProps({ focus: "lakoePrimary" })}
               value={s}
               onChange={handleSearch}
               placeholder="Cari produk"
-              className="p-2 "
               style={{ flex: 2 }}
               icon={<LuPackageSearch size={20} />}
             />
-            <Select>
-              <SelectTrigger style={{ flex: 1 }}>
-                <SelectValue placeholder="Semua Kategori" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pakaian">Pakaian</SelectItem>
-                <SelectItem value="celana">Celana</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select>
+            <MultipleSelector
+              maxSelected={3}
+              hidePlaceholderWhenSelected
+              className={cn(
+                inputVariantProps({ focus: "lakoePrimary" }),
+                "flex-wrap"
+              )}
+              onChange={setSelectedCategories}
+              options={categoryOptions}
+              onSearch={searchCategories}
+              delay={300}
+              placeholder="Semua Kategori"
+              commandProps={{ style: { flex: 1 } }}
+            />
+            <Select onValueChange={handleSelectChange} value={sortBy}>
               <SelectTrigger style={{ flex: 1 }}>
                 <SelectValue placeholder="Urutkan" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="date">Hari</SelectItem>
-                <SelectItem value="month">Bulan</SelectItem>
+                <SelectItem value="highest_price">Harga Termahal</SelectItem>
+                <SelectItem value="lowest_price">Harga Terendah</SelectItem>
+                <SelectItem value="highest_stock">Stock Terbanyak</SelectItem>
+                <SelectItem value="lowest_stock">Stock Terendah</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -248,9 +290,9 @@ export function ProductsPage() {
                 </div>
               }
             >
-              {productData.map((product, i) => (
+              {productData.map((product) => (
                 <CardProduct
-                  isChecked={checkedProducts?.[i]?.isChecked || false}
+                  isChecked={getIsProductChecked(product)}
                   onCheckedChange={handleProductCheckedChange}
                   product={product}
                   key={product?.id}
