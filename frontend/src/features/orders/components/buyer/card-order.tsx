@@ -18,10 +18,18 @@ import {
 } from "@/components/ui/accordion";
 export function CardOrderBuyer() {
   const [count, setCount] = useState(0);
+  const [focused, setFocus] = useState<number | null>(null);
 
   const handleDecrement = () => {
     setCount((prevCount) => (prevCount < 1 ? 0 : prevCount - 1));
   };
+
+  const variants = [
+    { id: 1, value: "Merah" },
+    { id: 2, value: "Kuning" },
+    { id: 3, value: "Hijau" },
+    { id: 4, value: "Biru" },
+  ];
 
   return (
     <>
@@ -103,6 +111,18 @@ export function CardOrderBuyer() {
                     +
                   </Button>
                 </div>
+              </div>
+              <div className="flex gap-2 ms-56 mt-10">
+                {variants.map((variant) => (
+                  <Button
+                    key={variant.id}
+                    variant={"outline"}
+                    isFocused={focused === variant.id}
+                    onClick={() => setFocus(variant.id)}
+                  >
+                    {variant.value}
+                  </Button>
+                ))}
               </div>
               <div className="flex gap-4 mt-10">
                 <Button className="ms-56" variant={"outline"}>

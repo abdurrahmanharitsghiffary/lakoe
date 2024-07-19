@@ -3,6 +3,14 @@ export type Store = {
   name: string;
   description: string;
   slogan: string;
-  logoAttachment: File | null;
-  bannerAttachment: File | null;
+  logo: FileList | null;
+  banner: FileList | null;
 };
+
+export interface StoreUpdate extends Store {
+  name: string;
+  description: string;
+  slogan: string;
+  logo: FileList | null;
+  banner: FileList | null;
+}

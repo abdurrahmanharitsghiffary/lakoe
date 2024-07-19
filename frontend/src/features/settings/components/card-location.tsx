@@ -10,6 +10,7 @@ import { DeleteLocationDialog } from "@/components/dialog/delete-location-dialog
 export function CardLocation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
+
   return (
     <>
       <div className="flex-col justify-center">

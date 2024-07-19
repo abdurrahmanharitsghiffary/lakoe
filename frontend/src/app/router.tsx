@@ -132,17 +132,18 @@ export const router = createBrowserRouter([
                 path: "settings/store",
                 element: <SettingsPage />,
               },
+
+              {
+                path: "settings/delivery",
+                element: <Delivery />,
+              },
+              {
+                path: "settings/payment",
+                element: <PaymentMethod />,
+              },
               { path: "profile", element: <ProfilePage /> },
               { path: "profile/edit", element: <EditProfilePage /> },
             ],
-          },
-          {
-            path: "settings/delivery",
-            element: <Delivery />,
-          },
-          {
-            path: "settings/payment",
-            element: <PaymentMethod />,
           },
         ],
       },

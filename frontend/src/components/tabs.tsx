@@ -51,6 +51,7 @@ export function Tabs({ items, onValueChange, value, defaultValue }: TabsProps) {
         <TabsList className="rounded-none border-b bg-transparent p-0 flex overflow-x-auto hide-scrollbar">
           {items.map((item) => (
             <TabsTrigger
+              key={item.value}
               value={item.value}
               className="relative rounded-none border-b-4 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 items-center"
             >
@@ -79,7 +80,9 @@ export function Tabs({ items, onValueChange, value, defaultValue }: TabsProps) {
           ))}
         </TabsList>
         {items.map((item) => (
-          <TabsContent value={item.value}>{item.content}</TabsContent>
+          <TabsContent key={item.value} value={item.value}>
+            {item.content}
+          </TabsContent>
         ))}
       </LayoutGroup>
     </ShadcnTabs>

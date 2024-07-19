@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { forwardRef, useState } from "react";
 import { motion } from "framer-motion";
-import { RiImageAddLine } from "react-icons/ri";
+
 import { BiX } from "react-icons/bi";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 
@@ -16,7 +16,7 @@ const BannerInput = forwardRef<HTMLInputElement, BannerInputProps>(
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e?.target?.files?.[0];
-      if (file && file instanceof File) {
+      if (file && file instanceof FileList) {
         const imageUrl = URL.createObjectURL(file);
         setImageSrc(imageUrl);
       }
