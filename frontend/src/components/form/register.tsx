@@ -84,7 +84,11 @@ export function RegisterForm() {
                     {errors.password?.message}
                   </p>
                 </div>
-                <Button type="submit" className="w-full">
+                <Button
+                  type="submit"
+                  variant={"lakoePrimary"}
+                  className="w-full"
+                >
                   Create account
                 </Button>
                 <Button variant="outline" className="w-full" type="submit">

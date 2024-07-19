@@ -21,13 +21,13 @@ export function VerifiedAccount() {
             <div className="grid gap-4">
               <div className="mt-3">
                 <Link
-                  to={"/seller/dashboard"}
+                  to={"/auth/new-store"}
                   className={cn(
                     "w-full mb-2",
                     buttonVariants({ variant: "lakoePrimary" })
                   )}
                 >
-                  Back to Dashboard
+                  Make your Store
                 </Link>
               </div>
             </div>

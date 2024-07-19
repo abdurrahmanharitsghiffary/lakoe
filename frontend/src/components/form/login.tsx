@@ -14,7 +14,7 @@ export const iframeHeight = "800px";
 export const containerClassName = "w-full h-full p-4 lg:p-0";
 
 export function LoginForm() {
-  const { register, handleSubmit, onSubmit, errors } = useLogin();
+  const { register, handleSubmit, onSubmit } = useLogin();
   return (
     <div className="w-full lg:grid lg:grid-cols-2 min-h-[100dvh]">
       <div className="flex items-center justify-center py-12">
@@ -56,7 +56,7 @@ export function LoginForm() {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full">
+              <Button type="submit" variant={"lakoePrimary"} className="w-full">
                 Login
               </Button>
               <Link

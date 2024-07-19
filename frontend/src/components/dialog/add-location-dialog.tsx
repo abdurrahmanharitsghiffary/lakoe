@@ -7,28 +7,44 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import { TiArrowSortedDown } from "react-icons/ti";
+import { FaCheck } from "react-icons/fa6";
 
 import { Label } from "../ui/label";
 
 import { Textarea } from "../ui/textarea";
 import { SelectInput } from "../input/select-input";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "../ui/command";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+
 export type Props = {
   isOpen: boolean;
   onOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function AddLocationDialog({ isOpen, onOpen }: Props) {
-  const cityOptions = [
-    { value: "jakarta", name: "Jakarta" },
-    { value: "depok", name: "Depok" },
-    { value: "bekasi", name: "Bekasi" },
-  ];
-
   const postOptions = [
     { value: "jakarta", name: "154123" },
     { value: "depok", name: "19087" },
     { value: "bekasi", name: "12645" },
   ];
+
+  const cities = [
+    { value: "jakarta", name: "Jakarta" },
+    { value: "depok", name: "Depok" },
+    { value: "bekasi", name: "Bekasi" },
+  ];
+
+  const [open2, setIsOpen2] = useState(false);
+  const [value, setValue] = useState("");
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onOpen}>
@@ -44,11 +60,50 @@ export function AddLocationDialog({ isOpen, onOpen }: Props) {
             isRequired
           />
 
-          <SelectInput
-            label="Kota/Kecamatan"
-            placeHolder="Cari Kota/Kecamatan"
-            options={cityOptions}
-          />
+          <Popover open={open2} onOpenChange={setIsOpen2}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open2}
+                className="w-full justify-between"
+              >
+                {value
+                  ? cities.find((city) => city.value === value)?.name
+                  : "Cari Kota/Kecamatan..."}
+                <TiArrowSortedDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0">
+              <Command>
+                <CommandInput
+                  placeholder="Search framework..."
+                  className="h-9"
+                />
+                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandGroup>
+                  {cities.map((city) => (
+                    <CommandItem
+                      key={city.value}
+                      value={city.value}
+                      onSelect={(currentValue) => {
+                        setValue(currentValue === value ? "" : currentValue);
+                        setIsOpen2(false);
+                      }}
+                    >
+                      {city.name}
+                      <FaCheck
+                        className={cn(
+                          "ml-auto h-4 w-4",
+                          value === city.value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
 
           <SelectInput
             label="Kode Pos"

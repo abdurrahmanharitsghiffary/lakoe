@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class OrderService {
   constructor(private prisma: PrismaService) {}
 
   async create(createOrderDto: CreateOrderDto) {
-    console.log("createOrderDto", createOrderDto);
-    const { products, description, ...invoiceData} = createOrderDto;
+    console.log('createOrderDto', createOrderDto);
+    const { products, description, ...invoiceData } = createOrderDto;
 
-    console.log("invoice", invoiceData);
+    console.log('invoice', invoiceData);
 
     return this.prisma.$transaction(async (tx) => {
       // 1. Buat order
@@ -21,15 +20,15 @@ export class OrderService {
           status: 'NOT_PAID',
         },
       });
-      console.log("order", order);
+      console.log('order', order);
 
       // 2. Ambil data produk variant berdasarkan ID produk dari DTO
       const productIds = products.map((p) => p.id);
-      console.log("productIds", productIds);
+      console.log('productIds', productIds);
       const productVariants = await tx.variant.findMany({
         where: { id: { in: productIds } },
       });
-      console.log("productVariant", productVariants);
+      console.log('productVariant', productVariants);
 
       // 3. Validasi produk variant
       const errors = [];
@@ -79,7 +78,7 @@ export class OrderService {
           weightPerProductInGram: productVariant.weightInGram,
         };
       });
-      console.log("orderDetails", orderDetails);
+      console.log('orderDetails', orderDetails);
 
       // 5. Buat order detail di database
       await tx.orderDetail.createMany({
@@ -99,15 +98,15 @@ export class OrderService {
         return total + +detail.pricePerProduct * detail.qty;
       }, 0);
 
-      console.log("totalprice", totalPrice);
+      console.log('totalprice', totalPrice);
 
       // 8. Buat invoice dengan harga total
       await tx.invoice.create({
         data: {
           prices: totalPrice,
-          serviceChange: 'Your service charge',
+          serviceCharge: 'Your service charge',
           status: 'NOT_PAID',
-          discount: null, // atau nilainya sesuai dengan kondisi Anda
+          // atau nilainya sesuai dengan kondisi Anda
           receiverContactName: invoiceData.receiverContactName,
           receiverContactPhone: invoiceData.receiverContactPhone,
           receiverName: invoiceData.receiverName,
