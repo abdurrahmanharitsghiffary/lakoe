@@ -123,13 +123,16 @@ export function Navigation() {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-      <Button
-        variant="ghost"
-        className="flex w-full justify-start items-center mt-auto"
-      >
-        <CgProfile className="ml-1 mr-2 h-8 w-8 !text-2xl" />
-        <h1 className="text-base">Profil</h1>
-      </Button>
+
+        <Link to={"profile"} className="mt-auto">
+        <Button
+          variant="ghost"
+          className="flex w-full justify-start items-center mt-auto"
+        >
+          <CgProfile className="ml-1 mr-2 h-8 w-8 !text-2xl" />
+          <h1 className="text-base">Profil</h1>
+        </Button>
+        </Link>
     </div>
   );
 }
