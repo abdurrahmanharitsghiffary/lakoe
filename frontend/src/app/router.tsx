@@ -33,6 +33,8 @@ import { ResetSuccessPage } from "./pages/auth/reset-success";
 import { VerifiedPage } from "./pages/auth/verified";
 import { VerifyPage } from "./pages/auth/verify";
 import { StorePage } from "./pages/seller/store-page";
+import { ProfilePage } from "./pages/profile/profile";
+import { EditProfilePage } from "./pages/profile/edit-profile";
 
 export const router = createBrowserRouter([
   {
@@ -126,6 +128,8 @@ export const router = createBrowserRouter([
                 path: "settings/store",
                 element: <SettingsPage />,
               },
+              { path: "profile", element: <ProfilePage /> },
+              { path: "profile/edit", element: <EditProfilePage /> },
             ],
           },
           {
