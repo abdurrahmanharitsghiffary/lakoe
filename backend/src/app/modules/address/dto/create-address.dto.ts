@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
 export class CreateAddressDto {
+  contactName = 'John Doe';
+  contactPhone = '+6281221214343';
+  addressPhone = '+6281221214343';
   name: string = 'Address 1';
   address: string;
   postalCode: string;

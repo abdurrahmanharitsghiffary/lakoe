@@ -19,7 +19,7 @@ import {
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { hours, Throttle } from '@nestjs/throttler';
 import { z } from 'zod';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 import { User } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/common/types';
@@ -47,6 +47,7 @@ export class AuthController {
     return await this.authService.login(response);
   }
 
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @Post('verify-email')
   async sendVerifyEmail(@User() user: UserPayload) {

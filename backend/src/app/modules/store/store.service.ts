@@ -81,19 +81,19 @@ export class StoreService {
   async getShippingRates(
     id: number,
     destAddress: CreateInvoiceDto,
-    products: { id: number; qty: number }[],
+    skusDto: { id: number; qty: number }[],
   ) {
     const store = await this.prismaService.store.findUnique({
       where: { id },
       select: { addresses: { orderBy: { isMainLocation: 'desc' }, take: 1 } },
     });
 
-    const variants = await this.prismaService.variant.findMany({
+    const skus = await this.prismaService.sKU.findMany({
       where: {
-        id: { in: products.map((product) => product.id) },
+        id: { in: skusDto.map((product) => product.id) },
         AND: [{ product: { storeId: id } }],
       },
-      include: { product: { select: { description: true } } },
+      include: { product: { select: { description: true, name: true } } },
     });
 
     const availableCouriers = await this.prismaService.courierService.findMany({
@@ -110,12 +110,13 @@ export class StoreService {
 
     const response = await this.biteshipService.getShippingRates({
       couriers: couriersCode as any,
-      items: variants.map((variant) => ({
-        name: variant.name,
-        quantity: products.find((product) => product.id === variant.id).qty,
-        value: +variant.price,
-        weight: variant.weightInGram,
-        description: variant.product.description,
+      items: skus.map((sku) => ({
+        name: sku.product.name,
+        sku: sku.sku,
+        quantity: skusDto.find((product) => product.id === sku.id).qty,
+        value: +sku.price,
+        weight: sku.weightInGram,
+        description: sku.product.description,
       })),
       destination_postal_code: +destAddress?.receiverPostalCode,
       origin_postal_code: +storeAddress?.postalCode,

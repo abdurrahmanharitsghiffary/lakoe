@@ -148,7 +148,7 @@ export class AuthService {
       data: {
         token,
         type: 'VERIFY_TOKEN',
-        userId: user.id,
+        userId: user?.id,
         expiresAt,
       },
     });

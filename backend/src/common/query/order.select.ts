@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { selectVariant } from './variant.select';
+import { selectSKU } from './sku.select';
 
 export const selectOrderSimplified = {
   createdAt: true,
@@ -9,22 +9,31 @@ export const selectOrderSimplified = {
   updatedAt: true,
   invoice: {
     select: {
+      id: true,
       invoiceNumber: true,
-      prices: true,
-      courier: {
-        select: {
-          biteshipOrderId: true,
-          biteshipTrackingId: true,
-          biteshipWaybillId: true,
-          price: true,
-          courierCode: true,
-          courierServiceCode: true,
-          courierServiceName: true,
-        },
-      },
+      amount: true,
     },
   },
-  products: { select: { productVariant: { select: selectVariant } } },
+  courier: {
+    select: {
+      id: true,
+      biteshipOrderId: true,
+      biteshipTrackingId: true,
+      biteshipWaybillId: true,
+      price: true,
+      courierCode: true,
+      courierServiceCode: true,
+    },
+  },
+  orderDetails: {
+    select: {
+      sku: { select: selectSKU },
+      qty: true,
+      pricePerProduct: true,
+      weightPerProductInGram: true,
+    },
+  },
+  _count: { select: { orderDetails: true } },
 } satisfies Prisma.OrderSelect;
 
 export const selectOrder = {
@@ -39,7 +48,7 @@ export const selectOrder = {
       ...selectOrderSimplified.invoice.select,
       id: true,
       invoiceNumber: true,
-      prices: true,
+      amount: true,
       receiverAddress: true,
       receiverAddressPhone: true,
       receiverCity: true,
@@ -54,17 +63,6 @@ export const selectOrder = {
       serviceCharge: true,
       updatedAt: true,
       createdAt: true,
-      courier: {
-        select: {
-          biteshipOrderId: true,
-          biteshipTrackingId: true,
-          biteshipWaybillId: true,
-          courierCode: true,
-          courierServiceCode: true,
-          courierServiceName: true,
-          price: true,
-        },
-      },
     },
   },
 } satisfies Prisma.OrderSelect;
