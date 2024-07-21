@@ -157,11 +157,13 @@ model Payment {
   id                    Int     @id @default(autoincrement())
   midtransTransactionId String
   midtransOrderId       String
-  bank                  String
-  paymentType           String
+  bank                  String?
+  paymentType           String?
   status                String
   amount                Decimal @db.Decimal(10, 2)
-  currency              String
+  currency              String?
+  orderId               Int?
+  order                 Order?  @relation(fields: [orderId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -211,7 +213,6 @@ model Courier {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  invoice Order?   @relation(fields: [orderId], references: [id])
   Invoice Invoice?
   orderId Int?
 
@@ -395,8 +396,8 @@ model Order {
   store     Store?         @relation(fields: [storeId], references: [id], onDelete: Cascade)
   histories OrderHistory[]
   products  OrderDetail[]
+  payments  Payment[]
   invoice   Invoice?
-  Courier   Courier[]
 
   @@map("orders")
 }

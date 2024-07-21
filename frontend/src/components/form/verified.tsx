@@ -24,7 +24,7 @@ export function VerifiedAccount() {
               buttonVariants({ variant: "lakoePrimary" })
             )}
           >
-            Back to Dashboard
+            Buat Toko Impianmu
           </Link>
         </div>
       </div>

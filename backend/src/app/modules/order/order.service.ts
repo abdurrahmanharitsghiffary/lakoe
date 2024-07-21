@@ -190,7 +190,7 @@ export class OrderService {
 
       await tx.courier.create({
         data: {
-          invoice: { connect: { id: invoice.id } },
+          Invoice: { connect: { id: invoice.id } },
           biteshipOrderId: biteshipOrder.id,
           biteshipTrackingId: biteshipOrder.courier.tracking_id,
           courierCode: biteshipOrder.courier.company,

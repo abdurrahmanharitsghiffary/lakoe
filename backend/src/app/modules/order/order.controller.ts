@@ -7,6 +7,7 @@ import { BiteshipService } from 'src/common/modules/biteship/biteship.service';
 
 @Controller('orders')
 @ApiTags('Orders')
+@SkipAuth()
 export class OrderController {
   constructor(
     private readonly orderService: OrderService,

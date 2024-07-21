@@ -46,6 +46,7 @@ export class AuthGuard implements CanActivate {
     if (skipAuth && !authOptional) return true;
 
     const token = this.getTokenFromHeaders(request);
+    console.log('token:', token);
 
     try {
       const decoded = await this.jwtService.verifyAsync<{
@@ -56,7 +57,7 @@ export class AuthGuard implements CanActivate {
       const tokenFromDb = await this.prismaService.token.findUnique({
         where: { token, type: 'ACCESS_TOKEN' },
       });
-
+      console.log('Db:', tokenFromDb);
       if (!tokenFromDb) throw new ForbiddenException('Invalid token.');
 
       request.user = decoded;
