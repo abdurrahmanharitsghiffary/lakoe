@@ -44,7 +44,15 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, asChild = false, isFocused = false, ...props },
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      isFocused = false,
+      type = "button",
+      ...props
+    },
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
@@ -54,6 +62,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           buttonVariants({ variant, size, className }),
           isFocused && "outline-blue-500 text-lakoe-primary"
         )}
+        type={type}
         ref={ref}
         {...props}
       />

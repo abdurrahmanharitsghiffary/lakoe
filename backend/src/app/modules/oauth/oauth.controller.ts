@@ -34,7 +34,7 @@ export class OauthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleOAuthCallback(@Res() res: Response, @User() user: any) {
-    const code = await this.oauthService.oauthCallback(user);
+    const { code } = await this.oauthService.oauthCallback(user);
     return res.redirect(
       `${process.env.BASE_CLIENT_URL}/oauth/callback?code=${code}`,
     );

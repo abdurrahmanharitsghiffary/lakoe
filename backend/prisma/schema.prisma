@@ -18,6 +18,7 @@ model User {
   email        String        @unique @db.VarChar(255)
   password     String        @db.VarChar(255)
   isVerified   Boolean       @default(false)
+  hasStore     Boolean       @default(false)
   role         Role?         @default(USER)
   providerId   String?
   providerType ProviderType?
@@ -25,14 +26,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  carts   Cart[]
-  store   Store?
-  profile Profile?
-  token   Token[]
+  store              Store?
+  profile            Profile?
+  wishlistCollection ProductWishlistCollection?
+  cartCollection     CartCollection?
 
-  // invoices Invoice[]
-  // addresses Address[]
-  // payments Payment[]
+  addresses Address[]
+  tokens    Token[]
 
   @@map("users")
 }
@@ -104,30 +104,69 @@ enum Role {
   USER
 }
 
+model ProductWishlistCollection {
+  id String @id @default(uuid())
+
+  products Product[]
+
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?  @unique
+
+  @@map("product_wishlists")
+}
+
+model CartCollection {
+  id    String @id @default(uuid())
+  carts Cart[]
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int?     @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cart_collections")
+}
+
 model Cart {
-  qty Int
+  id Int @id @default(autoincrement())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId           Int
-  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  productVariantId Int
-  productVariant   Variant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+  cartItems        CartItem[]
+  store            Store          @relation(fields: [storeId], references: [id])
+  storeId          Int
+  cartCollection   CartCollection @relation(fields: [cartCollectionId], references: [id], onDelete: Cascade)
+  cartCollectionId String
 
-  @@id([userId, productVariantId])
+  @@unique([storeId, cartCollectionId])
   @@map("carts")
 }
 
+model CartItem {
+  qty Int
+
+  cartId Int
+  cart   Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  skuId  Int
+  sku    SKU  @relation(fields: [skuId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([cartId, skuId])
+  @@map("cart_items")
+}
+
 model Invoice {
-  id                   Int      @id @default(autoincrement())
-  prices               Decimal  @db.Decimal(10, 2)
+  id                   String   @id @default(uuid())
+  amount               Decimal  @db.Decimal(10, 2)
   serviceCharge        Decimal? @db.Decimal(10, 2)
   status               String
   receiverContactName  String
-  receiverContactPhone String
+  receiverContactPhone String   @db.VarChar(30)
   receiverName         String
-  receiverAddressPhone String
+  receiverAddressPhone String   @db.VarChar(30)
   receiverAddress      String
   receiverPostalCode   String
   receiverCity         String
@@ -140,13 +179,10 @@ model Invoice {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  paymentId Int?     @unique
-  payment   Payment? @relation(fields: [paymentId], references: [id])
-  courierId Int?     @unique
-  courier   Courier? @relation(fields: [courierId], references: [id])
-  orderId   Int      @unique
-  order     Order    @relation(fields: [orderId], references: [id])
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id])
 
+  payment              Payment[]
   invoiceHistories     InvoiceHistory[]
   confirmationPayments ConfirmationPayment[]
 
@@ -154,21 +190,19 @@ model Invoice {
 }
 
 model Payment {
-  id                    Int     @id @default(autoincrement())
-  midtransTransactionId String
-  midtransOrderId       String
-  bank                  String?
-  paymentType           String?
-  status                String
-  amount                Decimal @db.Decimal(10, 2)
-  currency              String?
-  orderId               Int?
-  order                 Order?  @relation(fields: [orderId], references: [id])
+  id              Int     @id @default(autoincrement())
+  midtransOrderId String
+  bank            String
+  paymentType     String
+  status          String
+  amount          Decimal @db.Decimal(10, 2)
+  currency        String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Invoice Invoice?
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId String
 
   @@map("payments")
 }
@@ -180,7 +214,7 @@ model InvoiceHistory {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  invoiceId Int
+  invoiceId String
   invoice   Invoice @relation(fields: [invoiceId], references: [id])
 
   @@map("invoice_histories")
@@ -194,7 +228,7 @@ model ConfirmationPayment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  invoiceId Int
+  invoiceId String
   invoice   Invoice @relation(fields: [invoiceId], references: [id])
 
   @@map("confirmation_payments")
@@ -204,7 +238,6 @@ model Courier {
   id                 Int     @id @default(autoincrement())
   courierCode        String  @db.VarChar(30)
   courierServiceCode String  @db.VarChar(30)
-  courierServiceName String  @db.VarChar(50)
   biteshipOrderId    String  @db.VarChar(150)
   biteshipTrackingId String  @db.VarChar(150)
   biteshipWaybillId  String? @db.VarChar(150)
@@ -213,8 +246,8 @@ model Courier {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Invoice Invoice?
-  orderId Int?
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String @unique
 
   @@map("couriers")
 }
@@ -228,17 +261,19 @@ model Store {
   logoAttachment   String?
   bannerAttachment String?
 
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
 
-  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId           Int               @unique
+  user             User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId           Int?              @unique
   bankAccounts     BankAccount[]
   messageTemplates MessageTemplate[]
   products         Product[]
   addresses        Address[]
   courierServices  CourierService[]
   orders           Order[]
+  carts            Cart[]
 
   @@map("stores")
 }
@@ -247,12 +282,12 @@ model CourierService {
   id                 Int    @id @default(autoincrement())
   courierCode        String @db.VarChar(30)
   courierServiceCode String @db.VarChar(30)
-  courierServiceName String @db.VarChar(50)
+  courierServiceName String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store   Store @relation(fields: [storeId], references: [id])
   storeId Int
 }
 
@@ -261,7 +296,7 @@ model MessageTemplate {
   name    String @db.VarChar(125)
   content String @db.Text
   storeId Int
-  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store   Store  @relation(fields: [storeId], references: [id])
 
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
@@ -279,7 +314,7 @@ model BankAccount {
   createdAt DateTime @default(now())
 
   storeId Int
-  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store   Store @relation(fields: [storeId], references: [id])
 
   @@map("bank_accounts")
 }
@@ -288,19 +323,71 @@ model Product {
   id           Int      @id @default(autoincrement())
   name         String   @db.VarChar(125)
   description  String?  @db.Text
-  attachments  String[]
+  images       String[]
   isActive     Boolean  @default(false)
   minimumOrder Int
 
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
-  storeId    Int
-  store      Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  categories Category[]
-  variants   Variant[]
+  storeId             Int
+  store               Store                       @relation(fields: [storeId], references: [id])
+  categories          Category[]
+  wishlistCollections ProductWishlistCollection[]
+  attributtes         Attribute[]
+  skus                SKU[]
+  reviews             Review[]
 
   @@map("products")
+}
+
+enum DiscountType {
+  FIXED
+  PERCENTAGE
+}
+
+// Size, Colour
+model Attribute {
+  id            Int            @id @default(autoincrement())
+  name          String
+  productId     Int
+  product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  skuAttributes AttributeSKU[]
+}
+
+model SKU {
+  id           Int           @id @default(autoincrement())
+  sku          String        @unique
+  image        String?
+  stock        Int
+  isActive     Boolean       @default(false)
+  discount     Decimal?      @db.Decimal(2, 1)
+  discountType DiscountType?
+  weightInGram Int
+  price        Decimal       @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  productId     Int
+  product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  skuAttributes AttributeSKU[]
+
+  cartItems    CartItem[]
+  orderDetails OrderDetail[]
+}
+
+// SM, XL, Black, White
+model AttributeSKU {
+  value String
+
+  attributeId Int
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+
+  skuId Int
+  sku   SKU @relation(fields: [skuId], references: [id], onDelete: Cascade)
+
+  @@id([attributeId, skuId])
 }
 
 model Category {
@@ -316,35 +403,27 @@ model Category {
   @@map("categories")
 }
 
-// VARIANT THAT ARE AVAILABLE FOR SALE ARE VARIANT THAT DOES NOT HAVE SUBS-VARIANTS 
-// Variant that have parentId null is a root variant  
-model Variant {
-  id           Int      @id @default(autoincrement())
-  name         String   @db.VarChar(125)
-  isActive     Boolean  @default(false)
-  discount     Decimal? @db.Decimal(2, 1)
-  sku          String?
-  weightInGram Int?
-  stock        Int?
-  price        Decimal? @db.Decimal(10, 2)
-  parentId     Int?
+model Review {
+  name    String
+  content String  @db.Text
+  rating  Decimal @db.Decimal(2, 1)
 
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  productId     Int
-  product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
-  parentVariant Variant?      @relation("Variant", fields: [parentId], references: [id], onDelete: Cascade)
-  subVariants   Variant[]     @relation("Variant")
-  orderDetails  OrderDetail[]
-  carts         Cart[]
-
-  @@unique([name, productId])
-  @@map("product_variants")
+  @@id([productId, orderId])
+  @@map("reviews")
 }
 
 model Address {
   id             Int     @id @default(autoincrement())
+  contactName    String?
+  contactPhone   String? @db.VarChar(30)
+  addressPhone   String  @db.VarChar(30)
   name           String
   address        String
   postalCode     String  @db.VarChar(50)
@@ -358,15 +437,17 @@ model Address {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  storeId Int
-  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId Int?
+  store   Store? @relation(fields: [storeId], references: [id])
+  userId  Int?
+  user    User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model OrderHistory {
   id      Int    @id @default(autoincrement())
   content String @db.Text
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId Int
+  orderId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -376,28 +457,31 @@ model OrderDetail {
   qty                    Int
   pricePerProduct        Decimal @db.Decimal(10, 2)
   weightPerProductInGram Int
-  orderId                Int
+  orderId                String
   order                  Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productVariantId       Int
-  productVariant         Variant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+  skuId                  Int
+  sku                    SKU     @relation(fields: [skuId], references: [id], onDelete: Cascade)
 
-  @@id([productVariantId, orderId])
+  @@id([skuId, orderId])
 }
 
 model Order {
-  id          Int         @id @default(autoincrement())
+  id          String      @id @default(uuid())
   status      OrderStatus @default(NOT_PAID)
   description String?     @db.Text
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
-  storeId   Int?
-  store     Store?         @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  histories OrderHistory[]
-  products  OrderDetail[]
-  payments  Payment[]
-  invoice   Invoice?
+  storeId Int?
+  store   Store?   @relation(fields: [storeId], references: [id])
+  invoice Invoice?
+  courier Courier?
+
+  orderDetails OrderDetail[]
+  histories    OrderHistory[]
+  reviews      Review[]
 
   @@map("orders")
 }
@@ -410,3 +494,23 @@ enum OrderStatus {
   SUCCESS
   CANCELLED
 }
+
+// model Variant {
+//   id   Int    @id @default(autoincrement())
+//   name String @db.VarChar(125)
+
+//   parentId Int?
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   productId     Int
+//   product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+//   parentVariant Variant?      @relation("Variant", fields: [parentId], references: [id], onDelete: Cascade)
+//   subVariants   Variant[]     @relation("Variant")
+//   orderDetails  OrderDetail[]
+//   CartItem      CartItem[]
+
+//   @@unique([name, productId])
+//   @@map("product_variants")
+// }

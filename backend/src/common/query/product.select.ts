@@ -1,16 +1,16 @@
 import { Prisma } from '@prisma/client';
-import { selectVariant } from './variant.select';
+import { selectSKU } from './sku.select';
 
 export const productSelect = {
   id: true,
-  attachments: true,
+  images: true,
   categories: { select: { name: true } },
   description: true,
   isActive: true,
   minimumOrder: true,
   name: true,
-  variants: {
-    select: selectVariant,
+  skus: {
+    select: selectSKU,
   },
 } satisfies Prisma.ProductSelect;
 

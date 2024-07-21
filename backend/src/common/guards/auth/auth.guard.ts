@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate {
     ]);
 
     const request = context.switchToHttp().getRequest<Request>();
-    // console.log(process.env.NODE_ENV);
+    console.log(process.env.NODE_ENV);
     // if (APP_CONFIG.TESTING.DISABLE_AUTH_IN_DEV) {
     //   console.log(APP_CONFIG, 'AP CINFIG');
     //   if (APP_CONFIG.TESTING.LOGIN_AS.USER_2)
@@ -45,8 +45,7 @@ export class AuthGuard implements CanActivate {
 
     if (skipAuth && !authOptional) return true;
 
-    const token = this.getTokenFromHeaders(request);
-    console.log('token:', token);
+    const token = this.getTokenFromHeaders(request, authOptional);
 
     try {
       const decoded = await this.jwtService.verifyAsync<{
@@ -69,13 +68,14 @@ export class AuthGuard implements CanActivate {
     return true;
   }
 
-  getTokenFromHeaders(request: Request) {
+  getTokenFromHeaders(request: Request, authOptional: boolean) {
     const [tokenType, token] = (request.headers['authorization'] ?? '').split(
       ' ',
     );
 
-    if (!token) throw new ForbiddenException('No token provided.');
-    if (tokenType !== 'Bearer')
+    if (!token && !authOptional)
+      throw new ForbiddenException('No token provided.');
+    if (tokenType !== 'Bearer' && !authOptional)
       throw new ForbiddenException('Invalid token type.');
 
     return token;

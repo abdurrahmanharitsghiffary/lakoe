@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ProductModule } from './modules/product/product.module';
+// import { ProductModule } from './modules/product/product.module';
 import { UsersModule } from './modules/users/users.module';
-import { OrderModule } from './modules/order/order.module';
+// import { OrderModule } from './modules/order/order.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { StoreModule } from './modules/store/store.module';
-import { VariantModule } from './modules/variant/variant.module';
+// import { StoreModule } from './modules/store/store.module';
 import { MeModule } from './modules/me/me.module';
 import { OauthModule } from './modules/oauth/oauth.module';
 import { CronModule } from './modules/cron/cron.module';
@@ -19,12 +18,11 @@ import { CategoryModule } from './modules/category/category.module';
 @Module({
   imports: [
     CommonModule,
-    ProductModule,
+    // ProductModule,
     UsersModule,
-    OrderModule,
+    // OrderModule,
     AuthModule,
-    StoreModule,
-    VariantModule,
+    // StoreModule,
     MeModule,
     OauthModule,
     CronModule,

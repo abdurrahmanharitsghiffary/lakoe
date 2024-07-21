@@ -28,40 +28,40 @@ export class AppController {
     const { ids, isActive } = body;
     let updatedCount = 0;
 
-    if (ids.length > 0) {
-      switch (type) {
-        case 'product':
-          {
-            const updatedProducts = await this.prismaService.product.updateMany(
-              {
-                where: {
-                  id: { in: ids },
-                  AND: [{ store: { userId: user?.id } }],
-                },
-                data: { isActive },
-              },
-            );
+    // if (ids.length > 0) {
+    //   switch (type) {
+    //     case 'product':
+    //       {
+    //         const updatedProducts = await this.prismaService.product.updateMany(
+    //           {
+    //             where: {
+    //               id: { in: ids },
+    //               AND: [{ store: { userId: user?.id } }],
+    //             },
+    //             data: { isActive },
+    //           },
+    //         );
 
-            updatedCount = updatedProducts.count;
-          }
-          break;
-        case 'variant':
-          {
-            const updatedVariants = await this.prismaService.variant.updateMany(
-              {
-                where: {
-                  id: { in: ids },
-                  AND: [{ product: { store: { userId: user?.id } } }],
-                },
-                data: { isActive },
-              },
-            );
+    //         updatedCount = updatedProducts.count;
+    //       }
+    //       break;
+    //     case 'variant':
+    //       {
+    //         const updatedVariants = await this.prismaService.variant.updateMany(
+    //           {
+    //             where: {
+    //               id: { in: ids },
+    //               AND: [{ product: { store: { userId: user?.id } } }],
+    //             },
+    //             data: { isActive },
+    //           },
+    //         );
 
-            updatedCount = updatedVariants.count;
-          }
-          break;
-      }
-    }
+    //         updatedCount = updatedVariants.count;
+    //       }
+    //       break;
+    //   }
+    // }
 
     return { count: updatedCount };
   }
