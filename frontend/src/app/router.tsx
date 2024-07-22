@@ -36,6 +36,7 @@ import { StorePage } from "./pages/seller/store-page";
 import { ProfilePage } from "./pages/profile/profile";
 import { EditProfilePage } from "./pages/profile/edit-profile";
 import { CheckoutPage } from "./pages/buyer/checkout/checkout";
+import { Landing } from "@/features/landing/landing";
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +50,11 @@ export const router = createBrowserRouter([
           { path: "checkout", element: <CheckoutPage /> },
         ],
         element: <BuyerLayout />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "landing",
+        element: <Landing />,
         errorElement: <ErrorPage />,
       },
       {

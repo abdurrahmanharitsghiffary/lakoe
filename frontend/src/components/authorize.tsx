@@ -11,17 +11,17 @@ export function Authorize({ roles }: AuthorizeProps) {
   console.log("data: ", data);
   console.log("isError: ", isError);
 
-  if (data?.data?.role && roles && roles.includes(data?.data?.role)) {
-    return <ForbiddenPage />;
-  }
+  // if (data?.data?.role && roles && roles.includes(data?.data?.role)) {
+  //   return <ForbiddenPage />;
+  // }
 
-  if (isError && error?.response?.data?.statusCode === 403) {
-    return <Navigate to={"/auth/login"} />;
-  }
+  // if (isError && error?.response?.data?.statusCode === 403) {
+  //   return <Navigate to={"/auth/login"} />;
+  // }
 
-  if (!data?.data?.isVerified && isSuccess) {
-    return <Navigate to={"/auth/verify-account"} />;
-  }
+  // if (!data?.data?.isVerified && isSuccess) {
+  //   return <Navigate to={"/auth/verify-account"} />;
+  // }
 
   return <Outlet />;
 }
