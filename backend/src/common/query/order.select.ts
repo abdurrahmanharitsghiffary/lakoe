@@ -49,7 +49,6 @@ export const selectOrder = {
   updatedAt: true,
   invoice: {
     select: {
-      ...selectOrderSimplified.invoice.select,
       id: true,
       invoiceNumber: true,
       amount: true,

@@ -10,14 +10,14 @@ import { FaArrowRight } from "react-icons/fa";
 export function NewCheckout() {
   const { handleSubmit, onSubmit } = useAddCheckout();
   return (
-    <div className="flex flex-col w-full mt-8 ml-10">
-      <h1 className="text-[40px] px-[70px] font-bold">Checkout</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <div className="flex flex-col w-full p-4">
+      <h1 className="text-[40px] font-bold px-4">Checkout</h1>
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <div className="flex flex-row w-100 mt-10">
-          <div className="basis-3/4">
-            <div className="flex w-full px-2 mt-4 ml-10">
-              <Tabs defaultValue="Pengiriman">
-                <TabsList className="w-full bg-transparent p-0 ml-[-270px]">
+          <div className="w-[70%]">
+            <div className="flex w-full px-2">
+              <Tabs defaultValue="Pengiriman" className="flex flex-col w-full">
+                <TabsList className="bg-transparent p-0 mr-auto">
                   <TabsTrigger
                     value="Pengiriman"
                     className="relative border-b-4 border-b-transparent bg-transparent  pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-lakoe-primary  data-[state=active]:shadow-none data-[state=active]:text-lakoe-primary justify-start"
@@ -41,7 +41,7 @@ export function NewCheckout() {
                     </div>
                   </TabsTrigger>
                 </TabsList>
-                <div className="border-b-2 mt-4 ml-6 w-[945px]"></div>
+                <div className="border-b-2 mt-4 ml-6"></div>
                 <TabsContent value="Pengiriman" className="mt-2">
                   <CardHeaderCheckout />
                   <CardBodyCheckout />
@@ -50,11 +50,11 @@ export function NewCheckout() {
               </Tabs>
             </div>
           </div>
-          <div className="basis-1/4">
+          <div className="w-[30%]">
             <RightCard />
             <div className="flex flex-row w-full h-auto mt-4 mx-3">
               <Button
-                className="flex flex-row bg-blue-500 w-[450px] gap-4 items-center py-7"
+                className="flex flex-row bg-blue-500 gap-4 items-center py-7"
                 type="submit"
               >
                 <span className="text-xl">Lihat Pembayaran</span>

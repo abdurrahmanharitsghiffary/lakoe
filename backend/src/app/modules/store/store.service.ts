@@ -170,15 +170,26 @@ export class StoreService {
     });
   }
 
-  async findAllCourierServices(storeId: number) {
-    await this.checkStoreMustExists(storeId);
+  async findAllCourierServices(storeId: number, skipStoreCheck?: boolean) {
+    if (!skipStoreCheck) await this.checkStoreMustExists(storeId);
     return await this.prismaService.courierService.findMany({
       where: { storeId },
     });
   }
 
-  async addCourierService(storeId: number, addCourierDto: AddCourierDto) {
-    await this.checkStoreMustExists(storeId);
+  async checkCouriersMustExists(storeId: number) {
+    const courierServices = await this.findAllCourierServices(storeId, true);
+    if (courierServices.length === 0)
+      throw new BadRequestException(ERR.STORE_COURIER_NOT_FOUND);
+    return courierServices;
+  }
+
+  async addCourierService(
+    storeId: number,
+    addCourierDto: AddCourierDto,
+    skipStoreCheck?: boolean,
+  ) {
+    if (!skipStoreCheck) await this.checkStoreMustExists(storeId);
     return await this.prismaService.courierService.createMany({
       data: addCourierDto.courierServices.map((service) => ({
         ...service,

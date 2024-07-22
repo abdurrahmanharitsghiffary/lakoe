@@ -1,7 +1,8 @@
 import { Prisma } from '@prisma/client';
 import { selectSKU } from './sku.select';
+import { selectAttributeSimplified } from './attribute.select';
 
-export const productSelectSimplified = {
+export const selectProductSimplified = {
   id: true,
   images: true,
   categories: { select: { name: true } },
@@ -9,16 +10,17 @@ export const productSelectSimplified = {
   isActive: true,
   minimumOrder: true,
   name: true,
+  attributtes: { select: selectAttributeSimplified },
   _count: { select: { skus: true } },
 } satisfies Prisma.ProductSelect;
 
-export const productSelect = {
-  ...productSelectSimplified,
+export const selectProduct = {
+  ...selectProductSimplified,
   skus: {
     select: selectSKU,
   },
 } satisfies Prisma.ProductSelect;
 
 export type ProductSelectPayload = Prisma.ProductGetPayload<{
-  select: typeof productSelect;
+  select: typeof selectProduct;
 }>;
