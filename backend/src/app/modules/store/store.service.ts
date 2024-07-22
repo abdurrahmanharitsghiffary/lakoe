@@ -15,6 +15,7 @@ import { BiteshipService } from 'src/common/modules/biteship/biteship.service';
 import { CreateInvoiceDto } from '../order/dto/create-order.dto';
 import { AddCourierDto } from './dto/add-courier.dto';
 import { GetShippingRateOptions } from 'src/common/types/biteship';
+import { ERR } from 'src/common/constants';
 
 @Injectable()
 export class StoreService {
@@ -111,15 +112,11 @@ export class StoreService {
     );
 
     if (couriersCode.length === 0)
-      throw new BadRequestException(
-        'Store has not activated any courier options.',
-      );
+      throw new BadRequestException(ERR.STORE_COURIER_NOT_FOUND);
 
     const storeAddress = store?.addresses?.[0];
     if (!storeAddress)
-      throw new BadRequestException(
-        'Store is missing an active location required to calculate the shipping rate.',
-      );
+      throw new BadRequestException(ERR.UNABLE_CALCULATE_SHIPPING_RATE);
 
     const destAreaIdResponse = await this.biteshipService.getAreaID({
       countries: 'ID',
