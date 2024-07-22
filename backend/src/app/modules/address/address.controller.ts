@@ -23,10 +23,11 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validatio
 import { AddressGuard } from './guards/address.guard';
 import { StoreGuard } from '../store/guards/store.guard';
 import { StoreService } from '../store/store.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
+import { ApiTags } from '@nestjs/swagger';
+import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
 
 @ApiTags('Address')
+@ApiJwtBearerAuth()
 @Controller()
 export class AddressController {
   constructor(
@@ -34,7 +35,6 @@ export class AddressController {
     private readonly addressService: AddressService,
   ) {}
 
-  @ApiBearerAuth()
   @Post('stores/:id/address')
   @UseGuards(StoreGuard)
   async create(
@@ -46,19 +46,18 @@ export class AddressController {
   }
 
   @Get('stores/:id/address')
-  @SkipAuth()
+  @UseGuards(StoreGuard)
   async findAllAddressByStoreId(@Param('id') id: string) {
     await this.storeService.findOne(+id);
     return this.addressService.findAllByStoreId(+id);
   }
 
   @Get('address/:id')
-  @SkipAuth()
+  @UseGuards(AddressGuard)
   findOne(@Param('id') id: string) {
     return this.addressService.findOne(+id);
   }
 
-  @ApiBearerAuth()
   @Patch('address/:id')
   @UseGuards(AddressGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -70,7 +69,6 @@ export class AddressController {
     return this.addressService.update(+id, updateAddressDto);
   }
 
-  @ApiBearerAuth()
   @Delete('address/:id')
   @UseGuards(AddressGuard)
   @HttpCode(HttpStatus.NO_CONTENT)

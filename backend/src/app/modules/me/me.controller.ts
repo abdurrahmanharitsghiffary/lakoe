@@ -18,10 +18,11 @@ import { User } from 'src/common/decorators/user.decorator';
 import { UserPayload } from 'src/common/types';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { selectUser } from 'src/common/query/user.select';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
+import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
 
 @ApiTags('Me')
-@ApiBearerAuth()
+@ApiJwtBearerAuth()
 @Controller('me')
 export class MeController {
   constructor(

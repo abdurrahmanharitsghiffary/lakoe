@@ -1,3 +1,3 @@
 export class PaymentDto {
-  orderId: number;
+  orderId: string;
 }

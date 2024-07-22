@@ -7,7 +7,7 @@ import { snap } from 'src/common/libs/midtrans';
 export class PaymentService {
   constructor(private prisma: PrismaService) {}
 
-  async createPayment(orderId: number) {
+  async createPayment(orderId: string) {
     return await this.prisma.$transaction(async (tx) => {
       const order = await tx.order.findUnique({
         where: {
@@ -16,24 +16,20 @@ export class PaymentService {
         select: {
           invoice: {
             select: {
-              prices: true,
-              courier: {
-                select: {
-                  price: true,
-                },
-              },
+              id: true,
+              amount: true,
             },
           },
-          products: {
+          orderDetails: {
             select: {
               qty: true,
-              productVariant: {
+              pricePerProduct: true,
+              sku: {
                 select: {
                   id: true,
-                  price: true,
-                  name: true,
                   product: {
                     select: {
+                      name: true,
                       store: {
                         select: {
                           name: true,
@@ -45,6 +41,11 @@ export class PaymentService {
               },
             },
           },
+          courier: {
+            select: {
+              price: true,
+            },
+          },
         },
       });
 
@@ -52,14 +53,18 @@ export class PaymentService {
 
       const midtransOrderId = uuidv4();
       const grossAmount =
-        +order.invoice.prices + +order.invoice.courier.price + 500;
+        +order.orderDetails.reduce((total, detail) => {
+          return total + detail.qty * detail.pricePerProduct.toNumber();
+        }, 0) +
+        +order.courier.price +
+        500;
 
-      const itemDetails = order.products.map((item) => ({
-        id: item.productVariant.id.toString(),
-        price: item.productVariant.price.toNumber(),
+      const itemDetails = order.orderDetails.map((item) => ({
+        id: item.sku.id.toString(),
+        price: item.pricePerProduct.toNumber(),
         quantity: item.qty,
-        name: item.productVariant.name,
-        brand: item.productVariant.product.store.name,
+        name: item.sku.product.name,
+        brand: item.sku.product.store.name,
       }));
 
       const transaction = await snap.createTransaction({
@@ -72,21 +77,18 @@ export class PaymentService {
 
       const { token, order_id } = transaction;
 
-      const payment = await tx.payment.create({
+      await tx.payment.create({
         data: {
           midtransOrderId: order_id,
-          midtransTransactionId: token,
+          bank: 'midtrans',
           status: 'pending',
           amount: grossAmount,
           paymentType: 'midtrans',
-          order: {
-            connect: {
-              id: orderId,
-            },
-          },
+          currency: 'IDR',
+          invoiceId: order.invoice.id,
         },
       });
-      return transaction.redirectUrl;
+      return { token, order_id };
     });
   }
 }

@@ -19,7 +19,7 @@ import { ApiErrorResponse } from 'src/common/class/api-response';
 export class CartService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async checkCartMustExist(cartId: number) {
+  async checkCartMustExist(cartId: string) {
     const cart = await this.prismaService.cart.findUnique({
       where: {
         id: cartId,
@@ -39,7 +39,7 @@ export class CartService {
     return sku;
   }
 
-  async checkCartItemMustExists(cartId: number, skuId: number) {
+  async checkCartItemMustExists(cartId: string, skuId: number) {
     const cartItem = await this.prismaService.cartItem.findUnique({
       where: { cartId_skuId: { cartId, skuId } },
     });
@@ -82,7 +82,7 @@ export class CartService {
     return store;
   }
 
-  async findAllItemsByCartId(cartId: number) {
+  async findAllItemsByCartId(cartId: string) {
     await this.checkCartMustExist(cartId);
     return await this.prismaService.cartItem.findMany({
       where: { cartId },
@@ -90,7 +90,7 @@ export class CartService {
     });
   }
 
-  findOneCart(cartId: number) {
+  findOneCart(cartId: string) {
     return this.checkCartMustExist(cartId);
   }
 
@@ -135,7 +135,7 @@ export class CartService {
   }
 
   async updateCartCountOrDelete(
-    cartId: number,
+    cartId: string,
     skuId: number,
     count: number,
     replaceCount?: boolean,
@@ -170,11 +170,11 @@ export class CartService {
     return cartItem;
   }
 
-  decrement(cartId: number, skuId: number) {
+  decrement(cartId: string, skuId: number) {
     return this.updateCartCountOrDelete(cartId, skuId, -1);
   }
 
-  increment(cartId: number, skuId: number) {
+  increment(cartId: string, skuId: number) {
     return this.updateCartCountOrDelete(cartId, skuId, 1);
   }
 
@@ -226,27 +226,15 @@ export class CartService {
   ) {
     if (!skipCheckSku) await this.checkSkuIsExistsAndUnique(addCartItemDto);
 
-    const skuIds = addCartItemDto.skus.map((sku) => sku.skuId);
-
-    const skus = await this.prismaService.sKU.findMany({
-      where: {
-        id: { in: skuIds },
-      },
-      select: { product: { select: { storeId: true } } },
-      orderBy: [{ product: { storeId: 'desc' } }],
-    });
-
-    const storeId = skus?.[0]?.product?.storeId;
-
-    await this.prismaService.cart.upsert({
+    return await this.prismaService.cart.upsert({
       where: {
         storeId_cartCollectionId: {
           cartCollectionId: collectionId,
-          storeId,
+          storeId: addCartItemDto.storeId,
         },
       },
       create: {
-        storeId: storeId,
+        storeId: addCartItemDto.storeId,
         cartCollectionId: collectionId,
         cartItems: {
           createMany: {
@@ -258,20 +246,7 @@ export class CartService {
           },
         },
       },
-      update: {
-        cartItems: {
-          upsert: addCartItemDto.skus.map((sku) => ({
-            where: {
-              cartId_skuId: { cartId: addCartItemDto.cartId, skuId: sku.skuId },
-            },
-            create: {
-              skuId: sku.skuId,
-              qty: sku.qty,
-            },
-            update: { qty: sku.qty },
-          })),
-        },
-      },
+      update: {},
     });
   }
 
@@ -282,7 +257,7 @@ export class CartService {
     });
   }
 
-  async removeCart(cartId: number) {
+  async removeCart(cartId: string) {
     await this.checkCartMustExist(cartId);
     await this.prismaService.cart.delete({ where: { id: cartId } });
   }

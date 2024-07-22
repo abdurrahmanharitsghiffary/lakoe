@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Controller, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PaymentService } from './payment.service';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
@@ -9,9 +9,9 @@ import { PaymentDto } from './payment.dto';
 export class PaymentController {
   constructor(private paymentService: PaymentService) {}
   @SkipAuth()
-  @Post('pay')
+  @Post(':orderId')
   @HttpCode(HttpStatus.OK)
-  async pay(@Body() payment: PaymentDto) {
+  async pay(@Param() payment: PaymentDto) {
     const paymentUrl = await this.paymentService.createPayment(payment.orderId);
     return { paymentUrl };
     // also save the transaction order_id

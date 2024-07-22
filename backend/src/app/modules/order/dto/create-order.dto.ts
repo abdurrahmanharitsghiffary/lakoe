@@ -2,14 +2,19 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Z } from 'src/common/libs/zod';
 import { z } from 'zod';
 
-export class Product {
+export class Sku {
   id: number = 6;
   qty: number = 2;
 }
 
+export const skuSchema = z.object({
+  id: z.number().min(1).positive(),
+  qty: z.number().min(1).positive(),
+});
+
 export const orderSchema = z.object({
   description: z.string().optional(),
-  product: z.string(),
+  skus: z.array(skuSchema).min(1),
 });
 
 export class CreateInvoiceDto {
@@ -28,8 +33,8 @@ export class CreateInvoiceDto {
 
 export class CreateOrderDto extends CreateInvoiceDto {
   description?: string;
-  @ApiProperty({ type: () => [Product] })
-  products: Product[];
+  @ApiProperty({ type: () => [Sku] })
+  skus: Sku[];
 }
 
 export const invoiceSchema = z.object({

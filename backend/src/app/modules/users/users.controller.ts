@@ -16,12 +16,14 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validatio
 import { Roles } from 'src/common/decorators/roles/roles.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
+import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
 
 @Controller('users')
 @ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiJwtBearerAuth()
   @Post()
   @Roles(['ADMIN'])
   async create(
@@ -42,6 +44,7 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
+  @ApiJwtBearerAuth()
   @Patch(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @Roles(['ADMIN'])
@@ -49,6 +52,7 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
+  @ApiJwtBearerAuth()
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @Roles(['ADMIN'])
