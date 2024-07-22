@@ -19,7 +19,11 @@ export class AddressService {
     return this.prismaService.address.findMany({
       where: { storeId },
       select: selectAddress,
-      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      orderBy: [
+        { isMainLocation: 'desc' },
+        { createdAt: 'desc' },
+        { id: 'desc' },
+      ],
     });
   }
 

@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { selectSKU } from './sku.select';
 
-export const productSelect = {
+export const productSelectSimplified = {
   id: true,
   images: true,
   categories: { select: { name: true } },
@@ -9,6 +9,11 @@ export const productSelect = {
   isActive: true,
   minimumOrder: true,
   name: true,
+  _count: { select: { skus: true } },
+} satisfies Prisma.ProductSelect;
+
+export const productSelect = {
+  ...productSelectSimplified,
   skus: {
     select: selectSKU,
   },

@@ -25,7 +25,7 @@ import {
 } from './dto/update-product.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
-import { GetProductsSchema, getProductsSchema } from './schema/get-products';
+import { GetProductOption, getProductsSchema } from './schema/get-products.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from 'src/common/services/cloudinary.service';
 import { User } from '../../../common/decorators/user.decorator';
@@ -86,7 +86,7 @@ export class ProductController {
   @SkipAuth()
   findAll(
     @Query(new ZodValidationPipe(getProductsSchema))
-    options: GetProductsSchema,
+    options: GetProductOption,
   ) {
     return this.productService.search(options);
   }

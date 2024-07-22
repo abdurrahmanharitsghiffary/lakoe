@@ -2,9 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/common/services/prisma.service';
-import { productSelect } from 'src/common/query/product.select';
-import { GetProductsSchema } from './schema/get-products';
+import {
+  productSelect,
+  productSelectSimplified,
+} from 'src/common/query/product.select';
+import { GetProductOption } from './schema/get-products.dto';
 import { parseStringBool } from 'src/common/utils/parse-string-bool';
+import { genSku } from 'src/common/utils/gen-sku';
+import { omitProperties } from 'src/common/utils/omit-properties';
 
 @Injectable()
 export class ProductService {
@@ -34,7 +39,7 @@ export class ProductService {
             data: {
               ...sku,
               productId: createdProduct.id,
-              sku: dto.name + Date.now().toString().slice(-3),
+              sku: genSku(dto.name),
             },
           });
           await Promise.all(
@@ -74,17 +79,17 @@ export class ProductService {
   findAllByStoreId(storeId: number = -1, active: boolean = undefined) {
     return this.prismaService.product.findMany({
       where: { isActive: active, storeId },
-      select: productSelect,
+      select: productSelectSimplified,
     });
   }
 
   findAll() {
     return this.prismaService.product.findMany({
-      select: productSelect,
+      select: productSelectSimplified,
     });
   }
 
-  async search({ q, active, categories, sort_by }: GetProductsSchema) {
+  async search({ q, active, categories, sort_by }: GetProductOption) {
     let priceSortOptions;
     let stockSortOptions;
     switch (sort_by) {
@@ -109,7 +114,9 @@ export class ProductService {
     const results = await this.prismaService.product.findMany({
       where: {
         isActive: parseStringBool(active),
-        categories: { some: { name: { in: categories?.split(',') } } },
+        categories: {
+          some: { name: { in: categories?.split(','), mode: 'insensitive' } },
+        },
         OR: [
           {
             name: { contains: q, mode: 'insensitive' },
@@ -118,9 +125,9 @@ export class ProductService {
         ],
       },
       select: {
-        ...productSelect,
+        ...productSelectSimplified,
         skus: {
-          select: { ...productSelect.skus.select },
+          select: { stock: true, price: true },
           orderBy: [{ price: 'desc' }],
         },
       },
@@ -129,20 +136,30 @@ export class ProductService {
     const sortedResults = results.slice();
 
     if (['highest_stock', 'lowest_stock'].includes(sort_by)) {
-      return sortedResults.sort((a, b) => {
-        const totalStockA = a.skus.reduce((prev, { stock }) => prev + stock, 0);
-        const totalStockB = b.skus.reduce((prev, { stock }) => prev + stock, 0);
+      return sortedResults
+        .sort((a, b) => {
+          const totalStockA = a.skus.reduce(
+            (prev, { stock }) => prev + stock,
+            0,
+          );
+          const totalStockB = b.skus.reduce(
+            (prev, { stock }) => prev + stock,
+            0,
+          );
 
-        if (stockSortOptions === 'asc') return totalStockA - totalStockB;
-        return totalStockB - totalStockA;
-      });
+          if (stockSortOptions === 'asc') return totalStockA - totalStockB;
+          return totalStockB - totalStockA;
+        })
+        .map((product) => omitProperties(product, ['skus']));
     }
 
-    return sortedResults.sort((a, b) => {
-      if (priceSortOptions === 'desc')
-        return +b?.skus?.[0]?.price - +a?.skus?.[0]?.price;
-      return +a?.skus?.[0]?.price - +b?.skus?.[0]?.price;
-    });
+    return sortedResults
+      .sort((a, b) => {
+        if (priceSortOptions === 'desc')
+          return +b?.skus?.[0]?.price - +a?.skus?.[0]?.price;
+        return +a?.skus?.[0]?.price - +b?.skus?.[0]?.price;
+      })
+      .map((product) => omitProperties(product, ['skus']));
   }
 
   async findOne(id: number) {
@@ -150,7 +167,7 @@ export class ProductService {
       where: { id },
       select: productSelect,
     });
-    if (!product) throw new NotFoundException('Product not found.');
+    if (!product) throw new NotFoundException('Product is not found.');
     return product;
   }
 

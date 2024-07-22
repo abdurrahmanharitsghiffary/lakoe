@@ -10,3 +10,9 @@ export const ERROR_CODE = {
   INSUFFICIENT_STOCK: 'INSUFFICIENT_STOCK',
   NOT_ACTIVE: 'NOT_ACTIVE',
 } as const;
+
+export const ERR = {
+  STORE_COURIER_NOT_FOUND: 'Store has not activated any courier options.',
+  UNABLE_CALCULATE_SHIPPING_RATE:
+    'Store is missing an active location required to calculate the shipping rate.',
+} as const;

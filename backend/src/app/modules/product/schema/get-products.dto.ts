@@ -10,3 +10,10 @@ export const getProductsSchema = z.object({
 });
 
 export type GetProductsSchema = z.infer<typeof getProductsSchema>;
+
+export class GetProductOption {
+  active?: string;
+  q?: string;
+  sort_by?: 'highest_price' | 'lowest_price' | 'highest_stock' | 'lowest_stock';
+  categories?: string;
+}

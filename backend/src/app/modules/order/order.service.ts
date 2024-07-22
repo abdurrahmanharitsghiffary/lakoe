@@ -6,7 +6,7 @@ import {
 import { PrismaService } from 'src/common/services/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { BiteshipService } from 'src/common/modules/biteship/biteship.service';
-import { ERROR_CODE } from 'src/common/constants';
+import { ERR, ERROR_CODE } from 'src/common/constants';
 import {
   selectOrder,
   selectOrderSimplified,
@@ -14,12 +14,15 @@ import {
 } from 'src/common/query/order.select';
 import { FindAllOptions } from './dto/index.dto';
 import { omitProperties } from 'src/common/utils/omit-properties';
+import { genInvoice } from 'src/common/utils/gen-inv';
+import { AddressService } from '../address/address.service';
 
 @Injectable()
 export class OrderService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly biteshipService: BiteshipService,
+    private readonly addressService: AddressService,
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
@@ -46,23 +49,28 @@ export class OrderService {
           'You cannot order skus from multiple stores in a single transaction.',
         );
 
+      const addresses = await this.addressService.findAllByStoreId(storeIds[0]);
+
+      if (addresses.length === 0)
+        throw new BadRequestException(ERR.UNABLE_CALCULATE_SHIPPING_RATE);
+
       const errors = [];
 
-      skusDto.forEach((product) => {
-        const sku = skus.find((p) => p.id === product.id);
+      skusDto.forEach((sk) => {
+        const sku = skus.find((p) => p.id === sk.id);
 
         if (!sku) {
           errors.push({
-            productId: product.id,
-            message: 'Product sku not found.',
+            skuId: sk.id,
+            message: 'Product sku is not found.',
             code: ERROR_CODE.NOT_FOUND,
           });
           return;
         }
 
-        if (sku.stock < product.qty) {
+        if (sku.stock < sk.qty) {
           errors.push({
-            productId: product.id,
+            skuId: sk.id,
             message: 'Insufficient stock.',
             code: ERROR_CODE.INSUFFICIENT_STOCK,
           });
@@ -70,7 +78,8 @@ export class OrderService {
 
         if (!sku.product.isActive) {
           errors.push({
-            productId: product.id,
+            skuId: sk.id,
+            productId: sku.productId,
             message: 'Product is inactive.',
             code: ERROR_CODE.NOT_ACTIVE,
           });
@@ -78,7 +87,7 @@ export class OrderService {
 
         if (!sku.isActive) {
           errors.push({
-            productId: product.id,
+            skuId: sk.id,
             message: 'Product sku is inactive.',
             code: ERROR_CODE.NOT_ACTIVE,
           });
@@ -141,7 +150,7 @@ export class OrderService {
 
       const invoice = await tx.invoice.create({
         data: {
-          status: 'idk',
+          status: 'pending',
           amount: totalPrice,
           serviceCharge: 0,
           receiverContactName: invoiceData.receiverContactName,
@@ -155,7 +164,7 @@ export class OrderService {
           receiverProvince: invoiceData.receiverProvince,
           receiverLatitude: invoiceData.receiverLatitude,
           receiverLongitude: invoiceData.receiverLongitude,
-          invoiceNumber: 'INV-' + Date.now(),
+          invoiceNumber: genInvoice(),
           order: { connect: { id: order.id } },
         },
       });
