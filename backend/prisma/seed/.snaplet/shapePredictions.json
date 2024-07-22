@@ -233,6 +233,20 @@
   },
   {
     "schemaName": "public",
+    "tableName": "carts",
+    "predictions": [
+      {
+        "input": "public carts id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9986127614974976,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
     "tableName": "categories",
     "predictions": [
       {
@@ -508,6 +522,14 @@
         "confidenceContext": 0
       },
       {
+        "input": "public payments card_type",
+        "column": "cardType",
+        "shape": "CREDIT_DEBIT_NUMBER",
+        "confidence": 0.7214749455451965,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
         "input": "public payments currency",
         "column": "currency",
         "shape": "FINANCE_CURRENCY_NAME",
@@ -626,6 +648,28 @@
         "column": "username",
         "shape": "USERNAME",
         "confidence": 0.9713683724403381,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "reviews",
+    "predictions": [
+      {
+        "input": "public reviews content",
+        "column": "content",
+        "shape": "POST_COMMENT",
+        "confidence": 0.4885074496269226,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public reviews name",
+        "column": "name",
+        "shape": "COMMERCE_PRODUCT_NAME",
+        "confidence": 0.2979135811328888,
         "context": "GENERAL",
         "confidenceContext": 0
       }

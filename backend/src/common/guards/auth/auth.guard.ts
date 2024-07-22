@@ -56,7 +56,7 @@ export class AuthGuard implements CanActivate {
       const tokenFromDb = await this.prismaService.token.findUnique({
         where: { token, type: 'ACCESS_TOKEN' },
       });
-
+      console.log('Db:', tokenFromDb);
       if (!tokenFromDb) throw new ForbiddenException('Invalid token.');
 
       request.user = decoded;
