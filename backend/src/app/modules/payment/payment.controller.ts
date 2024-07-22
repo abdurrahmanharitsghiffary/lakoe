@@ -10,15 +10,14 @@ export class PaymentController {
   async pay() {
     // find order by orderId from body
     // get all product variants data from the orderDetails
-    // add all the product data to the request body of snap
+    // add all the product data to the request body of snap and courier service charge
     // gross amount should take from invoice.prices and courier price
     // also add the user address and informations to the request body of snap
     // see midtrans docs for example
-    // create new payment of the order see prisma schema
+    // create new payment of the order, see prisma schema
     // initial status of the payment should be pending
     // create the order_id it should be created with uuidv4
     // share order_id that already created with midtransOrderId column
-    // midtransTransactionId should take from the created transaction id
 
     const params = {
       transaction_details: {

@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { JsonWebTokenError } from '@nestjs/jwt';
 import { ThrottlerException } from '@nestjs/throttler';
+import { AxiosError } from 'axios';
 import { Response } from 'express';
 import { ZodError } from 'zod';
 
@@ -14,6 +15,18 @@ export class AllExceptionFilter<T> implements ExceptionFilter {
   catch(exception: T, host: ArgumentsHost) {
     const response = host.switchToHttp().getResponse<Response>();
     console.log(exception, 'Exception');
+
+    if (exception instanceof AxiosError) {
+      if (exception.config.baseURL.includes('api.biteship')) {
+        return response.status(400).json({
+          success: false,
+          statusCode: 400,
+          message: exception?.response?.data?.error,
+          name: exception?.name,
+          code: exception?.response?.data?.code,
+        });
+      }
+    }
 
     if (exception instanceof JsonWebTokenError) {
       return response.status(403).json({
@@ -40,7 +53,6 @@ export class AllExceptionFilter<T> implements ExceptionFilter {
       const exceptionResponse = exception.getResponse();
       const objRes =
         typeof exceptionResponse === 'string' ? {} : exceptionResponse;
-      console.log(exceptionResponse, 'EXCEPT RESPONSE');
 
       if (exception.cause instanceof ZodError) {
         return response.status(422).json({

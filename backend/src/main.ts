@@ -13,6 +13,7 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document(app), {
     useGlobalPrefix: true,
     jsonDocumentUrl: '/api-json',
+    swaggerOptions: { persistAuthorization: true },
   });
 
   await app.listen(3000);

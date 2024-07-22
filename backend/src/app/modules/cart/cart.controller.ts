@@ -46,12 +46,12 @@ export class CartController {
 
   @Get('carts/:id')
   findOneCart(@Param('id') cartId: string) {
-    return this.cartService.findOneCart(+cartId);
+    return this.cartService.findOneCart(cartId);
   }
 
   @Get('carts/:id/skus')
   findAllItemsByCartId(@Param('id') cartId: string) {
-    return this.cartService.findAllItemsByCartId(+cartId);
+    return this.cartService.findAllItemsByCartId(cartId);
   }
 
   @Put('carts/:id/skus/:skuId/increment')
@@ -60,7 +60,7 @@ export class CartController {
     @Param('id') cartId: string,
     @Param('skuId') skuId: string,
   ) {
-    return this.cartService.increment(+cartId, +skuId);
+    return this.cartService.increment(cartId, +skuId);
   }
 
   @Put('carts/:id/skus/:skuId/decrement')
@@ -69,7 +69,7 @@ export class CartController {
     @Param('id') cartId: string,
     @Param('skuId') skuId: string,
   ) {
-    return this.cartService.decrement(+cartId, +skuId);
+    return this.cartService.decrement(cartId, +skuId);
   }
 
   @Put('carts/:id/skus/:skuId')
@@ -81,7 +81,7 @@ export class CartController {
     updateCartCountDto: UpdateCartCountDto,
   ) {
     return this.cartService.updateCartCountOrDelete(
-      +cartId,
+      cartId,
       +skuId,
       updateCartCountDto.count,
       true,
@@ -107,6 +107,6 @@ export class CartController {
   @Delete('carts/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   removeCart(@Param('id') cartId: string) {
-    return this.cartService.removeCart(+cartId);
+    return this.cartService.removeCart(cartId);
   }
 }

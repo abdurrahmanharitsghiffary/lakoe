@@ -13,7 +13,7 @@ export class CronService {
     });
   }
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_30_MINUTES)
   handleLogger() {
     console.log('HELLO FROM CRON');
   }

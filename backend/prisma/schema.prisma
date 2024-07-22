@@ -128,7 +128,7 @@ model CartCollection {
 }
 
 model Cart {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -146,10 +146,10 @@ model Cart {
 model CartItem {
   qty Int
 
-  cartId Int
-  cart   Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId String
+  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
   skuId  Int
-  sku    SKU  @relation(fields: [skuId], references: [id], onDelete: Cascade)
+  sku    SKU    @relation(fields: [skuId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -289,6 +289,8 @@ model CourierService {
 
   store   Store @relation(fields: [storeId], references: [id])
   storeId Int
+
+  @@unique([courierCode, courierServiceCode, storeId])
 }
 
 model MessageTemplate {
@@ -353,6 +355,8 @@ model Attribute {
   productId     Int
   product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
   skuAttributes AttributeSKU[]
+
+  @@unique([productId, name])
 }
 
 model SKU {

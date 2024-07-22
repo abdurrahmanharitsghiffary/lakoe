@@ -36,6 +36,10 @@ export const selectOrderSimplified = {
   _count: { select: { orderDetails: true } },
 } satisfies Prisma.OrderSelect;
 
+export type SelectOrderSimplifiedPayload = Prisma.OrderGetPayload<{
+  select: typeof selectOrderSimplified;
+}>;
+
 export const selectOrder = {
   ...selectOrderSimplified,
   createdAt: true,
@@ -66,3 +70,7 @@ export const selectOrder = {
     },
   },
 } satisfies Prisma.OrderSelect;
+
+export type SelectOrderPayload = Prisma.OrderGetPayload<{
+  select: typeof selectOrder;
+}>;
