@@ -14,6 +14,8 @@ import { TemplateModule } from './modules/template/template.module';
 import { CommonModule } from 'src/common/common.module';
 import { CartModule } from './modules/cart/cart.module';
 import { CategoryModule } from './modules/category/category.module';
+import { SkuModule } from './modules/sku/sku.module';
+import { WebhookModule } from './modules/webhook/webhook.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { CategoryModule } from './modules/category/category.module';
     TemplateModule,
     CartModule,
     CategoryModule,
+    SkuModule,
+    WebhookModule,
   ],
   controllers: [AppController],
 })

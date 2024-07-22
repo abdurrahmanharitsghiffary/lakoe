@@ -12,16 +12,21 @@ export const skuSchema = z.object({
   qty: z.number().min(1).positive(),
 });
 
-export const orderSchema = z.object({
-  description: z.string().optional(),
-  skus: z.array(skuSchema).min(1),
+export const courierSchema = z.object({
+  courierServiceCode: z.string(),
+  courierCode: z.string(),
 });
+
+export class CreateCourierDto {
+  courierServiceCode: string = 'reg';
+  courierCode: string = 'jne';
+}
 
 export class CreateInvoiceDto {
   receiverContactName: string = 'John Doe';
-  receiverContactPhone: string = '08170032123';
+  receiverContactPhone: string = '+628170032123';
   receiverName: string = 'John Doe';
-  receiverAddressPhone: string = '08170032123';
+  receiverAddressPhone: string = '+628170032123';
   receiverAddress: string = 'Jakarta lb bulus';
   receiverPostalCode: string = '12950';
   receiverCity: string = 'Bogor';
@@ -32,7 +37,9 @@ export class CreateInvoiceDto {
 }
 
 export class CreateOrderDto extends CreateInvoiceDto {
-  description?: string;
+  @ApiProperty({ type: () => CreateCourierDto })
+  courier: CreateCourierDto;
+  orderNote?: string = 'Hallo bang rumahku yg disebelah pohon jubleg';
   @ApiProperty({ type: () => [Sku] })
   skus: Sku[];
 }
@@ -49,4 +56,10 @@ export const invoiceSchema = z.object({
   receiverProvince: z.string(),
   receiverLatitude: z.string().max(20),
   receiverLongitude: z.string().max(20),
+});
+
+export const createOrderSchema = invoiceSchema.extend({
+  courier: courierSchema,
+  orderNote: z.string().min(1).optional(),
+  skus: z.array(skuSchema).min(1),
 });

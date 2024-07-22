@@ -103,6 +103,7 @@ export class StoreController {
   @Get(':id/products')
   @SkipAuth()
   async findAllByStoreId(@Param('id') id: string) {
+    console.log(id, 'STORE ID');
     return this.productService.findAllByStoreId(+id);
   }
 

@@ -20,7 +20,6 @@ import { BsBox2, BsCopy, BsWallet } from "react-icons/bs";
 import { RiWhatsappFill } from "react-icons/ri";
 import { Image } from "@/components/image";
 import { TbTruckDelivery } from "react-icons/tb";
-import { Button } from "@/components/ui/button";
 
 const ORDER_STATUS_LABEL = {
   CANCELLED: "Dibatalkan",

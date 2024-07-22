@@ -9,6 +9,7 @@ import { BiteshipService } from 'src/common/modules/biteship/biteship.service';
 import { ERR, ERROR_CODE } from 'src/common/constants';
 import {
   selectOrder,
+  SelectOrderPayload,
   selectOrderSimplified,
   SelectOrderSimplifiedPayload,
 } from 'src/common/query/order.select';
@@ -16,6 +17,9 @@ import { FindAllOptions } from './dto/index.dto';
 import { omitProperties } from 'src/common/utils/omit-properties';
 import { genInvoice } from 'src/common/utils/gen-inv';
 import { AddressService } from '../address/address.service';
+import { StoreService } from '../store/store.service';
+import { BiteshipCreateOrderOptions } from 'src/common/types/biteship';
+import { $Enums } from '@prisma/client';
 
 @Injectable()
 export class OrderService {
@@ -23,11 +27,17 @@ export class OrderService {
     private readonly prismaService: PrismaService,
     private readonly biteshipService: BiteshipService,
     private readonly addressService: AddressService,
+    private readonly storeService: StoreService,
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
     console.log('createOrderDto', createOrderDto);
-    const { skus: skusDto, description, ...invoiceData } = createOrderDto;
+    const {
+      skus: skusDto,
+      courier,
+      orderNote,
+      ...invoiceData
+    } = createOrderDto;
 
     console.log('invoice', invoiceData);
 
@@ -49,11 +59,8 @@ export class OrderService {
           'You cannot order skus from multiple stores in a single transaction.',
         );
 
-      const addresses = await this.addressService.findAllByStoreId(storeIds[0]);
-
-      if (addresses.length === 0)
-        throw new BadRequestException(ERR.UNABLE_CALCULATE_SHIPPING_RATE);
-
+      const storeId = storeIds.values().next().value;
+      console.log(storeId, 'STOREID');
       const errors = [];
 
       skusDto.forEach((sk) => {
@@ -96,20 +103,43 @@ export class OrderService {
 
       if (errors.length > 0) {
         throw new BadRequestException({
-          success: false,
           message: 'Failed to create an order.',
           errors,
         });
       }
 
+      // console.log(storeIds, 'STOREIDS');
+      const storeAddress =
+        await this.addressService.checkAddressMustExists(storeId);
+
+      const courierService = await this.prismaService.courierService.findUnique(
+        {
+          where: {
+            courierCode_courierServiceCode_storeId: {
+              ...courier,
+              storeId,
+            },
+          },
+        },
+      );
+
+      if (!courierService)
+        throw new BadRequestException(
+          `The store has not activated the courier service for ${courier.courierCode} - ${courier.courierServiceCode}.`,
+        );
+
       const order = await tx.order.create({
-        data: { storeId: storeIds?.[0], description, status: 'NOT_PAID' },
+        data: {
+          storeId,
+          description: orderNote,
+          status: 'NOT_PAID',
+        },
       });
 
       console.log('productVariant', skus);
 
       const orderDetails = skusDto.map((sk) => {
-        const sku = skus.find((p) => p.id === sku.id);
+        const sku = skus.find((p) => p.id === sk.id);
         return {
           orderId: order.id,
           skuId: sku.id,
@@ -119,7 +149,7 @@ export class OrderService {
         };
       });
 
-      const createdOrder = await tx.orderDetail.createManyAndReturn({
+      const orderedSkus = await tx.orderDetail.createManyAndReturn({
         data: orderDetails,
         select: {
           qty: true,
@@ -129,7 +159,7 @@ export class OrderService {
             select: {
               sku: true,
               price: true,
-              product: { select: { name: true } },
+              product: { select: { name: true, description: true } },
             },
           },
         },
@@ -148,7 +178,9 @@ export class OrderService {
 
       console.log('totalprice', totalPrice);
 
-      const invoice = await tx.invoice.create({
+      const invoiceNumber = genInvoice();
+
+      await tx.invoice.create({
         data: {
           status: 'pending',
           amount: totalPrice,
@@ -164,55 +196,97 @@ export class OrderService {
           receiverProvince: invoiceData.receiverProvince,
           receiverLatitude: invoiceData.receiverLatitude,
           receiverLongitude: invoiceData.receiverLongitude,
-          invoiceNumber: genInvoice(),
+          invoiceNumber,
           order: { connect: { id: order.id } },
         },
       });
 
-      const biteshipOrder = await this.biteshipService.createOrder({
-        courier_company: 'jne',
-        courier_type: 'reg',
-        order_note: order.description,
-        delivery_type: 'now',
-        reference_id: Date.now().toString(),
-        destination_note: 'Hello world',
-        destination_address: invoice.receiverAddress,
-        destination_contact_name: invoice.receiverContactName,
-        destination_contact_phone: invoice.receiverContactPhone,
-        destination_coordinate: {
-          latitude: +invoice.receiverLatitude,
-          longitude: +invoice.receiverLongitude,
-        },
-        origin_postal_code: 16330,
-        origin_coordinate: {
-          latitude: -6.439818032404368,
-          longitude: 106.69847946516565,
-        },
-        origin_address: 'Lebak Bulus MRT...',
-        origin_contact_name: 'JAMAL BOOLEAN',
-        origin_contact_phone: '+6285612122121',
-        items: createdOrder.map((order) => ({
-          name: order.sku.product.name,
-          sku: order.sku.sku,
-          quantity: order.qty,
-          value: +order.pricePerProduct,
-          weight: order.weightPerProductInGram,
-        })),
-      });
+      // const destAreaIdResponse = await this.biteshipService.getAreaID({
+      //   countries: 'ID',
+      //   input: invoice.receiverDistrict,
+      //   type: 'single',
+      // });
 
-      await tx.invoice.update({
-        where: { id: invoice.id },
-        data: { status: biteshipOrder.status },
+      // const destAreaId = destAreaIdResponse?.areas?.[0]?.id;
+
+      // const originAreaIdResponse = await this.biteshipService.getAreaID({
+      //   countries: 'ID',
+      //   input: storeAddress.district,
+      //   type: 'single',
+      // });
+
+      // const originAreaId = originAreaIdResponse?.areas?.[0]?.id;
+
+      // const createOrderOptions: BiteshipCreateOrderOptions = {
+      //   courier_company: courier.courierCode,
+      //   courier_type: courier.courierServiceCode,
+      //   order_note: order.description,
+      //   delivery_type: 'now',
+      //   reference_id: invoiceNumber,
+      //   destination_address: invoice.receiverAddress,
+      //   destination_contact_name: invoice.receiverContactName,
+      //   destination_contact_phone: invoice.receiverContactPhone,
+      //   destination_coordinate: {
+      //     latitude: +invoice.receiverLatitude,
+      //     longitude: +invoice.receiverLongitude,
+      //   },
+      //   origin_postal_code: +storeAddress.postalCode,
+      //   origin_coordinate: {
+      //     latitude: +storeAddress.latitude,
+      //     longitude: +storeAddress.longitude,
+      //   },
+      //   origin_address: storeAddress.address,
+      //   origin_contact_name: storeAddress.contactName,
+      //   origin_contact_phone: storeAddress.contactPhone,
+      //   items: createdOrder.map((order) => ({
+      //     name: order.sku.product.name,
+      //     sku: order.sku.sku,
+      //     quantity: order.qty,
+      //     value: +order.pricePerProduct,
+      //     weight: order.weightPerProductInGram,
+      //   })),
+      //   destination_postal_code: +invoiceData.receiverPostalCode,
+      // };
+
+      // if (originAreaId) createOrderOptions.origin_area_id = originAreaId;
+      // if (destAreaId) createOrderOptions.destination_area_id = destAreaId;
+
+      // const biteshipOrder =
+      //   await this.biteshipService.createOrder(createOrderOptions);
+
+      // await tx.invoice.update({
+      //   where: { id: invoice.id },
+      //   data: { status: biteshipOrder.status },
+      // });
+
+      const shippingRate = await this.biteshipService.getShippingRates({
+        couriers: [courier.courierCode as any],
+        items: orderedSkus.map((orderDetail) => ({
+          name: orderDetail.sku.product.name,
+          sku: orderDetail.sku.sku,
+          quantity: orderDetail.qty,
+          value: +orderDetail.pricePerProduct,
+          weight: orderDetail.weightPerProductInGram,
+          description: orderDetail.sku.product.description,
+        })),
+        destination_postal_code: +invoiceData?.receiverPostalCode,
+        origin_postal_code: +storeAddress?.postalCode,
+        destination_latitude: +invoiceData?.receiverLatitude,
+        destination_longitude: +invoiceData?.receiverLongitude,
+        origin_latitude: +storeAddress?.latitude,
+        origin_longitude: +storeAddress?.longitude,
       });
+      const firstRate = shippingRate?.pricing?.[0];
 
       await tx.courier.create({
         data: {
-          orderId: order.id,
-          biteshipOrderId: biteshipOrder.id,
-          biteshipTrackingId: biteshipOrder.courier.tracking_id,
-          courierCode: biteshipOrder.courier.company,
-          courierServiceCode: biteshipOrder.courier.type,
-          price: biteshipOrder.price,
+          biteshipWaybillId: '',
+          biteshipOrderId: '',
+          biteshipTrackingId: '',
+          courierCode: firstRate.type,
+          courierServiceCode: firstRate.company,
+          price: firstRate.price,
+          order: { connect: { id: order.id } },
         },
       });
 
@@ -220,8 +294,88 @@ export class OrderService {
     });
   }
 
+  async deliverOrder(orderId: string) {
+    const order = await this.prismaService.order.findUnique({
+      where: { id: orderId },
+      include: {
+        invoice: true,
+        courier: true,
+        store: { select: { id: true } },
+        orderDetails: {
+          select: {
+            sku: { include: { product: true } },
+            pricePerProduct: true,
+            qty: true,
+            weightPerProductInGram: true,
+          },
+        },
+      },
+    });
+
+    const storeAddress = await this.addressService.checkAddressMustExists(
+      order.storeId,
+    );
+    await this.storeService.checkCouriersMustExists(order.storeId);
+
+    const destAreaIdResponse = await this.biteshipService.getAreaID({
+      countries: 'ID',
+      input: order.invoice.receiverDistrict,
+      type: 'single',
+    });
+
+    const destAreaId = destAreaIdResponse?.areas?.[0]?.id;
+
+    const originAreaIdResponse = await this.biteshipService.getAreaID({
+      countries: 'ID',
+      input: storeAddress.district,
+      type: 'single',
+    });
+
+    const originAreaId = originAreaIdResponse?.areas?.[0]?.id;
+
+    const createOrderOptions: BiteshipCreateOrderOptions = {
+      courier_company: order.courier.courierCode,
+      courier_type: order.courier.courierServiceCode,
+      order_note: order.description,
+      delivery_type: 'now',
+      reference_id: order.id,
+      destination_address: order.invoice.receiverAddress,
+      destination_contact_name: order.invoice.receiverContactName,
+      destination_contact_phone: order.invoice.receiverContactPhone,
+      destination_coordinate: {
+        latitude: +order.invoice.receiverLatitude,
+        longitude: +order.invoice.receiverLongitude,
+      },
+      origin_postal_code: +storeAddress.postalCode,
+      origin_coordinate: {
+        latitude: +storeAddress.latitude,
+        longitude: +storeAddress.longitude,
+      },
+      origin_address: storeAddress.address,
+      origin_contact_name: storeAddress.contactName,
+      origin_contact_phone: storeAddress.contactPhone,
+      items: order.orderDetails.map((order) => ({
+        name: order.sku.product.name,
+        sku: order.sku.sku,
+        quantity: order.qty,
+        value: +order.pricePerProduct,
+        weight: order.weightPerProductInGram,
+        description: order.sku.product.description,
+      })),
+      destination_postal_code: +order.invoice.receiverPostalCode,
+    };
+
+    if (originAreaId) createOrderOptions.origin_area_id = originAreaId;
+    if (destAreaId) createOrderOptions.destination_area_id = destAreaId;
+
+    const biteshipOrder =
+      await this.biteshipService.createOrder(createOrderOptions);
+
+    return biteshipOrder;
+  }
+
   async getOrderTracking(orderId: string) {
-    const order = await this.findOne(orderId);
+    const order = await this.checkOrderMustExists(orderId);
 
     return await this.biteshipService.getTracking(
       order.courier.biteshipTrackingId,
@@ -229,7 +383,7 @@ export class OrderService {
   }
 
   async getOrderPublicTracking(orderId: string) {
-    const order = await this.findOne(orderId);
+    const order = await this.checkOrderMustExists(orderId);
 
     return await this.biteshipService.getPublicTracking(
       order.courier.biteshipWaybillId,
@@ -238,13 +392,17 @@ export class OrderService {
   }
 
   async findOne(id: string) {
+    return this.checkOrderMustExists(id);
+  }
+
+  async checkOrderMustExists(id: string) {
     const order = await this.prismaService.order.findUnique({
       where: { id },
       select: selectOrder,
     });
 
-    if (!order) throw new NotFoundException('Order not found.');
-    return this.toOrderResponse(order);
+    if (!order) throw new NotFoundException('Order is not found.');
+    return order;
   }
 
   async getAllStatusCount(storeId: number) {
@@ -303,7 +461,11 @@ export class OrderService {
     });
 
     console.log(counts);
-
+    const orderedOrder = await this.prismaService.order.groupBy({
+      by: ['status'],
+      orderBy: { _count: { status: 'desc' } },
+    });
+    console.log(orderedOrder, 'ORDERED ORDER');
     const orders = await this.prismaService.order.findMany({
       where: {
         storeId,
@@ -351,6 +513,9 @@ export class OrderService {
       },
     });
 
+    if (!order) throw new NotFoundException('Order is not found.');
+
+    console.log(order, 'ORDER');
     const availableCouriers = await this.prismaService.courierService.findMany({
       where: {
         storeId: order?.storeId,
@@ -385,7 +550,67 @@ export class OrderService {
     return response?.pricing;
   }
 
-  toOrderResponse(payload: SelectOrderSimplifiedPayload) {
+  async changeOrderStatus(
+    orderId: string,
+    status: $Enums.OrderStatus,
+    skipCheckOrder?: boolean,
+  ) {
+    if (!skipCheckOrder) await this.checkOrderMustExists(orderId);
+    return this.prismaService.order.update({
+      where: { id: orderId },
+      data: { status },
+    });
+  }
+
+  async acceptOrder(orderId: string) {
+    const order = await this.checkOrderMustExists(orderId);
+    if (order?.status !== 'NEW_ORDER')
+      throw new BadRequestException(
+        ERR.CHANGE_ORDER_STATUS_NOT_ACCEPTED(order.status),
+      );
+    return this.prismaService.$transaction(async (tx) => {
+      const updatedOrder = await tx.order.update({
+        where: { id: orderId },
+        data: { status: 'NEW_ORDER' },
+        select: {
+          id: true,
+        },
+      });
+
+      await this.deliverOrder(updatedOrder.id);
+    });
+  }
+
+  async cancelOrder(orderId: string) {
+    const order = await this.checkOrderMustExists(orderId);
+    if (order?.status !== 'NEW_ORDER')
+      throw new BadRequestException(
+        ERR.CHANGE_ORDER_STATUS_NOT_ACCEPTED(order.status),
+      );
+
+    return this.prismaService.$transaction(async (tx) => {
+      const updatedOrder = await tx.order.update({
+        where: { id: orderId },
+        data: { status: 'CANCELLED' },
+        select: {
+          orderDetails: { select: { skuId: true, qty: true } },
+        },
+      });
+
+      await Promise.all(
+        updatedOrder.orderDetails.map(async (detail) => {
+          await tx.sKU.update({
+            where: { id: detail.skuId },
+            data: { stock: { increment: detail.qty } },
+          });
+        }),
+      );
+
+      return updatedOrder;
+    });
+  }
+
+  toOrderResponse(payload: SelectOrderSimplifiedPayload | SelectOrderPayload) {
     return {
       ...omitProperties(payload, ['orderDetails']),
       skus: payload.orderDetails,

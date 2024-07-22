@@ -1,15 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/common/services/prisma.service';
 import {
-  productSelect,
-  productSelectSimplified,
+  selectProduct,
+  selectProductSimplified,
 } from 'src/common/query/product.select';
 import { GetProductOption } from './schema/get-products.dto';
 import { parseStringBool } from 'src/common/utils/parse-string-bool';
 import { genSku } from 'src/common/utils/gen-sku';
 import { omitProperties } from 'src/common/utils/omit-properties';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -79,13 +79,13 @@ export class ProductService {
   findAllByStoreId(storeId: number = -1, active: boolean = undefined) {
     return this.prismaService.product.findMany({
       where: { isActive: active, storeId },
-      select: productSelectSimplified,
+      select: selectProductSimplified,
     });
   }
 
   findAll() {
     return this.prismaService.product.findMany({
-      select: productSelectSimplified,
+      select: selectProductSimplified,
     });
   }
 
@@ -125,7 +125,7 @@ export class ProductService {
         ],
       },
       select: {
-        ...productSelectSimplified,
+        ...selectProductSimplified,
         skus: {
           select: { stock: true, price: true },
           orderBy: [{ price: 'desc' }],
@@ -165,7 +165,7 @@ export class ProductService {
   async findOne(id: number) {
     const product = await this.prismaService.product.findUnique({
       where: { id },
-      select: productSelect,
+      select: selectProduct,
     });
     if (!product) throw new NotFoundException('Product is not found.');
     return product;
@@ -183,7 +183,7 @@ export class ProductService {
           })),
         },
       },
-      select: productSelect,
+      select: selectProduct,
     });
 
     return updatedProducts;
@@ -192,7 +192,7 @@ export class ProductService {
   async remove(id: number) {
     return await this.prismaService.product.delete({
       where: { id },
-      select: productSelect,
+      select: selectProduct,
     });
   }
 }

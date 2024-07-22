@@ -15,7 +15,7 @@ export function RightCard() {
   );
   const [isVoucherOpen, setIsVoucherOpen] = useState(false);
   return (
-    <div className="flex flex-col w-[450px] mr-[200px]">
+    <div className="flex flex-col">
       <Button
         variant={"outline"}
         className="border-black  mx-3 flex flex-row w-full justify-between py-8 rounded-xl"
