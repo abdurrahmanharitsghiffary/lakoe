@@ -1,36 +1,48 @@
-import { Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { snap } from 'src/common/libs/midtrans';
+import { PaymentService } from './payment.service';
+import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
+import { PaymentDto, PaymentId } from './payment.dto';
 
 @Controller('payments')
 @ApiTags('Payments')
 export class PaymentController {
+  constructor(private paymentService: PaymentService) {}
+  @SkipAuth()
   @Post()
   @HttpCode(HttpStatus.OK)
-  async pay() {
-    // find order by orderId from body
-    // get all product variants data from the orderDetails
-    // add all the product data to the request body of snap and courier service charge
-    // gross amount should take from invoice.prices and courier price
-    // also add the user address and informations to the request body of snap
-    // see midtrans docs for example
-    // create new payment of the order, see prisma schema
-    // initial status of the payment should be pending
-    // create the order_id it should be created with uuidv4
-    // share order_id that already created with midtransOrderId column
+  async pay(@Body() payment: PaymentDto) {
+    const paymentUrl = await this.paymentService.createPayment(payment.orderId);
+    return { paymentUrl };
+  }
 
-    const params = {
-      transaction_details: {
-        order_id: Date.now().toString(),
-        gross_amount: 200000,
-      },
-      credit_card: {
-        secure: true,
-      },
-    };
+  @SkipAuth()
+  @Get()
+  async allPayment() {
+    return await this.paymentService.getPayment();
+  }
 
-    const token = await snap.createTransaction(params);
+  @SkipAuth()
+  @Get(':id')
+  async paymentId(@Param() payments: PaymentId) {
+    return await this.paymentService.getPaymentById(payments.id);
+  }
 
-    return token;
+  @SkipAuth()
+  @Post('notification')
+  @HttpCode(HttpStatus.OK)
+  async notif(@Body() notification: any) {
+    console.log('test', notification);
+    const updatedPayment =
+      await this.paymentService.handleNotification(notification);
+    return { received: true, updatedPayment };
   }
 }

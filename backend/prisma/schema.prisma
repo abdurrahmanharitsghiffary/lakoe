@@ -191,12 +191,13 @@ model Invoice {
 
 model Payment {
   id              Int     @id @default(autoincrement())
-  midtransOrderId String
+  midtransOrderId String  @unique
   bank            String
   paymentType     String
   status          String
   amount          Decimal @db.Decimal(10, 2)
   currency        String
+  cardType        String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

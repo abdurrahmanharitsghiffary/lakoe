@@ -14,20 +14,68 @@ const main = async () => {
   await seed.$resetDatabase();
 
   await seed.user([
-    { role: 'USER' },
-    { role: 'USER' },
-    { role: 'USER' },
-    { role: 'USER' },
-    { role: 'USER' },
-    { role: 'USER' },
-    { role: 'USER' },
-    { role: 'USER' },
-    { role: 'USER' },
+    {
+      role: 'USER',
+      password: '$2b$10$Ho9zTgkn5aYHabLZv3gfT.D/JNqon7hWBtrY/DqQD91caobRRNuyC',
+      providerId: null,
+      providerType: null,
+    },
+    {
+      role: 'USER',
+      password: '$2b$10$Ho9zTgkn5aYHabLZv3gfT.D/JNqon7hWBtrY/DqQD91caobRRNuyC',
+      providerId: null,
+      providerType: null,
+    },
+    {
+      role: 'USER',
+      password: '$2b$10$Ho9zTgkn5aYHabLZv3gfT.D/JNqon7hWBtrY/DqQD91caobRRNuyC',
+      providerId: null,
+      providerType: null,
+    },
+    {
+      role: 'USER',
+      password: '$2b$10$Ho9zTgkn5aYHabLZv3gfT.D/JNqon7hWBtrY/DqQD91caobRRNuyC',
+      providerId: null,
+      providerType: null,
+    },
+    {
+      role: 'USER',
+      password: '$2b$10$Ho9zTgkn5aYHabLZv3gfT.D/JNqon7hWBtrY/DqQD91caobRRNuyC',
+      providerId: null,
+      providerType: null,
+    },
+    {
+      role: 'USER',
+      password: '$2b$10$Ho9zTgkn5aYHabLZv3gfT.D/JNqon7hWBtrY/DqQD91caobRRNuyC',
+      providerId: null,
+      providerType: null,
+    },
+    {
+      role: 'USER',
+      password: '$2b$10$Ho9zTgkn5aYHabLZv3gfT.D/JNqon7hWBtrY/DqQD91caobRRNuyC',
+      providerId: null,
+      providerType: null,
+    },
+    {
+      role: 'USER',
+      password: '$2b$10$Ho9zTgkn5aYHabLZv3gfT.D/JNqon7hWBtrY/DqQD91caobRRNuyC',
+      providerId: null,
+      providerType: null,
+    },
+    {
+      role: 'USER',
+      password: '$2b$10$Ho9zTgkn5aYHabLZv3gfT.D/JNqon7hWBtrY/DqQD91caobRRNuyC',
+      providerId: null,
+      providerType: null,
+    },
   ]);
 
   // Seed the database with 10 user
   await seed.user((x) =>
     x(20, {
+      password: '$2b$10$Ho9zTgkn5aYHabLZv3gfT.D/JNqon7hWBtrY/DqQD91caobRRNuyC',
+      providerId: null,
+      providerType: null,
       addresses: [{ isMainLocation: true }, {}, {}],
       store: [
         {
