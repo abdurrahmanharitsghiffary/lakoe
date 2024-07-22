@@ -5,3 +5,9 @@ export const snap = new Midtrans.Snap({
   serverKey: process.env.MID_SERVER_KEY,
   isProduction: false,
 });
+
+export const coreMidtrans = new Midtrans.CoreApi({
+  clientKey: process.env.MID_CLIENT_KEY,
+  serverKey: process.env.MID_SERVER_KEY,
+  isProduction: false,
+});

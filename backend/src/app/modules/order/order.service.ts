@@ -20,6 +20,7 @@ import { AddressService } from '../address/address.service';
 import { StoreService } from '../store/store.service';
 import { BiteshipCreateOrderOptions } from 'src/common/types/biteship';
 import { $Enums } from '@prisma/client';
+import { coreMidtrans } from 'src/common/libs/midtrans';
 
 @Injectable()
 export class OrderService {
@@ -605,6 +606,9 @@ export class OrderService {
           });
         }),
       );
+
+      const refunded = await coreMidtrans.transaction.refund(orderId);
+      console.log(refunded, 'Refunded');
 
       return updatedOrder;
     });

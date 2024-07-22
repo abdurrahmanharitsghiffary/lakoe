@@ -3,6 +3,7 @@ import { $Enums } from '@prisma/client';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { OrderStatusEvent } from 'src/common/types/biteship/order-status';
 import { OrderService } from '../order/order.service';
+import { coreMidtrans } from 'src/common/libs/midtrans';
 
 @Injectable()
 export class WebhookService {
@@ -38,7 +39,9 @@ export class WebhookService {
         });
       }
 
-      return await this.orderService.cancelOrder(orderId);
+      const cancelledOrder = await this.orderService.cancelOrder(orderId);
+      await coreMidtrans.transaction.refund(orderId);
+      return cancelledOrder;
     }
   }
 }
