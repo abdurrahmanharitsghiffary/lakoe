@@ -35,12 +35,11 @@ import { VerifyPage } from "./pages/auth/verify";
 import { StorePage } from "./pages/seller/store-page";
 import { ProfilePage } from "./pages/profile/profile";
 import { EditProfilePage } from "./pages/profile/edit-profile";
-
+import { CartList } from "@/components/cart/cartlist";
 import { AuthorizeNav } from "@/components/authorize/authorize-nav";
-
 import { CartPage } from "./pages/buyer/cart";
-
 import { CheckoutPage } from "./pages/buyer/checkout/checkout";
+
 
 export const router = createBrowserRouter([
   {
@@ -63,6 +62,16 @@ export const router = createBrowserRouter([
         path: "auth",
         errorElement: <ErrorPage />,
         children: [{ path: "new-store", element: <StorePage /> }],
+      },
+      {
+        path: "checkout",
+        errorElement: <ErrorPage />,
+        element: <CheckoutPage />,
+      },
+      {
+        path: "cart",
+        errorElement: <ErrorPage />,
+        element: <CartList />,
       },
       {
         path: "auth",
