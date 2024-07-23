@@ -42,6 +42,7 @@ import { CartPage } from "./pages/buyer/cart";
 
 import { CheckoutPage } from "./pages/buyer/checkout/checkout";
 import { Landing } from "@/features/landing/landing";
+import { Store } from "@/features/store";
 
 export const router = createBrowserRouter([
   {
@@ -63,6 +64,11 @@ export const router = createBrowserRouter([
       {
         path: "landing",
         element: <Landing />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "store",
+        element: <Store />,
         errorElement: <ErrorPage />,
       },
       {
