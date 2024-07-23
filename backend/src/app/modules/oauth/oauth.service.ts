@@ -18,9 +18,9 @@ export class OauthService {
     });
 
     if (!c) throw new UnauthorizedException('Invalid code.');
-
+    console.log(c, 'CODAS');
     await this.prismaService.code.delete({
-      where: { code: code.toString() },
+      where: { code },
     });
 
     return c.token;
@@ -31,6 +31,7 @@ export class OauthService {
     const token = await this.jwtService.signAsync({
       id: user?.id,
       role: user?.role,
+      storeId: user?.storeId,
     });
 
     const accessToken = await this.prismaService.token.create({

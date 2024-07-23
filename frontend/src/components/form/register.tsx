@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import { FcGoogle } from "react-icons/fc";
 import { useRegist } from "@/hooks/use-regist";
 
 export function RegisterForm() {

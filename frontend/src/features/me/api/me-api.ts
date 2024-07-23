@@ -2,7 +2,7 @@ import { axios } from "@/lib/axios";
 import { ApiResponse } from "@/types/api-response";
 import { Profile } from "@/types/me";
 import { queryOptions, useQuery } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { QueryConfig } from "@/types/query";
 
 export const getMe = async () => {
   const response = await axios.get<ApiResponse<Profile>>("/me");
@@ -17,8 +17,13 @@ export const getMeOptions = () => {
   });
 };
 
-export const useGetMe = () => {
+export type UseGetMeOptions = {
+  queryConfig?: QueryConfig<typeof getMeOptions>;
+};
+
+export const useGetMe = (options?: UseGetMeOptions) => {
   return useQuery({
     ...getMeOptions(),
+    ...options?.queryConfig,
   });
 };
