@@ -4,8 +4,7 @@ import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { AlertDialogProvider } from "@/providers/alert-dialog-provider";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // import { ThemeProvider } from "@/providers/theme";
 
 const queryClient = new QueryClient();
@@ -22,7 +21,7 @@ export function AppProvider({ children }: { children?: React.ReactNode }) {
         <AlertDialogProvider>
           <QueryClientProvider client={queryClient}>
             {children}
-            <ReactQueryDevtools initialIsOpen={false} />
+            {/* <ReactQueryDevtools initialIsOpen={false}* /> */}
           </QueryClientProvider>
           <Toaster />
         </AlertDialogProvider>

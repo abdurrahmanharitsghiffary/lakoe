@@ -27,7 +27,7 @@ import { PaymentMethod } from "@/features/settings/components/payment-method";
 import { ForgotPasswordPage } from "./pages/auth/forgot";
 import { ResetPasswordPage } from "./pages/auth/reset-password";
 import { OAuthCallback } from "./pages/oauth/callback";
-import { Authorize } from "@/components/authorize";
+import { Authorize } from "@/components/authorize/authorize";
 import { AuthLayout } from "./pages/auth/layout";
 import { ResetSuccessPage } from "./pages/auth/reset-success";
 import { VerifiedPage } from "./pages/auth/verified";
@@ -36,6 +36,8 @@ import { StorePage } from "./pages/seller/store-page";
 import { ProfilePage } from "./pages/profile/profile";
 import { EditProfilePage } from "./pages/profile/edit-profile";
 import { CartList } from "@/components/cart/cartlist";
+import { AuthorizeNav } from "@/components/authorize/authorize-nav";
+import { CartPage } from "./pages/buyer/cart";
 import { CheckoutPage } from "./pages/buyer/checkout/checkout";
 
 
@@ -46,7 +48,13 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        children: [{ path: "", element: <CardOrderBuyer /> }],
+        children: [
+          { path: "", element: <CardOrderBuyer /> },
+
+          { path: "cart", element: <CartPage /> },
+
+          { path: "checkout", element: <CheckoutPage /> },
+        ],
         element: <BuyerLayout />,
         errorElement: <ErrorPage />,
       },
@@ -74,8 +82,22 @@ export const router = createBrowserRouter([
           { path: "register", element: <RegisterPage /> },
           { path: "forgot-password", element: <ForgotPasswordPage /> },
           { path: "reset-password/:token", element: <ResetPasswordPage /> },
-          { path: "verify-account", element: <VerifyPage /> },
-          { path: "verified", element: <VerifiedPage /> },
+          {
+            path: "verify-account",
+            element: (
+              <AuthorizeNav redirectUrl="/seller/dashboard" whenVerified>
+                <VerifyPage />
+              </AuthorizeNav>
+            ),
+          },
+          {
+            path: "verified",
+            element: (
+              <AuthorizeNav redirectUrl="/seller/dashboard" whenVerified>
+                <VerifiedPage />
+              </AuthorizeNav>
+            ),
+          },
           { path: "reset-success", element: <ResetSuccessPage /> },
         ],
       },

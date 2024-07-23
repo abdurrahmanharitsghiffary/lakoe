@@ -15,9 +15,9 @@ export function CardHeaderCheckout({ onInputChange, formData }: CardHeaderProps)
   const { register, formState: { errors } } = useFormContext<FormCheckout>();
 
   return (
-    <div className="flex w-full px-6 mt-4">
+    <div className="flex w-full mt-4">
       <Card className="flex w-full h-auto py-4">
-        <div className="flex flex-col px-8">
+        <div className="flex flex-col px-4">
           <h1 className="text-2xl font-bold mx-3"> Informasi kontak</h1>
           <div className="flex w-full ">
             <div className="flex flex-col w-full mt-5">

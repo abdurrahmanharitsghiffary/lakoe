@@ -25,7 +25,7 @@ import {
 } from './dto/update-product.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
-import { GetProductsSchema, getProductsSchema } from './schema/get-products';
+import { GetProductOption, getProductsSchema } from './schema/get-products.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from 'src/common/services/cloudinary.service';
 import { User } from '../../../common/decorators/user.decorator';
@@ -33,6 +33,7 @@ import { UserPayload } from 'src/common/types';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { ProductGuard } from './guards/product.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
 
 @ApiTags('Products')
 @Controller('products')
@@ -44,6 +45,7 @@ export class ProductController {
   ) {}
 
   @Post()
+  @ApiJwtBearerAuth()
   @UseInterceptors(FilesInterceptor('images[]', 5))
   async create(
     @User() user: UserPayload,
@@ -51,6 +53,7 @@ export class ProductController {
     @Body(new ZodValidationPipe(createProductSchema))
     createProductDto: CreateProductDto,
   ) {
+    console.log(createProductDto, 'DTO');
     console.log(user, 'USER ');
     let uploadedImageSecureUrl: string[];
 
@@ -83,7 +86,7 @@ export class ProductController {
   @SkipAuth()
   findAll(
     @Query(new ZodValidationPipe(getProductsSchema))
-    options: GetProductsSchema,
+    options: GetProductOption,
   ) {
     return this.productService.search(options);
   }
@@ -94,6 +97,7 @@ export class ProductController {
     return this.productService.findOne(+id);
   }
 
+  @ApiJwtBearerAuth()
   @Patch(':id')
   @UseGuards(ProductGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -105,6 +109,7 @@ export class ProductController {
     return this.productService.update(+id, updateProductDto);
   }
 
+  @ApiJwtBearerAuth()
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(ProductGuard)

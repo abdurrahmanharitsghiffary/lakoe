@@ -8,21 +8,20 @@ import { Request } from 'express';
 import { PrismaService } from 'src/common/services/prisma.service';
 
 @Injectable()
-export class ProductGuard implements CanActivate {
+export class SkuGuard implements CanActivate {
   constructor(private readonly prismaService: PrismaService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
-    const id = request.body.productId;
-
-    const product = await this.prismaService.product.findUnique({
+    const id = Number(request.params?.id) || -1;
+    const sKU = await this.prismaService.sKU.findUnique({
       where: { id },
-      select: { store: { select: { userId: true } } },
+      select: { product: { select: { store: { select: { userId: true } } } } },
     });
 
-    if (!product) throw new NotFoundException('Product not found.');
+    if (!sKU) throw new NotFoundException('Product sku is not found.');
 
-    if (product.store.userId !== request.user.id) return false;
+    if (request?.user?.id !== sKU?.product?.store?.userId) return false;
     return true;
   }
 }

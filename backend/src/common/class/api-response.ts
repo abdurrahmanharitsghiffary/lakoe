@@ -8,3 +8,13 @@ export class ApiResponse<T> {
     this.success = statusCode < 400;
   }
 }
+
+type Error = {
+  message: string;
+  code?: string;
+  [key: string]: any;
+};
+
+export class ApiErrorResponse {
+  constructor(private readonly errors: Error[] = []) {}
+}

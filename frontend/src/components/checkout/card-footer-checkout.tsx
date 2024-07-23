@@ -47,9 +47,9 @@ export function CardFooterCheckout() {
   const [deliveryMethod, setDeliveryMethod] = useState<
     opsiPengirimanType | undefined>(undefined);
   return (
-    <div className="flex w-full px-6 mt-4 ">
+    <div className="flex w-full mt-4 ">
       <Card className="flex w-full h-auto py-4">
-        <div className="flex flex-col px-8 gap-2">
+        <div className="flex flex-col px-4 gap-2">
           <h1 className="text-2xl font-bold mx-3">Metode Pengiriman</h1>
           {!deliveryMethod ? (
             <Button

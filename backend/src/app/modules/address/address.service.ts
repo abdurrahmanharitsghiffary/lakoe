@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { selectAddress } from 'src/common/query/address.select';
+import { ERR } from 'src/common/constants';
 
 @Injectable()
 export class AddressService {
@@ -15,11 +20,24 @@ export class AddressService {
     });
   }
 
+  async checkAddressMustExists(storeId: number) {
+    const addresses = await this.findAllByStoreId(storeId);
+
+    if (addresses.length === 0)
+      throw new BadRequestException(ERR.UNABLE_CALCULATE_SHIPPING_RATE);
+
+    return addresses?.[0];
+  }
+
   findAllByStoreId(storeId: number) {
     return this.prismaService.address.findMany({
       where: { storeId },
       select: selectAddress,
-      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      orderBy: [
+        { isMainLocation: 'desc' },
+        { createdAt: 'desc' },
+        { id: 'desc' },
+      ],
     });
   }
 

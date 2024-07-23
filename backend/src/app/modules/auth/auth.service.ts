@@ -110,7 +110,7 @@ export class AuthService {
         verifyToken.type !== TokenType.VERIFY_TOKEN ||
         verifyToken.expiresAt < new Date(Date.now())
       ) {
-        throw new NotFoundException('Invalid token');
+        throw new BadRequestException('Invalid token');
       }
 
       await tx.user.update({
@@ -141,6 +141,8 @@ export class AuthService {
       },
     });
 
+    console.log('user:', user);
+
     const token = uuidv4();
     const expiresAt = new Date(Date.now() + 1000 * 60 * 10);
 
@@ -148,7 +150,7 @@ export class AuthService {
       data: {
         token,
         type: 'VERIFY_TOKEN',
-        userId: user.id,
+        userId: user?.id,
         expiresAt,
       },
     });
