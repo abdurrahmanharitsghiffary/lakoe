@@ -40,7 +40,9 @@ export class WebhookService {
       }
 
       const cancelledOrder = await this.orderService.cancelOrder(orderId);
-      await coreMidtrans.transaction.refund(orderId);
+      await coreMidtrans.transaction.refund(
+        cancelledOrder.invoice.payment.midtransOrderId,
+      );
       return cancelledOrder;
     }
   }

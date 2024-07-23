@@ -14,6 +14,7 @@ export class CreateProductDto {
   name: string = faker.commerce.productName();
   @ApiProperty({ type: () => [CreateSkuDto] })
   skus: CreateSkuDto[];
+  isActive?: boolean;
 }
 
 export const createProductSchema = z.object({
@@ -22,4 +23,5 @@ export const createProductSchema = z.object({
   categories: zfd.repeatable(z.array(zfd.text())).optional(),
   name: zfd.text(z.string().min(2)),
   skus: z.array(createSkuSchema).min(1),
+  isActive: z.boolean().optional(),
 });

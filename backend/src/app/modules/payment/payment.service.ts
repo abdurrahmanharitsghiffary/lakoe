@@ -21,6 +21,7 @@ export class PaymentService {
         select: {
           invoice: {
             select: {
+              payment: { select: { id: true } },
               id: true,
               amount: true,
             },
@@ -103,13 +104,13 @@ export class PaymentService {
             id: `${order.courier.courierCode}`,
             price: `${order.courier.price}`,
             quantity: 1,
-            name: `courier service charge`,
+            name: 'Courier service charge',
           },
           {
             id: additionalId,
             price: 500,
             quantity: 1,
-            name: 'additional charge',
+            name: 'Additional charge',
           },
         ],
       });
@@ -118,16 +119,26 @@ export class PaymentService {
 
       const { token, order_id, redirect_url } = transaction;
 
-      await tx.payment.create({
-        data: {
+      await tx.payment.upsert({
+        where: { id: order?.invoice?.payment?.id },
+        update: {
+          bank: 'unknown',
+          midtransOrderId,
+          status: 'pending',
+          amount: grossAmount,
+          paymentType: 'unknown',
+          currency: 'IDR',
+          cardType: 'unknown',
+        },
+        create: {
           midtransOrderId,
           bank: 'unknown',
           status: 'pending',
           amount: grossAmount,
-          paymentType: 'midtrans',
+          paymentType: 'unknown',
           currency: 'IDR',
-          cardType: '',
-          invoiceId: order.invoice.id,
+          cardType: 'unknown',
+          invoiceId: order?.invoice?.id,
         },
       });
       return { token, order_id, redirect_url };
@@ -151,6 +162,7 @@ export class PaymentService {
   }
 
   async handleNotification(notification: any) {
+    console.log(notification, 'NOTI');
     const statusResponse = (await snap.transaction.notification(
       notification,
     )) as MidtransNotification;
@@ -168,7 +180,19 @@ export class PaymentService {
         midtransOrderId: statusResponse.order_id,
       },
       data: updateData,
+      select: { invoice: { select: { orderId: true } } },
     });
+
+    if (
+      ['capture', 'settlement'].includes(statusResponse?.transaction_status)
+    ) {
+      await this.prisma.order.update({
+        where: {
+          id: updatedPayment?.invoice?.orderId,
+        },
+        data: { status: 'NEW_ORDER' },
+      });
+    }
 
     return updatedPayment;
   }
