@@ -6,7 +6,6 @@ import {
 } from "@/components/ui/accordion";
 import { Typography } from "@/components/ui/typography";
 
-
 export function Faq() {
   return (
     <div id="faq" className="py-10 px-4 bg-gray-50">

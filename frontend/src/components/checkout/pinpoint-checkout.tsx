@@ -19,6 +19,7 @@ import {
 import { PiExclamationMarkDuotone } from "react-icons/pi";
 import { MdLocationOff } from "react-icons/md";
 import { MdLocationOn } from "react-icons/md";
+import { SearchField } from "../map/map-search";
 // import { ClickMap } from "../map/map-click";
 
 export function PinpointCheckout() {
@@ -158,7 +159,7 @@ export function PinpointCheckout() {
                           {/* <FlyToButton position={Position} /> */}
                         </>
                       )}
-                      {/* <SearchField setPosition={updatePosition} /> */}
+                      <SearchField setPosition={updatePosition} />
                       {/* <ClickMap onClick={onMapClick}/> */}
                     </MapContainer>
                     <div className="mt-6 py-4 flex flex-row gap-2">

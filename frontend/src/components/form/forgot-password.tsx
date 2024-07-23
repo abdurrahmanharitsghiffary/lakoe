@@ -27,7 +27,11 @@ export function ForgotForm() {
           </div>
 
           <div className="mt-3">
-            <Button type="submit" className="w-full mb-2">
+            <Button
+              type="submit"
+              className="w-full mb-2"
+              variant="lakoePrimary"
+            >
               Submit
             </Button>
             <Button variant="outline" className="w-full">

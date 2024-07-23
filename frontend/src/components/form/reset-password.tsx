@@ -50,13 +50,13 @@ export function ResetForm() {
       <div className="grid gap-2 text-center">
         <h1 className="text-3xl font-bold">Reset Password?</h1>
       </div>
-      <div className="grid gap-4">
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="newPassword">New Password</Label>
             <Input
               type="password"
-              placeholder="••••••••"
+              placeholder="Enter your new password..."
               {...register("newPassword")}
               required
             />
@@ -65,21 +65,25 @@ export function ResetForm() {
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <Input
               type="password"
-              placeholder="••••••••"
+              placeholder="Enter again your password..."
               {...register("confirmPassword")}
               required
             />
           </div>
 
           <div className="mt-3">
-            <Button type="submit" className="w-full mb-2">
+            <Button
+              type="submit"
+              className="w-full mb-2"
+              variant="lakoePrimary"
+            >
               Submit
             </Button>
             <Link
               to={"/auth/login"}
               className={cn(
                 "w-full mb-2",
-                buttonVariants({ variant: "lakoePrimary" })
+                buttonVariants({ variant: "secondary" })
               )}
             >
               Back to Login

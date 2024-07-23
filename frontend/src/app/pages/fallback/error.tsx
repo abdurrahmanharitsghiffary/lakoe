@@ -26,10 +26,7 @@ export function ErrorPage() {
         >
           Go Back
         </Button>
-        <Link
-          to={"/"}
-          className={cn(buttonVariants({ variant: "default" }), "rounded-full")}
-        >
+        <Link to={"/"} className={cn(buttonVariants({}), "rounded-full")}>
           Back to Home
         </Link>
       </div>

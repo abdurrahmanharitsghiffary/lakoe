@@ -14,16 +14,19 @@ interface RightCardProps {
 }
 
 export function RightCard({ onInputChange, formData }: RightCardProps) {
-  const { register, formState: { errors } } = useFormContext<FormCheckout>();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormCheckout>();
   const [isVoucherOpen, setIsVoucherOpen] = useState(false);
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <Button
         variant={"outline"}
-        className="border-black  mx-3 flex flex-row w-full justify-between py-8 rounded-xl"
+        className="border-black flex flex-row w-full justify-between py-8 rounded-xl"
         onClick={() => setIsVoucherOpen(true)}
       >
-        <div className="flex flex-row w-100 ">
+        <div className="flex flex-row w-full">
           <div className="flex flex-row w-full items-center gap-2">
             <BiSolidDiscount className="h-6 w-6" color="blue" />
             <p className="text-lg">Gunakan / Masukkan Voucher</p>
@@ -34,7 +37,7 @@ export function RightCard({ onInputChange, formData }: RightCardProps) {
         </div>
       </Button>
       <CheckoutDialogVoucher onOpen={setIsVoucherOpen} isOpen={isVoucherOpen} />
-      <Card className="flex w-full mt-5 mx-3 bg-blue-100 border-blue-500">
+      <Card className="flex w-full mt-5 bg-blue-100 border-blue-500">
         <div className="flex flex-col w-full mx-10 py-8 ">
           <h1 className="text-2xl font-bold">Ringkasan Pesanan</h1>
           <div className="flex flex-row mt-[30px]">
@@ -68,7 +71,7 @@ export function RightCard({ onInputChange, formData }: RightCardProps) {
           </div>
         </div>
       </Card>
-      <Card className="flex w-full mt-5 mx-3">
+      <Card className="flex w-full mt-5">
         <div className="flex flex-col w-full mx-10 py-8 ">
           <div className="flex flex-row w-full gap-1">
             <h1 className="text-2xl font-bold">Catatan</h1>
@@ -84,7 +87,7 @@ export function RightCard({ onInputChange, formData }: RightCardProps) {
               onChange={(e) => {
                 const value = e.target.value;
                 if (value.length <= 50) {
-                  onInputChange('note', value);
+                  onInputChange("note", value);
                 }
               }}
             />

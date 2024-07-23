@@ -5,7 +5,10 @@ import { CardBodyCheckout } from "./card-body-checkout";
 import { CardFooterCheckout } from "./card-footer-checkout";
 import { Button } from "../ui/button";
 import { FaArrowRight } from "react-icons/fa";
-import { addCheckoutSchema, FormCheckout } from "@/validator/checkout-validator";
+import {
+  addCheckoutSchema,
+  FormCheckout,
+} from "@/validator/checkout-validator";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -28,7 +31,7 @@ export function NewCheckout() {
   });
 
   const onSubmit = (data: FormCheckout) => {
-    console.log('Form Data:', data);
+    console.log("Form Data:", data);
   };
 
   const [formCheckout, setFormCheckout] = useState<FormCheckout>({
@@ -50,19 +53,19 @@ export function NewCheckout() {
   };
 
   const handleButtonClick = () => {
-    console.log('App Data:', formCheckout);
+    console.log("App Data:", formCheckout);
   };
 
   return (
-    <div className="flex flex-col w-full mt-8 ml-10">
-      <h1 className="text-[40px] px-[70px] font-bold">Checkout</h1>
+    <div className="flex flex-col w-full">
+      <h1 className="text-4xl p-8 font-bold">Checkout</h1>
       <FormProvider {...checkout}>
         <form onSubmit={checkout.handleSubmit(onSubmit)}>
-          <div className="flex flex-row w-100 mt-10">
-            <div className="basis-3/4">
-              <div className="flex w-full px-2 mt-4 ml-10">
+          <div className="flex flex-row w-100 w-full p-4 gap-8">
+            <div className="w-[70%]">
+              <div className="w-full px-2 mt-4">
                 <Tabs defaultValue="Pengiriman">
-                  <TabsList className="w-full bg-transparent p-0 ml-[-270px]">
+                  <TabsList className="bg-transparent p-0">
                     <TabsTrigger
                       value="Pengiriman"
                       className="relative border-b-4 border-b-transparent bg-transparent  pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-lakoe-primary  data-[state=active]:shadow-none data-[state=active]:text-lakoe-primary justify-start"
@@ -86,21 +89,30 @@ export function NewCheckout() {
                       </div>
                     </TabsTrigger>
                   </TabsList>
-                  <div className="border-b-2 mt-4 ml-6 w-[945px]"></div>
+                  <div className="border-b-2 mt-4 w-full"></div>
                   <TabsContent value="Pengiriman" className="mt-2">
-                    <CardHeaderCheckout onInputChange={handleInputChange} formData={formCheckout} />
-                    <CardBodyCheckout onInputChange={handleInputChange} formData={formCheckout} />
+                    <CardHeaderCheckout
+                      onInputChange={handleInputChange}
+                      formData={formCheckout}
+                    />
+                    <CardBodyCheckout
+                      onInputChange={handleInputChange}
+                      formData={formCheckout}
+                    />
                     <CardFooterCheckout />
                   </TabsContent>
                 </Tabs>
               </div>
             </div>
-            <div className="basis-1/4">
-              <RightCard onInputChange={handleInputChange} formData={formCheckout} />
-              <div className="flex flex-row w-full h-auto mt-4 mx-3">
+            <div className="w-[30%]">
+              <RightCard
+                onInputChange={handleInputChange}
+                formData={formCheckout}
+              />
+              <div className="flex flex-row w-full h-auto mt-4">
                 <Button
                   type="submit"
-                  className="flex flex-row bg-blue-500 w-[450px] gap-4 items-center py-7"
+                  className="flex flex-row bg-blue-500 w-full gap-4 items-center py-7"
                   onClick={handleButtonClick}
                 >
                   <span className="text-xl">Lihat Pembayaran</span>
