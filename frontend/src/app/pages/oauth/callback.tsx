@@ -4,10 +4,12 @@ import { getAxiosErrMessage } from "@/utils/get-axios-err-message";
 import { useCallback, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useSessionActions } from "@/hooks/use-session";
 
 export function OAuthCallback() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { login } = useSessionActions();
 
   const code = searchParams.get("code");
   console.log(code, "CODE");
@@ -21,8 +23,9 @@ export function OAuthCallback() {
         pending: "Verifying login",
         success: {
           render({ data }) {
+            console.log(data, "DATA");
+            login(data?.data?.token);
             if (data?.data?.token) {
-              localStorage.setItem("token", data.data.token);
               navigate("/seller/dashboard");
             } else {
               navigate("/auth/login");

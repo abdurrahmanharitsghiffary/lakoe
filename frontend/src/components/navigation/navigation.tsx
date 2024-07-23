@@ -49,7 +49,7 @@ export function Navigation() {
   const { pathname } = useLocation();
 
   return (
-    <div className="flex flex-col gap-2 px-2 py-2 h-[90vh]">
+    <div className="flex flex-col gap-2 px-2 py-4 h-[90vh]">
       {navItems.map((item) => (
         <Link
           key={item?.label}
@@ -59,7 +59,7 @@ export function Navigation() {
               variant: item.href === pathname ? "secondary" : "ghost",
               size: "lg",
             }),
-            "flex w-full justify-start items-center py-3"
+            "flex w-full justify-start items-center py-3 px-4"
           )}
         >
           <item.icon
@@ -84,7 +84,7 @@ export function Navigation() {
             <Button
               variant="ghost"
               size="lg"
-              className="flex w-full justify-start items-center"
+              className="flex w-full justify-start items-center px-4"
             >
               <IoSettingsOutline className="ml-1 mr-2 text-2xl" />
               <h1 className="text-base">Pengaturan</h1>
@@ -101,7 +101,7 @@ export function Navigation() {
                     variant: item.href === pathname ? "secondary" : "ghost",
                     size: "lg",
                   }),
-                  "flex w-full justify-start items-center py-3"
+                  "flex w-full justify-start items-center py-3 px-4"
                 )}
               >
                 <item.icon
@@ -124,15 +124,15 @@ export function Navigation() {
         </AccordionItem>
       </Accordion>
 
-        <Link to={"profile"} className="mt-auto">
+      <Link to={"profile"} className="mt-auto">
         <Button
           variant="ghost"
           className="flex w-full justify-start items-center mt-auto"
         >
-          <CgProfile className="ml-1 mr-2 h-8 w-8 !text-2xl" />
+          <CgProfile className="ml-1 mr-2 !text-2xl" />
           <h1 className="text-base">Profil</h1>
         </Button>
-        </Link>
+      </Link>
     </div>
   );
 }

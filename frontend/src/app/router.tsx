@@ -27,7 +27,7 @@ import { PaymentMethod } from "@/features/settings/components/payment-method";
 import { ForgotPasswordPage } from "./pages/auth/forgot";
 import { ResetPasswordPage } from "./pages/auth/reset-password";
 import { OAuthCallback } from "./pages/oauth/callback";
-import { Authorize } from "@/components/authorize/authorize";
+import { Authored, Authorize } from "@/components/authorize/authorize";
 import { AuthLayout } from "./pages/auth/layout";
 import { ResetSuccessPage } from "./pages/auth/reset-success";
 import { VerifiedPage } from "./pages/auth/verified";
@@ -37,7 +37,6 @@ import { ProfilePage } from "./pages/profile/profile";
 import { EditProfilePage } from "./pages/profile/edit-profile";
 import { CartList } from "@/components/cart/cartlist";
 import { AuthorizeNav } from "@/components/authorize/authorize-nav";
-import { CartPage } from "./pages/buyer/cart";
 import { CheckoutPage } from "./pages/buyer/checkout/checkout";
 import { MustHaveStoreOrRedirect } from "@/components/authorize/have-store-or-redirect";
 
@@ -50,36 +49,29 @@ export const router = createBrowserRouter([
         path: "/",
         children: [
           { path: "", element: <CardOrderBuyer /> },
-
-          { path: "cart", element: <CartPage /> },
-
+          {
+            path: "cart",
+            element: <CartList />,
+          },
           { path: "checkout", element: <CheckoutPage /> },
         ],
         element: <BuyerLayout />,
         errorElement: <ErrorPage />,
       },
-      {
-        path: "checkout",
-        errorElement: <ErrorPage />,
-        element: <CheckoutPage />,
-      },
-      {
-        path: "cart",
-        errorElement: <ErrorPage />,
-        element: <CartList />,
-      },
-      {
-        path: "stores",
-        errorElement: <ErrorPage />,
-        children: [{ path: "create", element: <StorePage /> }],
-      },
+
       {
         path: "auth",
         element: <AuthLayout />,
         errorElement: <ErrorPage />,
         children: [
-          { path: "login", element: <LoginPage /> },
-          { path: "register", element: <RegisterPage /> },
+          {
+            path: "",
+            element: <Authored />,
+            children: [
+              { path: "login", element: <LoginPage /> },
+              { path: "register", element: <RegisterPage /> },
+            ],
+          },
           { path: "forgot-password", element: <ForgotPasswordPage /> },
           { path: "reset-password/:token", element: <ResetPasswordPage /> },
           {
@@ -135,12 +127,16 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "",
+        path: "seller",
         id: "private",
         element: <Authorize />,
         children: [
           {
-            path: "seller",
+            path: "stores",
+            children: [{ path: "create", element: <StorePage /> }],
+          },
+          {
+            path: "",
             errorElement: <ErrorPage />,
             element: (
               <MustHaveStoreOrRedirect>
