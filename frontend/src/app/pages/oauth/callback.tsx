@@ -1,36 +1,43 @@
-import { useToast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 import { ApiResponse } from "@/types/api-response";
 import { getAxiosErrMessage } from "@/utils/get-axios-err-message";
 import { useCallback, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export function OAuthCallback() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const code = searchParams.get("code");
   console.log(code, "CODE");
-  const verifyCode = useCallback(async () => {
-    try {
-      console.log(code, "CODE IN VERIFY");
-
-      const response = await axios.post<ApiResponse<{ token: string }>>(
-        "/oauth/verify-code?code=" + code
-      );
-      const data = response.data;
-      if (data?.data?.token) {
-        localStorage.setItem("token", data.data.token);
-        return navigate("/seller/dashboard");
-      } else {
-        return navigate("/auth/login");
+  const verifyCode = useCallback(() => {
+    toast.promise(
+      axios
+        .post<ApiResponse<{ token: string }>>("/oauth/verify-code?code=" + code)
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err)),
+      {
+        pending: "Verifying login",
+        success: {
+          render({ data }) {
+            if (data?.data?.token) {
+              localStorage.setItem("token", data.data.token);
+              navigate("/seller/dashboard");
+            } else {
+              navigate("/auth/login");
+            }
+            return "Login success";
+          },
+        },
+        error: {
+          render: ({ data }) => {
+            navigate("/auth/login");
+            return getAxiosErrMessage(data);
+          },
+        },
       }
-    } catch (err: any) {
-      console.error(err, "ERROR");
-      toast({ title: getAxiosErrMessage(err) });
-      navigate("/auth/login");
-    }
+    );
   }, [code, navigate, toast]);
 
   useEffect(() => {

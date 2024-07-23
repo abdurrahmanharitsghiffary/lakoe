@@ -15,7 +15,7 @@ export function Authorize({ roles }: AuthorizeProps) {
     return <ForbiddenPage />;
   }
 
-  if (isError && error?.response?.data?.statusCode === 403) {
+  if (isError && (error as any)?.response?.data?.statusCode === 403) {
     return <Navigate to={"/auth/login"} />;
   }
 
