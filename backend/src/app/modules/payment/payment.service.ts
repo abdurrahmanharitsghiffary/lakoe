@@ -163,6 +163,13 @@ export class PaymentService {
       bank: statusResponse.bank,
     };
 
+    if (
+      statusResponse.transaction_status === 'capture' ||
+      statusResponse.transaction_status === 'settlement'
+    ) {
+      updateData.status = 'NEW_ORDER';
+    }
+
     const updatedPayment = await this.prisma.payment.update({
       where: {
         midtransOrderId: statusResponse.order_id,
