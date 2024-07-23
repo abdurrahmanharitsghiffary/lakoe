@@ -37,7 +37,10 @@ import { EditProfilePage } from "./pages/profile/edit-profile";
 import { CartList } from "@/components/cart/cartlist";
 import { AuthorizeNav } from "@/components/authorize/authorize-nav";
 import { CheckoutPage } from "./pages/buyer/checkout/checkout";
-import { MustHaveStoreOrRedirect } from "@/components/authorize/have-store-or-redirect";
+import {
+  HaveStoreAndRedirect,
+  MustHaveStoreOrRedirect,
+} from "@/components/authorize/have-store-or-redirect";
 import { Landing } from "@/features/landing/landing";
 
 export const router = createBrowserRouter([
@@ -136,7 +139,16 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "stores",
-            children: [{ path: "create", element: <StorePage /> }],
+            children: [
+              {
+                path: "create",
+                element: (
+                  <HaveStoreAndRedirect>
+                    <StorePage />
+                  </HaveStoreAndRedirect>
+                ),
+              },
+            ],
           },
           {
             path: "",

@@ -278,7 +278,13 @@ export class OrderService {
         origin_latitude: +storeAddress?.latitude,
         origin_longitude: +storeAddress?.longitude,
       });
-      const firstRate = shippingRate?.pricing?.[0];
+
+      const pricings = (shippingRate?.pricing ?? [])?.sort((a) => {
+        if (a?.type === courier?.courierServiceCode) return -1;
+        return 0;
+      });
+
+      const firstRate = pricings?.[0];
 
       await tx.courier.create({
         data: {

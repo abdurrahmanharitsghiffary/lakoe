@@ -17,3 +17,13 @@ export function MustHaveStoreOrRedirect({
 
   return children;
 }
+
+export function HaveStoreAndRedirect({
+  redirectTo = "/seller/settings/store",
+  children,
+}: MustHaveStoreOrRedirectProps) {
+  const { user } = useSession();
+  if (user && user?.storeId) return <Navigate to={redirectTo} />;
+
+  return children;
+}
