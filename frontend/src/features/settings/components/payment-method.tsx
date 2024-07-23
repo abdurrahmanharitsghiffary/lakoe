@@ -30,25 +30,25 @@ export function PaymentMethod() {
                     <CardTitle className="px-5 py-5">Akun virtual</CardTitle>
                     <div className="flex gap-4 justify-center">
                         <button
-                            className={`border border-gray-300 shadow-2xl rounded-md p-3 focus:border-blue-500 focus:outline-none transition-all duration-300 active:scale-95 ${paymentMethod === 'Mandiri' ? 'border-blue-500 bg-blue-100' : ''}`}
+                            className={`border border-gray-500 shadow-2xl rounded-md p-3 focus:border-blue-500 focus:outline-none transition-all duration-300 active:scale-95 ${paymentMethod === 'Mandiri' ? 'border-blue-500 bg-blue-100' : ''}`}
                             onClick={() => handleMethod('Mandiri')}
                         >
                             <img src="/assets/logo-payment/mandiri.svg" alt="mandiri Icon" className="w-16" />
                         </button>
                         <button
-                            className={`border border-gray-300 shadow-2xl rounded-md p-3 focus:border-blue-500 focus:outline-none transition-all duration-300 active:scale-95 ${paymentMethod === 'BNI' ? 'border-blue-500 bg-blue-100' : ''}`}
+                            className={`border border-gray-500 shadow-2xl rounded-md p-3 focus:border-blue-500 focus:outline-none transition-all duration-300 active:scale-95 ${paymentMethod === 'BNI' ? 'border-blue-500 bg-blue-100' : ''}`}
                             onClick={() => handleMethod('BNI')}
                         >
                             <img src="/assets/logo-payment/bni.svg" alt="bni Icon" className="w-16" />
                         </button>
                         <button
-                            className={`border border-gray-300 shadow-2xl rounded-md p-3 focus:border-blue-500 focus:outline-none transition-all duration-300 active:scale-95 ${paymentMethod === 'BRI' ? 'border-blue-500 bg-blue-100' : ''}`}
+                            className={`border border-gray-500 shadow-2xl rounded-md p-3 focus:border-blue-500 focus:outline-none transition-all duration-300 active:scale-95 ${paymentMethod === 'BRI' ? 'border-blue-500 bg-blue-100' : ''}`}
                             onClick={() => handleMethod('BRI')}
                         >
                             <img src="/assets/logo-payment/bri.svg" alt="bri Icon" className="w-16" />
                         </button>
                         <button
-                            className={`border border-gray-300 shadow-2xl rounded-md p-3 focus:border-blue-500 focus:outline-none transition-all duration-300 active:scale-95 ${paymentMethod === 'BCA' ? 'border-blue-500 bg-blue-100' : ''}`}
+                            className={`border border-gray-500 shadow-2xl rounded-md p-3 focus:border-blue-500 focus:outline-none transition-all duration-300 active:scale-95 ${paymentMethod === 'BCA' ? 'border-blue-500 bg-blue-100' : ''}`}
                             onClick={() => handleMethod('BCA')}
                         >
                             <img src="/assets/logo-payment/bca.svg" alt="bca Icon" className="w-16" />
@@ -59,7 +59,7 @@ export function PaymentMethod() {
                 <Card className="border border-gray-300 w-[500px] h-[250px] shadow-lg mb-3">
                     <CardTitle className="px-5 py-5">E-wallet</CardTitle>
                     <button
-                        className={`border border-gray-300 shadow-2xl rounded-md p-3 px-5 ml-3 focus:border-blue-500 focus:outline-none transition-all duration-300 active:scale-95 ${paymentMethod === 'OVO' ? 'border-blue-500 bg-blue-100' : ''}`}
+                        className={`border border-gray-500 shadow-2xl rounded-md p-3 px-5 ml-8 focus:border-blue-500 focus:outline-none transition-all duration-300 active:scale-95 ${paymentMethod === 'OVO' ? 'border-blue-500 bg-blue-100' : ''}`}
                         onClick={() => handleMethod('OVO')}
                     >
                         <img src="/assets/logo-payment/ovo.svg" alt="OVO Icon" className="w-16" />

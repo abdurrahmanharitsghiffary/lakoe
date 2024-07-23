@@ -2815,6 +2815,7 @@
           "maxLength": null
         },
         {
+
           "id": "public.invoices.serviceCharge",
           "name": "serviceCharge",
           "columnName": "serviceCharge",
@@ -2829,8 +2830,7 @@
           "maxLength": null
         },
         {
-          "id": "public.invoices.amount",
-          "name": "amount",
+
           "columnName": "amount",
           "type": "numeric",
           "isRequired": true,
@@ -2845,7 +2845,6 @@
         {
           "name": "orders",
           "type": "orders",
-          "isRequired": true,
           "kind": "object",
           "relationName": "invoicesToorders",
           "relationFromFields": [
@@ -3365,34 +3364,7 @@
           "isId": false,
           "maxLength": null
         },
-        {
-          "id": "public.payments.midtransOrderId",
-          "name": "midtransOrderId",
-          "columnName": "midtransOrderId",
-          "type": "text",
-          "isRequired": true,
-          "kind": "scalar",
-          "isList": false,
-          "isGenerated": false,
-          "sequence": false,
-          "hasDefaultValue": false,
-          "isId": false,
-          "maxLength": null
-        },
-        {
-          "id": "public.payments.invoiceId",
-          "name": "invoiceId",
-          "columnName": "invoiceId",
-          "type": "text",
-          "isRequired": true,
-          "kind": "scalar",
-          "isList": false,
-          "isGenerated": false,
-          "sequence": false,
-          "hasDefaultValue": false,
-          "isId": false,
-          "maxLength": null
-        },
+        
         {
           "id": "public.payments.cardType",
           "name": "cardType",
@@ -4696,8 +4668,7 @@
           "isGenerated": false,
           "sequence": false,
           "hasDefaultValue": true,
-          "isId": false,
-          "maxLength": null
+          "isId": false
         },
         {
           "name": "Address",
@@ -4712,8 +4683,7 @@
           "isGenerated": false,
           "sequence": false,
           "hasDefaultValue": false
-        },
-        {
+        },{
           "name": "cart_collections",
           "type": "cart_collections",
           "isRequired": false,
