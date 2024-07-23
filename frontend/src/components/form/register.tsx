@@ -80,10 +80,10 @@ export function RegisterForm() {
           <Button type="submit" className="w-full">
             Create account
           </Button>
-          <Button variant="outline" className="w-full" type="submit">
+          {/* <Button variant="outline" className="w-full" type="submit">
             <FcGoogle className="mr-2" />
             Login with Google
-          </Button>
+          </Button> */}
         </form>
       </div>
       <div className="mt-4 text-center text-sm">

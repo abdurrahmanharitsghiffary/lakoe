@@ -1,38 +1,67 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  HttpCode,
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  HttpStatus,
+} from '@nestjs/common';
 import { OrderService } from './order.service';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { CreateOrderDto, createOrderSchema } from './dto/create-order.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
-import { BiteshipService } from 'src/common/modules/biteship/biteship.service';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
+import { OrderGuard } from './guards/order.guard';
+import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
 
-@Controller('orders')
 @ApiTags('Orders')
+@Controller('orders')
 export class OrderController {
-  constructor(
-    private readonly orderService: OrderService,
-    private readonly biteshipService: BiteshipService,
-  ) {}
+  constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  async create(@Body() createOrderDto: CreateOrderDto) {
+  @SkipAuth()
+  async create(
+    @Body(new ZodValidationPipe(createOrderSchema))
+    createOrderDto: CreateOrderDto,
+  ) {
     return await this.orderService.create(createOrderDto);
   }
 
+  @Post(':id/accept')
+  @ApiJwtBearerAuth()
+  @UseGuards(OrderGuard)
+  @HttpCode(HttpStatus.OK)
+  async acceptOrder(@Param('id') orderId: string) {
+    return this.orderService.acceptOrder(orderId);
+  }
+
+  @Post(':id/reject')
+  @ApiJwtBearerAuth()
+  @UseGuards(OrderGuard)
+  @HttpCode(HttpStatus.OK)
+  async rejectOrder(@Param('id') orderId: string) {
+    return this.orderService.cancelOrder(orderId);
+  }
+
   @Get(':id')
+  @SkipAuth()
   findById(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
+    return this.orderService.findOne(id);
   }
 
   @Get(':id/shipping-rates')
   @SkipAuth()
   getOrderShippingRates(@Param('id') id: string) {
-    return this.orderService.getShippingRates(+id);
+    return this.orderService.getShippingRates(id);
   }
 
   @Get(':id/trackings')
   @SkipAuth()
   async findTrackingByOrderId(@Param('id') id: string) {
-    const response = await this.orderService.getOrderTracking(+id);
+    const response = await this.orderService.getOrderTracking(id);
     console.log(response, 'TRACKING RESPONSE');
     return response?.history ?? [];
   }
@@ -40,13 +69,8 @@ export class OrderController {
   @Get(':id/public-trackings')
   @SkipAuth()
   async findPublicTrackingByOrderId(@Param('id') id: string) {
-    const response = await this.orderService.getOrderPublicTracking(+id);
+    const response = await this.orderService.getOrderPublicTracking(id);
     console.log(response, 'TRACKING RESPONSE');
     return response?.history ?? [];
-  }
-
-  @Get('bts/:id')
-  testBiteship(@Param('id') id: string) {
-    return this.biteshipService.getOrder(id);
   }
 }

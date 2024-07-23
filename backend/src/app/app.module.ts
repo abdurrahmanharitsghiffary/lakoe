@@ -4,7 +4,6 @@ import { UsersModule } from './modules/users/users.module';
 import { OrderModule } from './modules/order/order.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { StoreModule } from './modules/store/store.module';
-import { VariantModule } from './modules/variant/variant.module';
 import { MeModule } from './modules/me/me.module';
 import { OauthModule } from './modules/oauth/oauth.module';
 import { CronModule } from './modules/cron/cron.module';
@@ -15,16 +14,17 @@ import { TemplateModule } from './modules/template/template.module';
 import { CommonModule } from 'src/common/common.module';
 import { CartModule } from './modules/cart/cart.module';
 import { CategoryModule } from './modules/category/category.module';
+import { SkuModule } from './modules/sku/sku.module';
+import { WebhookModule } from './modules/webhook/webhook.module';
 
 @Module({
   imports: [
+    OrderModule,
+    StoreModule,
     CommonModule,
     ProductModule,
     UsersModule,
-    OrderModule,
     AuthModule,
-    StoreModule,
-    VariantModule,
     MeModule,
     OauthModule,
     CronModule,
@@ -33,6 +33,8 @@ import { CategoryModule } from './modules/category/category.module';
     TemplateModule,
     CartModule,
     CategoryModule,
+    SkuModule,
+    WebhookModule,
   ],
   controllers: [AppController],
 })

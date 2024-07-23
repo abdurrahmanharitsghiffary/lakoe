@@ -24,8 +24,10 @@ import { TemplateGuard } from './guards/template.guard';
 import { StoreGuard } from '../store/guards/store.guard';
 import { StoreService } from '../store/store.service';
 import { ApiTags } from '@nestjs/swagger';
+import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
 
 @Controller()
+@ApiJwtBearerAuth()
 @ApiTags('Templates')
 export class TemplateController {
   constructor(
@@ -44,12 +46,14 @@ export class TemplateController {
   }
 
   @Get('stores/:id/templates')
+  @UseGuards(StoreGuard)
   async findAll(@Param('id') id: string) {
     await this.storeService.findOne(+id);
     return this.templateService.findAllByStoreId(+id);
   }
 
   @Get('templates/:id')
+  @UseGuards(TemplateGuard)
   findOne(@Param('id') id: string) {
     return this.templateService.findOne(+id);
   }

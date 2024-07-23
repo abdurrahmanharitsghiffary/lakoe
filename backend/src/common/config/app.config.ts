@@ -5,7 +5,7 @@ export const APP_CONFIG = {
     LOGIN_AS: {
       USER_1: false,
       USER_1_NOT_ADMIN: false,
-      USER_2: false,
+      USER_2: true,
     },
   },
 };

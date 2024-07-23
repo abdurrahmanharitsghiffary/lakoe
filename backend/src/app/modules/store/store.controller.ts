@@ -11,6 +11,8 @@ import {
   HttpCode,
   HttpStatus,
   Query,
+  UseGuards,
+  Put,
 } from '@nestjs/common';
 import { StoreService } from './store.service';
 import {
@@ -25,11 +27,17 @@ import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
 import { CloudinaryService } from 'src/common/services/cloudinary.service';
-import { Roles } from 'src/common/decorators/roles/roles.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { ProductService } from '../product/product.service';
 import { OrderService } from '../order/order.service';
 import { FindAllOptions } from '../order/dto/index.dto';
+import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
+import { StoreGuard } from './guards/store.guard';
+import { AddCourierDto } from './dto/add-courier.dto';
+import {
+  DeleteCourierServiceDto,
+  deleteCourierServiceSchema,
+} from './dto/delete-courier.dto';
 
 @ApiTags('Stores')
 @Controller('stores')
@@ -41,6 +49,7 @@ export class StoreController {
     private readonly orderService: OrderService,
   ) {}
 
+  @ApiJwtBearerAuth()
   @Post()
   @UseInterceptors(
     FileFieldsInterceptor([
@@ -81,8 +90,9 @@ export class StoreController {
     });
   }
 
+  @ApiJwtBearerAuth()
   @Get(':id/orders')
-  @SkipAuth()
+  @UseGuards(StoreGuard)
   async findOrdersByStoreId(
     @Param('id') id: string,
     @Query() options: FindAllOptions,
@@ -93,6 +103,7 @@ export class StoreController {
   @Get(':id/products')
   @SkipAuth()
   async findAllByStoreId(@Param('id') id: string) {
+    console.log(id, 'STORE ID');
     return this.productService.findAllByStoreId(+id);
   }
 
@@ -106,7 +117,7 @@ export class StoreController {
     return this.storeService.getShippingRates(
       +id,
       getShippingRateDto.address,
-      getShippingRateDto.products,
+      getShippingRateDto.skus,
     );
   }
 
@@ -122,15 +133,16 @@ export class StoreController {
     return this.storeService.findOne(+id);
   }
 
+  @ApiJwtBearerAuth()
   @Patch(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(StoreGuard)
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'logo', maxCount: 1 },
       { name: 'banner', maxCount: 1 },
     ]),
   )
-  @Roles(['ADMIN'])
   async update(
     @Param('id') id: string,
     @Body() updateStoreDto: UpdateStoreDto,
@@ -140,8 +152,6 @@ export class StoreController {
       banner?: Express.Multer.File[];
     },
   ) {
-    await this.storeService.findOne(+id);
-    console.log(updateStoreDto, 'UPDATE STORE DTO');
     let logoSrc: string;
     if (files?.logo?.[0]?.buffer) {
       const uploadedLogo = await this.cloudinaryService.uploadStream(
@@ -165,11 +175,44 @@ export class StoreController {
     });
   }
 
+  @ApiJwtBearerAuth()
   @Delete(':id')
+  @UseGuards(StoreGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Roles(['ADMIN'])
   async remove(@Param('id') id: string) {
-    await this.storeService.findOne(+id);
     return this.storeService.remove(+id);
+  }
+
+  @ApiJwtBearerAuth()
+  @Put(':id/couriers')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(StoreGuard)
+  async addCouriers(
+    @Param('id') id: string,
+    @Body() addCourierDto: AddCourierDto,
+  ) {
+    return this.storeService.addCourierService(+id, addCourierDto);
+  }
+
+  @ApiJwtBearerAuth()
+  @Delete(':id/couriers')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(StoreGuard)
+  async deleteCouriers(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(deleteCourierServiceSchema))
+    deleteCourierServiceDto: DeleteCourierServiceDto,
+  ) {
+    return this.storeService.removeCourierService(
+      +id,
+      deleteCourierServiceDto.courierServiceIds,
+    );
+  }
+
+  @ApiJwtBearerAuth()
+  @Get(':id/couriers')
+  @UseGuards(StoreGuard)
+  async findAllCourierServices(@Param('id') id: string) {
+    return this.storeService.findAllCourierServices(+id);
   }
 }

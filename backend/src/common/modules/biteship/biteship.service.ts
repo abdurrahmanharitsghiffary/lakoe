@@ -9,23 +9,32 @@ import {
 import { Tracking } from '../../types/biteship/tracking';
 import { PublicTracking } from '../../types/biteship/public-tracking';
 import { HttpService } from '@nestjs/axios';
+import { AreaResponse } from 'src/common/types/biteship/area';
+import { CourierPricingResponse } from 'src/common/types/biteship/shipping-rates';
 
 @Injectable()
 export class BiteshipService {
   constructor(private readonly httpService: HttpService) {}
 
   async getShippingRates(options: GetShippingRateOptions) {
-    const response = await this.httpService.axiosRef.post('/rates/couriers', {
-      ...options,
-      couriers: options.couriers.join(','),
-    });
+    const response =
+      await this.httpService.axiosRef.post<CourierPricingResponse>(
+        '/rates/couriers',
+        {
+          ...options,
+          couriers: options.couriers.join(','),
+        },
+      );
     return response.data;
   }
 
   async getAreaID(options: BiteshipSearchAreaMapOptions) {
-    const response = await this.httpService.axiosRef.get('/maps/areas', {
-      params: options,
-    });
+    const response = await this.httpService.axiosRef.get<AreaResponse>(
+      '/maps/areas',
+      {
+        params: options,
+      },
+    );
 
     return response.data;
   }

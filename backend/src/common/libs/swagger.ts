@@ -1,6 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+export const BEARER_AUTH_NAME = 'JWT';
+
 const config = new DocumentBuilder()
   .setTitle('Lakoe Api')
   .setDescription('Lakoe is a ecommerce platform for buy and sell products')
@@ -12,7 +14,7 @@ const config = new DocumentBuilder()
   )
   .addTag('Products')
   .addTag('Address')
-  .addTag('Variants')
+  .addTag('Skus')
   .addTag('Carts')
   .addTag('Me')
   .addTag('Auth')
@@ -21,7 +23,10 @@ const config = new DocumentBuilder()
   .addTag('Stores')
   .addTag('Templates')
   .addTag('Users')
-  .addBearerAuth()
+  .addBearerAuth(
+    { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' },
+    BEARER_AUTH_NAME,
+  )
   .build();
 
 export const document = (app: INestApplication<any>) =>

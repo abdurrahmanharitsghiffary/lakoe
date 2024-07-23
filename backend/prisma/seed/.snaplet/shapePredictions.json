@@ -1,0 +1,776 @@
+[
+  {
+    "schemaName": "public",
+    "tableName": "Address",
+    "predictions": [
+      {
+        "input": "public address address",
+        "column": "address",
+        "shape": "FULL_ADDRESS",
+        "confidence": 0.9717127680778503,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public address address_phone",
+        "column": "addressPhone",
+        "shape": "PHONE_NUMBER",
+        "confidence": 0.4813565313816071,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public address city",
+        "column": "city",
+        "shape": "CITY",
+        "confidence": 0.9838017821311951,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public address contact_name",
+        "column": "contactName",
+        "shape": "PERSON_FULL_NAME",
+        "confidence": 0.6301873326301575,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public address contact_phone",
+        "column": "contactPhone",
+        "shape": "PHONE_NUMBER",
+        "confidence": 0.9908300638198853,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public address district",
+        "column": "district",
+        "shape": "STREET_ADDRESS",
+        "confidence": 0.617236316204071,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public address latitude",
+        "column": "latitude",
+        "shape": "LOCATION_LATITUDE",
+        "confidence": 0.9667553901672363,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public address longitude",
+        "column": "longitude",
+        "shape": "LOCATION_LONGITUDE",
+        "confidence": 0.9746661186218262,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public address name",
+        "column": "name",
+        "shape": "STREET_ADDRESS",
+        "confidence": 0.7753094434738159,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public address postal_code",
+        "column": "postalCode",
+        "shape": "ZIP_CODE",
+        "confidence": 0.9654251337051392,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public address province",
+        "column": "province",
+        "shape": "STREET_ADDRESS",
+        "confidence": 0.9170302152633667,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "Attribute",
+    "predictions": [
+      {
+        "input": "public attribute name",
+        "column": "name",
+        "shape": "COMPANY_NAME",
+        "confidence": 0.6580790877342224,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "AttributeSKU",
+    "predictions": [
+      {
+        "input": "public attribute_sku value",
+        "column": "value",
+        "shape": "COMMERCE_PRODUCT",
+        "confidence": 0.9843579530715942,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "CourierService",
+    "predictions": [
+      {
+        "input": "public courier_service courier_code",
+        "column": "courierCode",
+        "shape": "TOKEN",
+        "confidence": 0.2804073989391327,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public courier_service courier_service_code",
+        "column": "courierServiceCode",
+        "shape": "INTERNET_HTTP_STATUS_CODE",
+        "confidence": 0.153737410902977,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public courier_service courier_service_name",
+        "column": "courierServiceName",
+        "shape": "PERSON_FULL_NAME",
+        "confidence": 0.2106465697288513,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "OrderHistory",
+    "predictions": [
+      {
+        "input": "public order_history content",
+        "column": "content",
+        "shape": "POST_BODY",
+        "confidence": 0.8887237906455994,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "SKU",
+    "predictions": [
+      {
+        "input": "public sku image",
+        "column": "image",
+        "shape": "IMAGE_RAW",
+        "confidence": 0.3175343871116638,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public sku sku",
+        "column": "sku",
+        "shape": "COMMERCE_PRODUCT",
+        "confidence": 0.9945743680000305,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "bank_accounts",
+    "predictions": [
+      {
+        "input": "public bank_accounts acc_name",
+        "column": "accName",
+        "shape": "COMPANY_NAME",
+        "confidence": 0.4906406104564667,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public bank_accounts acc_number",
+        "column": "accNumber",
+        "shape": "FINANCE_IBAN",
+        "confidence": 0.4761326611042023,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public bank_accounts bank",
+        "column": "bank",
+        "shape": "BANK_ROUTING_FULL",
+        "confidence": 0.2602550983428955,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "cart_collections",
+    "predictions": [
+      {
+        "input": "public cart_collections id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9975067973136902,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "carts",
+    "predictions": [
+      {
+        "input": "public carts id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9986127614974976,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "categories",
+    "predictions": [
+      {
+        "input": "public categories name",
+        "column": "name",
+        "shape": "COMMERCE_PRODUCT",
+        "confidence": 0.7693310379981995,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "codes",
+    "predictions": [
+      {
+        "input": "public codes code",
+        "column": "code",
+        "shape": "TAX_CODE",
+        "confidence": 0.7868766784667969,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "confirmation_payments",
+    "predictions": [
+      {
+        "input": "public confirmation_payments bank",
+        "column": "bank",
+        "shape": "BANK_ROUTING_FULL",
+        "confidence": 0.4043363928794861,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "couriers",
+    "predictions": [
+      {
+        "input": "public couriers biteship_order_id",
+        "column": "biteshipOrderId",
+        "shape": "UUID",
+        "confidence": 0.9981999397277832,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public couriers biteship_tracking_id",
+        "column": "biteshipTrackingId",
+        "shape": "UUID",
+        "confidence": 0.7010433673858643,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public couriers biteship_waybill_id",
+        "column": "biteshipWaybillId",
+        "shape": "UUID",
+        "confidence": 0.9422978758811951,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public couriers courier_code",
+        "column": "courierCode",
+        "shape": "TAX_CODE",
+        "confidence": 0.3941977620124817,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public couriers courier_service_code",
+        "column": "courierServiceCode",
+        "shape": "TOKEN",
+        "confidence": 0.3854088187217712,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "invoice_histories",
+    "predictions": [
+      {
+        "input": "public invoice_histories status",
+        "column": "status",
+        "shape": "STATUS",
+        "confidence": 0.9645656943321228,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "invoices",
+    "predictions": [
+      {
+        "input": "public invoices id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9864341020584106,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices invoice_number",
+        "column": "invoiceNumber",
+        "shape": "FINANCE_ACCOUNT",
+        "confidence": 0.3415020704269409,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices receiver_address",
+        "column": "receiverAddress",
+        "shape": "FULL_ADDRESS",
+        "confidence": 0.9400794506072998,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices receiver_address_phone",
+        "column": "receiverAddressPhone",
+        "shape": "PHONE_NUMBER",
+        "confidence": 0.9267637729644775,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices receiver_city",
+        "column": "receiverCity",
+        "shape": "CITY",
+        "confidence": 0.9972459077835083,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices receiver_contact_name",
+        "column": "receiverContactName",
+        "shape": "PERSON_FULL_NAME",
+        "confidence": 0.9777486324310303,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices receiver_contact_phone",
+        "column": "receiverContactPhone",
+        "shape": "PHONE_NUMBER",
+        "confidence": 0.9891291856765747,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices receiver_district",
+        "column": "receiverDistrict",
+        "shape": "LOCATION_BUILDING_NUMBER",
+        "confidence": 0.7245999574661255,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices receiver_latitude",
+        "column": "receiverLatitude",
+        "shape": "LOCATION_LATITUDE",
+        "confidence": 0.9762405753135681,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices receiver_longitude",
+        "column": "receiverLongitude",
+        "shape": "LOCATION_LONGITUDE",
+        "confidence": 0.9834215044975281,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices receiver_name",
+        "column": "receiverName",
+        "shape": "PERSON_FULL_NAME",
+        "confidence": 0.8679770827293396,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices receiver_postal_code",
+        "column": "receiverPostalCode",
+        "shape": "TAX_CODE",
+        "confidence": 0.9162126183509827,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices receiver_province",
+        "column": "receiverProvince",
+        "shape": "STATE",
+        "confidence": 0.3414984047412872,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public invoices status",
+        "column": "status",
+        "shape": "STATUS",
+        "confidence": 0.9923000335693359,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "message_templates",
+    "predictions": [
+      {
+        "input": "public message_templates content",
+        "column": "content",
+        "shape": "SYSTEM_FILE_TYPE",
+        "confidence": 0.8789534568786621,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public message_templates name",
+        "column": "name",
+        "shape": "SYSTEM_FILE_TYPE",
+        "confidence": 0.8302372694015503,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "orders",
+    "predictions": [
+      {
+        "input": "public orders description",
+        "column": "description",
+        "shape": "COMMERCE_PRODUCT_DESCRIPTION",
+        "confidence": 0.9385854005813599,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public orders id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9989456534385681,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "payments",
+    "predictions": [
+      {
+        "input": "public payments bank",
+        "column": "bank",
+        "shape": "FINANCIAL_INSTITUTION",
+        "confidence": 0.4000949561595917,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public payments card_type",
+        "column": "cardType",
+        "shape": "CREDIT_DEBIT_NUMBER",
+        "confidence": 0.7214749455451965,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public payments currency",
+        "column": "currency",
+        "shape": "FINANCE_CURRENCY_NAME",
+        "confidence": 0.9868384003639221,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public payments midtrans_order_id",
+        "column": "midtransOrderId",
+        "shape": "UUID",
+        "confidence": 0.9976929426193237,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public payments payment_type",
+        "column": "paymentType",
+        "shape": "FINANCE_PAYMENT_METHOD",
+        "confidence": 0.7891392111778259,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public payments status",
+        "column": "status",
+        "shape": "STATUS",
+        "confidence": 0.9724403619766235,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "product_wishlists",
+    "predictions": [
+      {
+        "input": "public product_wishlists id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9973843693733215,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "products",
+    "predictions": [
+      {
+        "input": "public products description",
+        "column": "description",
+        "shape": "COMMERCE_PRODUCT_DESCRIPTION",
+        "confidence": 0.8767876625061035,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public products images",
+        "column": "images",
+        "shape": "IMAGE",
+        "confidence": 0.8,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public products name",
+        "column": "name",
+        "shape": "COMMERCE_PRODUCT_NAME",
+        "confidence": 0.9182306528091431,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "profiles",
+    "predictions": [
+      {
+        "input": "public profiles bio",
+        "column": "bio",
+        "shape": "PERSON_BIO",
+        "confidence": 0.7,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public profiles full_name",
+        "column": "fullName",
+        "shape": "PERSON_FULL_NAME",
+        "confidence": 0.9122052788734436,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public profiles phone",
+        "column": "phone",
+        "shape": "PHONE_NUMBER",
+        "confidence": 0.9602307081222534,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public profiles profile_picture",
+        "column": "profilePicture",
+        "shape": "INTERNET_AVATAR",
+        "confidence": 0.9666502475738525,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public profiles username",
+        "column": "username",
+        "shape": "USERNAME",
+        "confidence": 0.9713683724403381,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "reviews",
+    "predictions": [
+      {
+        "input": "public reviews content",
+        "column": "content",
+        "shape": "POST_COMMENT",
+        "confidence": 0.4885074496269226,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public reviews name",
+        "column": "name",
+        "shape": "COMMERCE_PRODUCT_NAME",
+        "confidence": 0.2979135811328888,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "stores",
+    "predictions": [
+      {
+        "input": "public stores banner_attachment",
+        "column": "bannerAttachment",
+        "shape": "SYSTEM_FILE_NAME",
+        "confidence": 0.8802720308303833,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public stores description",
+        "column": "description",
+        "shape": "COMMERCE_PRODUCT_DESCRIPTION",
+        "confidence": 0.9061951041221619,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public stores domain",
+        "column": "domain",
+        "shape": "INTERNET_DOMAIN_NAME",
+        "confidence": 0.9387688040733337,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public stores logo_attachment",
+        "column": "logoAttachment",
+        "shape": "SYSTEM_FILE_NAME",
+        "confidence": 0.9686062932014465,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public stores name",
+        "column": "name",
+        "shape": "COMPANY_NAME",
+        "confidence": 0.8687799572944641,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public stores slogan",
+        "column": "slogan",
+        "shape": "COMPANY_CATCH_PHRASE_DESCRIPTOR",
+        "confidence": 0.987409234046936,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "tokens",
+    "predictions": [
+      {
+        "input": "public tokens token",
+        "column": "token",
+        "shape": "TOKEN",
+        "confidence": 0.9971657395362854,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "users",
+    "predictions": [
+      {
+        "input": "public users email",
+        "column": "email",
+        "shape": "EMAIL",
+        "confidence": 0.9942367076873779,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public users password",
+        "column": "password",
+        "shape": "PASSWORD",
+        "confidence": 0.9364579916000366,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public users provider_id",
+        "column": "providerId",
+        "shape": "UUID",
+        "confidence": 0.9960737228393555,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  }
+]

@@ -1,6 +1,9 @@
 import { Prisma } from '@prisma/client';
 
 export const selectAddress = {
+  contactName: true,
+  contactPhone: true,
+  addressPhone: true,
   address: true,
   city: true,
   createdAt: true,
