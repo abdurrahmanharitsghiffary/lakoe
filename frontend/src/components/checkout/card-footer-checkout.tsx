@@ -24,29 +24,28 @@ interface opsiPengirimanType {
 const opsiPengiriman: opsiPengirimanType[] = [
   {
     harga: 10000,
-    image: "assets/jnt.png",
+    image: "assets/logo-logistic/j&t.svg",
     IsAvailableForCOD: true,
     nama: "J&T",
   },
   {
     harga: 30000,
-    image: "assets/jne.png",
+    image: "assets/logo-logistic/jne.svg",
     IsAvailableForCOD: false,
     nama: "JNE",
   },
   {
     harga: 50000,
-    image: "assets/ninja.png",
+    image: "assets/logo-logistic/sicepat.svg",
     IsAvailableForCOD: true,
-    nama: "Ninja",
+    nama: "SiCepat",
   },
 ];
 
 export function CardFooterCheckout() {
   const [isSendOpen, setIsSendOpen] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState<
-    opsiPengirimanType | undefined
-  >(undefined);
+    opsiPengirimanType | undefined>(undefined);
   return (
     <div className="flex w-full mt-4 ">
       <Card className="flex w-full h-auto py-4">
@@ -68,7 +67,7 @@ export function CardFooterCheckout() {
               <div className="flex w-full h-auto gap-4">
                 <img
                   src={deliveryMethod.image}
-                  className="h-[60px]  object-cover"
+                  className="h-[40px] mt-3"
                 />
                 <div className="flex flex-col w-full mt-[-5px] justify-center ">
                   <p>Nextday</p>
@@ -131,8 +130,8 @@ export function CardFooterCheckout() {
                         <div className="flex flex-row justify-between w-[200px]">
                           <img
                             src={data.image}
-                            alt="anteraja icon"
-                            className="h-[50px]"
+                            alt=""
+                            className="h-[40px]"
                           />
                           <p className="text-lg mt-[10px] mx-[10px] text-black-0">
                             {data.nama}

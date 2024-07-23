@@ -20,6 +20,8 @@ import { AddressService } from '../address/address.service';
 import { StoreService } from '../store/store.service';
 import { BiteshipCreateOrderOptions } from 'src/common/types/biteship';
 import { $Enums } from '@prisma/client';
+import { coreMidtrans } from 'src/common/libs/midtrans';
+import { isAxiosError } from 'axios';
 
 @Injectable()
 export class OrderService {
@@ -283,8 +285,8 @@ export class OrderService {
           biteshipWaybillId: '',
           biteshipOrderId: '',
           biteshipTrackingId: '',
-          courierCode: firstRate.type,
-          courierServiceCode: firstRate.company,
+          courierCode: firstRate.company,
+          courierServiceCode: firstRate.type,
           price: firstRate.price,
           order: { connect: { id: order.id } },
         },
@@ -294,7 +296,10 @@ export class OrderService {
     });
   }
 
-  async deliverOrder(orderId: string) {
+  async deliverOrder(
+    orderId: string,
+    collectionMethod: BiteshipCreateOrderOptions['origin_collection_method'] = 'pickup',
+  ) {
     const order = await this.prismaService.order.findUnique({
       where: { id: orderId },
       include: {
@@ -315,6 +320,9 @@ export class OrderService {
     const storeAddress = await this.addressService.checkAddressMustExists(
       order.storeId,
     );
+
+    console.log(storeAddress, 'STORE ADDRESS');
+
     await this.storeService.checkCouriersMustExists(order.storeId);
 
     const destAreaIdResponse = await this.biteshipService.getAreaID({
@@ -332,7 +340,7 @@ export class OrderService {
     });
 
     const originAreaId = originAreaIdResponse?.areas?.[0]?.id;
-
+    console.log(order.courier, 'COURIER');
     const createOrderOptions: BiteshipCreateOrderOptions = {
       courier_company: order.courier.courierCode,
       courier_type: order.courier.courierServiceCode,
@@ -346,6 +354,7 @@ export class OrderService {
         latitude: +order.invoice.receiverLatitude,
         longitude: +order.invoice.receiverLongitude,
       },
+      origin_collection_method: collectionMethod,
       origin_postal_code: +storeAddress.postalCode,
       origin_coordinate: {
         latitude: +storeAddress.latitude,
@@ -564,25 +573,40 @@ export class OrderService {
 
   async acceptOrder(orderId: string) {
     const order = await this.checkOrderMustExists(orderId);
+
+    if (order?.status === 'READY_TO_DELIVER')
+      throw new BadRequestException('Order already accepted.');
+
     if (order?.status !== 'NEW_ORDER')
       throw new BadRequestException(
         ERR.CHANGE_ORDER_STATUS_NOT_ACCEPTED(order.status),
       );
+
     return this.prismaService.$transaction(async (tx) => {
       const updatedOrder = await tx.order.update({
         where: { id: orderId },
-        data: { status: 'NEW_ORDER' },
+        data: { status: 'READY_TO_DELIVER' },
         select: {
           id: true,
         },
       });
 
-      await this.deliverOrder(updatedOrder.id);
+      try {
+        return await this.deliverOrder(updatedOrder.id);
+      } catch (err) {
+        if (isAxiosError(err) && err?.response?.data?.code === 40002031) {
+          console.log('YOYO MAMA');
+          return await this.deliverOrder(updatedOrder.id, 'drop_off');
+        }
+      }
     });
   }
 
   async cancelOrder(orderId: string) {
     const order = await this.checkOrderMustExists(orderId);
+
+    if (order?.status === 'CANCELLED')
+      throw new BadRequestException('Order already cancelled.');
     if (order?.status !== 'NEW_ORDER')
       throw new BadRequestException(
         ERR.CHANGE_ORDER_STATUS_NOT_ACCEPTED(order.status),
@@ -593,6 +617,9 @@ export class OrderService {
         where: { id: orderId },
         data: { status: 'CANCELLED' },
         select: {
+          invoice: {
+            select: { payment: { select: { midtransOrderId: true } } },
+          },
           orderDetails: { select: { skuId: true, qty: true } },
         },
       });
@@ -605,6 +632,11 @@ export class OrderService {
           });
         }),
       );
+
+      const refunded = await coreMidtrans.transaction.refund(
+        updatedOrder.invoice.payment.midtransOrderId,
+      );
+      console.log(refunded, 'Refunded');
 
       return updatedOrder;
     });

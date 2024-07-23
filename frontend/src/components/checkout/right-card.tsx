@@ -4,15 +4,17 @@ import { BiSolidDiscount } from "react-icons/bi";
 import { Card } from "../ui/card";
 import { Textarea } from "../ui/textarea";
 import { CheckoutDialogVoucher } from "../dialog/checkout-dilalog-voucher";
-import { useState, useRef } from "react";
-import { useAddCheckout } from "@/hooks/use-add-checkout";
+import { useState } from "react";
+import { useFormContext } from "react-hook-form";
+import { FormCheckout } from "@/validator/checkout-validator";
 
-export function RightCard() {
-  const { register, errors } = useAddCheckout();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [Input, setInput] = useState<number | null>(
-    inputRef.current?.value.length || 0
-  );
+interface RightCardProps {
+  onInputChange: (name: keyof FormCheckout, value: string) => void;
+  formData: FormCheckout;
+}
+
+export function RightCard({ onInputChange, formData }: RightCardProps) {
+  const { register, formState: { errors } } = useFormContext<FormCheckout>();
   const [isVoucherOpen, setIsVoucherOpen] = useState(false);
   return (
     <div className="flex flex-col">
@@ -76,14 +78,19 @@ export function RightCard() {
             <Textarea
               id="note"
               {...register("note")}
+              value={formData.note}
               placeholder="Tuliskan Catatan di sini"
               className="text-lg h-12"
-              onChange={(e) => setInput(e.target.value.length)}
-              maxLength={150}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value.length <= 50) {
+                  onInputChange('note', value);
+                }
+              }}
             />
             {errors.note && <p>{errors.note.message}</p>}
             <div className="flex w-full justify-end">
-              <span className="text-lg">{Input}/150</span>
+              <span className="text-lg">{formData.note.length}/150</span>
             </div>
           </div>
         </div>

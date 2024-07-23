@@ -19,7 +19,7 @@ export class OrderGuard implements CanActivate {
     });
     console.log(order, 'ORDER');
     if (!order) throw new NotFoundException('Order is not found.');
-
+    console.log(order, 'ORDER');
     if (request?.user?.id !== order?.store?.user?.id) return false;
     return true;
   }

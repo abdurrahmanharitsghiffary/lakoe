@@ -2330,48 +2330,6 @@
           "maxLength": 30
         },
         {
-          "id": "public.couriers.biteshipOrderId",
-          "name": "biteshipOrderId",
-          "columnName": "biteshipOrderId",
-          "type": "varchar",
-          "isRequired": true,
-          "kind": "scalar",
-          "isList": false,
-          "isGenerated": false,
-          "sequence": false,
-          "hasDefaultValue": false,
-          "isId": false,
-          "maxLength": 150
-        },
-        {
-          "id": "public.couriers.biteshipTrackingId",
-          "name": "biteshipTrackingId",
-          "columnName": "biteshipTrackingId",
-          "type": "varchar",
-          "isRequired": true,
-          "kind": "scalar",
-          "isList": false,
-          "isGenerated": false,
-          "sequence": false,
-          "hasDefaultValue": false,
-          "isId": false,
-          "maxLength": 150
-        },
-        {
-          "id": "public.couriers.biteshipWaybillId",
-          "name": "biteshipWaybillId",
-          "columnName": "biteshipWaybillId",
-          "type": "varchar",
-          "isRequired": false,
-          "kind": "scalar",
-          "isList": false,
-          "isGenerated": false,
-          "sequence": false,
-          "hasDefaultValue": false,
-          "isId": false,
-          "maxLength": 150
-        },
-        {
           "id": "public.couriers.price",
           "name": "price",
           "columnName": "price",
@@ -2412,6 +2370,48 @@
           "hasDefaultValue": false,
           "isId": false,
           "maxLength": null
+        },
+        {
+          "id": "public.couriers.biteshipOrderId",
+          "name": "biteshipOrderId",
+          "columnName": "biteshipOrderId",
+          "type": "varchar",
+          "isRequired": true,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false,
+          "isId": false,
+          "maxLength": 150
+        },
+        {
+          "id": "public.couriers.biteshipTrackingId",
+          "name": "biteshipTrackingId",
+          "columnName": "biteshipTrackingId",
+          "type": "varchar",
+          "isRequired": true,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false,
+          "isId": false,
+          "maxLength": 150
+        },
+        {
+          "id": "public.couriers.biteshipWaybillId",
+          "name": "biteshipWaybillId",
+          "columnName": "biteshipWaybillId",
+          "type": "varchar",
+          "isRequired": false,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false,
+          "isId": false,
+          "maxLength": 150
         },
         {
           "id": "public.couriers.orderId",
@@ -2588,20 +2588,6 @@
           "sequence": false,
           "hasDefaultValue": false,
           "isId": true,
-          "maxLength": null
-        },
-        {
-          "id": "public.invoices.serviceCharge",
-          "name": "serviceCharge",
-          "columnName": "serviceCharge",
-          "type": "numeric",
-          "isRequired": false,
-          "kind": "scalar",
-          "isList": false,
-          "isGenerated": false,
-          "sequence": false,
-          "hasDefaultValue": false,
-          "isId": false,
           "maxLength": null
         },
         {
@@ -2829,8 +2815,22 @@
           "maxLength": null
         },
         {
-          "id": "public.invoices.amount",
-          "name": "amount",
+
+          "id": "public.invoices.serviceCharge",
+          "name": "serviceCharge",
+          "columnName": "serviceCharge",
+          "type": "numeric",
+          "isRequired": false,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": false,
+          "isId": false,
+          "maxLength": null
+        },
+        {
+
           "columnName": "amount",
           "type": "numeric",
           "isRequired": true,
@@ -2845,7 +2845,6 @@
         {
           "name": "orders",
           "type": "orders",
-          "isRequired": true,
           "kind": "object",
           "relationName": "invoicesToorders",
           "relationFromFields": [
@@ -3268,20 +3267,6 @@
           "maxLength": null
         },
         {
-          "id": "public.payments.midtransOrderId",
-          "name": "midtransOrderId",
-          "columnName": "midtransOrderId",
-          "type": "text",
-          "isRequired": true,
-          "kind": "scalar",
-          "isList": false,
-          "isGenerated": false,
-          "sequence": false,
-          "hasDefaultValue": false,
-          "isId": false,
-          "maxLength": null
-        },
-        {
           "id": "public.payments.bank",
           "name": "bank",
           "columnName": "bank",
@@ -3379,26 +3364,13 @@
           "isId": false,
           "maxLength": null
         },
+        
         {
           "id": "public.payments.cardType",
           "name": "cardType",
           "columnName": "cardType",
           "type": "text",
           "isRequired": false,
-          "kind": "scalar",
-          "isList": false,
-          "isGenerated": false,
-          "sequence": false,
-          "hasDefaultValue": false,
-          "isId": false,
-          "maxLength": null
-        },
-        {
-          "id": "public.payments.invoiceId",
-          "name": "invoiceId",
-          "columnName": "invoiceId",
-          "type": "text",
-          "isRequired": true,
           "kind": "scalar",
           "isList": false,
           "isGenerated": false,
@@ -3431,6 +3403,13 @@
           "name": "payments_pkey",
           "fields": [
             "id"
+          ],
+          "nullNotDistinct": false
+        },
+        {
+          "name": "payments_invoiceId_key",
+          "fields": [
+            "invoiceId"
           ],
           "nullNotDistinct": false
         },
@@ -4595,20 +4574,6 @@
           "maxLength": 255
         },
         {
-          "id": "public.users.isVerified",
-          "name": "isVerified",
-          "columnName": "isVerified",
-          "type": "bool",
-          "isRequired": true,
-          "kind": "scalar",
-          "isList": false,
-          "isGenerated": false,
-          "sequence": false,
-          "hasDefaultValue": true,
-          "isId": false,
-          "maxLength": null
-        },
-        {
           "id": "public.users.role",
           "name": "role",
           "columnName": "role",
@@ -4679,6 +4644,20 @@
           "maxLength": null
         },
         {
+          "id": "public.users.isVerified",
+          "name": "isVerified",
+          "columnName": "isVerified",
+          "type": "bool",
+          "isRequired": true,
+          "kind": "scalar",
+          "isList": false,
+          "isGenerated": false,
+          "sequence": false,
+          "hasDefaultValue": true,
+          "isId": false,
+          "maxLength": null
+        },
+        {
           "id": "public.users.hasStore",
           "name": "hasStore",
           "columnName": "hasStore",
@@ -4689,8 +4668,7 @@
           "isGenerated": false,
           "sequence": false,
           "hasDefaultValue": true,
-          "isId": false,
-          "maxLength": null
+          "isId": false
         },
         {
           "name": "Address",
@@ -4705,8 +4683,7 @@
           "isGenerated": false,
           "sequence": false,
           "hasDefaultValue": false
-        },
-        {
+        },{
           "name": "cart_collections",
           "type": "cart_collections",
           "isRequired": false,
