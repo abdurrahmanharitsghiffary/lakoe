@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "../ui/input";
-import { useAddCheckout } from "@/hooks/use-add-checkout";
+import { useLogin } from "@/hooks/use-login";
 
 type ProductDialogLoginProps = {
   isOpen: boolean;
@@ -21,7 +21,7 @@ export function CheckoutDialogLogin({
   isOpen,
   onOpen,
 }: ProductDialogLoginProps) {
-  const { handleSubmit, onSubmit, register, errors } = useAddCheckout();
+  const { handleSubmit, onSubmit, register, errors } = useLogin();
   return (
     <>
       <Dialog
@@ -45,12 +45,12 @@ export function CheckoutDialogLogin({
               <>
                 <Label className="text-lg px-3">Nomor HP atau Email</Label>
                 <Input
-                  id="telephone"
+                  id="email"
                   placeholder="890823777 atau you@email.com"
                   className="mt-[-10px] text-lg h-12 w-[420px] ml-3"
-                  {...register("telephone")}
+                  {...register("email")}
                 />
-                {errors.telephone && <p>{errors.telephone.message}</p>}
+                {errors.email && <p>{errors.email.message}</p>}
               </>
             </div>
             <DialogFooter className="mt-10">

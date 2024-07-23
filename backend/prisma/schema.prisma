@@ -182,7 +182,7 @@ model Invoice {
   orderId String @unique
   order   Order  @relation(fields: [orderId], references: [id])
 
-  payment              Payment[]
+  payment              Payment?
   invoiceHistories     InvoiceHistory[]
   confirmationPayments ConfirmationPayment[]
 
@@ -203,7 +203,7 @@ model Payment {
   updatedAt DateTime @updatedAt
 
   invoice   Invoice @relation(fields: [invoiceId], references: [id])
-  invoiceId String
+  invoiceId String  @unique
 
   @@map("payments")
 }

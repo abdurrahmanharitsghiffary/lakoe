@@ -1,3 +1,4 @@
+import { MidtransError } from '@miwone/midtrans-client-typescript/dist/lib/midtransError';
 import {
   ArgumentsHost,
   Catch,
@@ -15,6 +16,15 @@ export class AllExceptionFilter<T> implements ExceptionFilter {
   catch(exception: T, host: ArgumentsHost) {
     const response = host.switchToHttp().getResponse<Response>();
     console.log(exception, 'Exception');
+
+    if (exception instanceof MidtransError) {
+      return response.status(+exception.httpStatusCode).json({
+        success: false,
+        statusCode: +exception.httpStatusCode,
+        message: exception?.ApiResponse?.status_message ?? exception?.message,
+        name: exception.name,
+      });
+    }
 
     if (exception instanceof AxiosError) {
       if (exception.config.baseURL.includes('api.biteship')) {
