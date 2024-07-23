@@ -96,7 +96,7 @@ export function NewCheckout() {
               </div>
             </div>
             <div className="basis-1/4">
-              <RightCard onInputChange={handleInputChange} formData={formCheckout}/>
+              <RightCard onInputChange={handleInputChange} formData={formCheckout} />
               <div className="flex flex-row w-full h-auto mt-4 mx-3">
                 <Button
                   type="submit"

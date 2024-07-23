@@ -13,8 +13,8 @@ interface RightCardProps {
   formData: FormCheckout;
 }
 
-export function RightCard({onInputChange,formData}:RightCardProps) {
-  const { register, formState:{errors}} = useFormContext<FormCheckout>();
+export function RightCard({ onInputChange, formData }: RightCardProps) {
+  const { register, formState: { errors } } = useFormContext<FormCheckout>();
   const [isVoucherOpen, setIsVoucherOpen] = useState(false);
   return (
     <div className="flex flex-col w-[450px] mr-[200px]">
@@ -81,7 +81,8 @@ export function RightCard({onInputChange,formData}:RightCardProps) {
               value={formData.note}
               placeholder="Tuliskan Catatan di sini"
               className="text-lg h-12"
-              onChange={(e) =>  {const value = e.target.value;
+              onChange={(e) => {
+                const value = e.target.value;
                 if (value.length <= 50) {
                   onInputChange('note', value);
                 }

@@ -45,8 +45,7 @@ const opsiPengiriman: opsiPengirimanType[] = [
 export function CardFooterCheckout() {
   const [isSendOpen, setIsSendOpen] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState<
-    opsiPengirimanType | undefined
-  >(undefined);
+    opsiPengirimanType | undefined>(undefined);
   return (
     <div className="flex w-full px-6 mt-4 ">
       <Card className="flex w-full h-auto py-4">

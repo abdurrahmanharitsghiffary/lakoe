@@ -90,13 +90,13 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                             <SelectValue placeholder="Select Kecamatan" />
                           </SelectTrigger>
                           <SelectContent className="text-lg">
-                              <SelectItem value="kecamatan1" className="text-lg">
-                                Ciputat
-                              </SelectItem>
-                              <SelectItem value="kecamatan2" className="text-lg">
-                                Jombang
-                              </SelectItem>
-                              {/* Add more options as needed */}
+                            <SelectItem value="kecamatan1" className="text-lg">
+                              Ciputat
+                            </SelectItem>
+                            <SelectItem value="kecamatan2" className="text-lg">
+                              Jombang
+                            </SelectItem>
+                            {/* Add more options as needed */}
                           </SelectContent>
                         </Select>
                       )}
@@ -126,13 +126,13 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                             <SelectValue placeholder="Select Kelurahan" />
                           </SelectTrigger>
                           <SelectContent className="text-lg">
-                              <SelectItem value="kelurahan1" className="text-lg">
-                                Ciputat
-                              </SelectItem>
-                              <SelectItem value="kelurahan2" className="text-lg">
-                                Jombang
-                              </SelectItem>
-                              {/* Add more options as needed */}
+                            <SelectItem value="kelurahan1" className="text-lg">
+                              Ciputat
+                            </SelectItem>
+                            <SelectItem value="kelurahan2" className="text-lg">
+                              Jombang
+                            </SelectItem>
+                            {/* Add more options as needed */}
                           </SelectContent>
                         </Select>
                       )}
@@ -161,13 +161,13 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                             <SelectValue placeholder="Select Kota" />
                           </SelectTrigger>
                           <SelectContent className="text-lg">
-                              <SelectItem value="kota1" className="text-lg">
-                                Ciputat
-                              </SelectItem>
-                              <SelectItem value="kota2" className="text-lg">
-                                Jombang
-                              </SelectItem>
-                              {/* Add more options as needed */}
+                            <SelectItem value="kota1" className="text-lg">
+                              Ciputat
+                            </SelectItem>
+                            <SelectItem value="kota2" className="text-lg">
+                              Jombang
+                            </SelectItem>
+                            {/* Add more options as needed */}
                           </SelectContent>
                         </Select>
                       )}
@@ -196,13 +196,13 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                             <SelectValue placeholder="Select Province" />
                           </SelectTrigger>
                           <SelectContent className="text-lg">
-                              <SelectItem value="Province1" className="text-lg">
-                                Ciputat
-                              </SelectItem>
-                              <SelectItem value="Province2" className="text-lg">
-                                Jombang
-                              </SelectItem>
-                              {/* Add more options as needed */}
+                            <SelectItem value="Province1" className="text-lg">
+                              Ciputat
+                            </SelectItem>
+                            <SelectItem value="Province2" className="text-lg">
+                              Jombang
+                            </SelectItem>
+                            {/* Add more options as needed */}
                           </SelectContent>
                         </Select>
                       )}
@@ -219,7 +219,7 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                       id="addressDetails"
                       {...register("addressDetails")}
                       value={formData.addressDetails}
-                      onChange={(e) => onInputChange('addressDetails',e.target.value)}
+                      onChange={(e) => onInputChange('addressDetails', e.target.value)}
                       placeholder="Isi dengan nama jalan, nomor rumah, nomor gedung, lantai atau nomor unit"
                       className="text-lg h-12"
                     />
