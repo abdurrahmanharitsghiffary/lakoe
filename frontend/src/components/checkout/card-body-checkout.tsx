@@ -1,4 +1,3 @@
-import { useAddCheckout } from "@/hooks/use-add-checkout";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 // import {
@@ -17,9 +16,16 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { Checkbox } from "../ui/checkbox";
 import { PinpointCheckout } from "./pinpoint-checkout";
+import { useFormContext, Controller } from "react-hook-form";
+import { FormCheckout } from "@/validator/checkout-validator";
 
-export function CardBodyCheckout() {
-  const { register, errors } = useAddCheckout();
+interface CardBodyProps {
+  onInputChange: (name: keyof FormCheckout, value: string) => void;
+  formData: FormCheckout;
+}
+
+export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
+  const { control, register, formState: { errors } } = useFormContext<FormCheckout>();
   return (
     <div className="flex w-full px-6 mt-4">
       <Card className="flex w-full h-auto py-4">
@@ -35,11 +41,14 @@ export function CardBodyCheckout() {
                   <Input
                     id="recipientName"
                     placeholder="Masukkan Nama Anda"
+                    type="text"
                     {...register("recipientName")}
+                    value={formData.recipientName}
                     className="text-lg h-12 mb-4 mx-3 w-100"
                   />
                   {errors.recipientName && (
-                    <p>{errors.recipientName.message}</p>
+                    <p className="ml-4 text-red-500 mt-[-10px] mb-3">{errors.recipientName.message}</p>
+
                   )}
                 </>
 
@@ -50,9 +59,12 @@ export function CardBodyCheckout() {
                     className="text-lg h-12 mb-4 mx-3 w-100"
                     placeholder="Masukkan No Telp yang Valid"
                     startAdornment="+62"
+                    type="text"
                     {...register("telephone")}
+                    value={formData.telephone}
                   />
-                  {errors.telephone && <p>{errors.telephone.message}</p>}
+                  {errors.telephone && <p className="ml-4 text-red-500 mt-[-15px] mb-3">{errors.telephone.message}</p>}
+
                 </>
                 <div className="flex-col px-3 mb-4">
                   <>
@@ -62,30 +74,34 @@ export function CardBodyCheckout() {
                     >
                       Kecamatan
                     </Label>
-                    <Select>
-                      <SelectTrigger className="text-lg h-12">
-                        <SelectValue
-                          {...register("subDistrict")}
-                          id="subDistrict"
-                          placeholder="Pilih Kecamatan"
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem className="text-lg" value="Ciputat">
-                          Ciputat
-                        </SelectItem>
-                        <SelectItem className="text-lg" value="Pondok Ranji">
-                          Pondok Ranji
-                        </SelectItem>
-                        <SelectItem className="text-lg" value="Pondok Aran">
-                          Pondok Aren
-                        </SelectItem>
-                        <SelectItem className="text-lg" value="Serpong">
-                          Serpong
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {errors.subDistrict && <p>{errors.subDistrict.message}</p>}
+                    <Controller
+                      name="subDistrict"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            onInputChange('subDistrict', value);
+                          }}
+                          value={formData.subDistrict}
+                        >
+                          <SelectTrigger className="text-lg h-12">
+                            <SelectValue placeholder="Select Kecamatan" />
+                          </SelectTrigger>
+                          <SelectContent className="text-lg">
+                              <SelectItem value="kecamatan1" className="text-lg">
+                                Ciputat
+                              </SelectItem>
+                              <SelectItem value="kecamatan2" className="text-lg">
+                                Jombang
+                              </SelectItem>
+                              {/* Add more options as needed */}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.subDistrict && <p className="text-red-500 mb-3">{errors.subDistrict.message}</p>}
                   </>
                 </div>
 
@@ -94,30 +110,104 @@ export function CardBodyCheckout() {
                     <Label htmlFor="ward" className="text-lg px-1 mb-[-10px]">
                       Kelurahan
                     </Label>
-                    <Select>
-                      <SelectTrigger className="text-lg h-12">
-                        <SelectValue
-                          id="ward"
-                          placeholder="Pilih Kelurahan"
-                          {...register("ward")}
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem className="text-lg" value="Jombang">
-                          Jombang
-                        </SelectItem>
-                        <SelectItem className="text-lg" value="Pondok Ranji">
-                          Pondok Ranji
-                        </SelectItem>
-                        <SelectItem className="text-lg" value="Pondok Aren">
-                          Pondok Aren
-                        </SelectItem>
-                        <SelectItem className="text-lg" value="Serpong">
-                          Serpong
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {errors.ward && <p>{errors.ward.message}</p>}
+                    <Controller
+                      name="ward"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            onInputChange('ward', value);
+                          }}
+                          value={formData.ward}
+                        >
+                          <SelectTrigger className="text-lg h-12">
+                            <SelectValue placeholder="Select Kelurahan" />
+                          </SelectTrigger>
+                          <SelectContent className="text-lg">
+                              <SelectItem value="kelurahan1" className="text-lg">
+                                Ciputat
+                              </SelectItem>
+                              <SelectItem value="kelurahan2" className="text-lg">
+                                Jombang
+                              </SelectItem>
+                              {/* Add more options as needed */}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.ward && <p className="text-red-500 mb-3">{errors.ward.message}</p>}
+                  </>
+                </div>
+                <div className="flex-col px-3 mb-4">
+                  <>
+                    <Label htmlFor="cities" className="text-lg px-1 mb-[-10px]">
+                      Kota
+                    </Label>
+                    <Controller
+                      name="cities"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            onInputChange('cities', value);
+                          }}
+                          value={formData.cities}
+                        >
+                          <SelectTrigger className="text-lg h-12">
+                            <SelectValue placeholder="Select Kota" />
+                          </SelectTrigger>
+                          <SelectContent className="text-lg">
+                              <SelectItem value="kota1" className="text-lg">
+                                Ciputat
+                              </SelectItem>
+                              <SelectItem value="kota2" className="text-lg">
+                                Jombang
+                              </SelectItem>
+                              {/* Add more options as needed */}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.cities && <p className="text-red-500 mb-3">{errors.cities.message}</p>}
+                  </>
+                </div>
+                <div className="flex-col px-3 mb-4">
+                  <>
+                    <Label htmlFor="provinci" className="text-lg px-1 mb-[-10px]">
+                      Provinsi
+                    </Label>
+                    <Controller
+                      name="province"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            onInputChange('province', value);
+                          }}
+                          value={formData.province}
+                        >
+                          <SelectTrigger className="text-lg h-12">
+                            <SelectValue placeholder="Select Province" />
+                          </SelectTrigger>
+                          <SelectContent className="text-lg">
+                              <SelectItem value="Province1" className="text-lg">
+                                Ciputat
+                              </SelectItem>
+                              <SelectItem value="Province2" className="text-lg">
+                                Jombang
+                              </SelectItem>
+                              {/* Add more options as needed */}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.province && <p className="text-red-500 mb-3">{errors.province.message}</p>}
                   </>
                 </div>
                 <div className="flex-col px-3 mb-4">
@@ -128,6 +218,8 @@ export function CardBodyCheckout() {
                     <Textarea
                       id="addressDetails"
                       {...register("addressDetails")}
+                      value={formData.addressDetails}
+                      onChange={(e) => onInputChange('addressDetails',e.target.value)}
                       placeholder="Isi dengan nama jalan, nomor rumah, nomor gedung, lantai atau nomor unit"
                       className="text-lg h-12"
                     />
