@@ -79,21 +79,17 @@ export const router = createBrowserRouter([
           {
             path: "verify-account",
             element: (
-              <Authorize>
-                <AuthorizeNav redirectUrl="/seller/dashboard" whenVerified>
-                  <VerifyPage />
-                </AuthorizeNav>
-              </Authorize>
+              <AuthorizeNav redirectUrl="/seller/dashboard" whenVerified>
+                <VerifyPage />
+              </AuthorizeNav>
             ),
           },
           {
             path: "verified",
             element: (
-              <Authorize>
-                <AuthorizeNav redirectUrl="/seller/dashboard" whenVerified>
-                  <VerifiedPage />
-                </AuthorizeNav>
-              </Authorize>
+              <AuthorizeNav redirectUrl="/seller/dashboard" whenVerified>
+                <VerifiedPage />
+              </AuthorizeNav>
             ),
           },
           { path: "reset-success", element: <ResetSuccessPage /> },

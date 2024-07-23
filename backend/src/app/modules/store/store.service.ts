@@ -31,15 +31,20 @@ export class StoreService {
       logoAttachment?: string;
     },
   ) {
-    const store = await this.prismaService.store.count({ where: { userId } });
-    if (store > 0) throw new ConflictException('Store already created.');
+    return this.prismaService.$transaction(async (tx) => {
+      const store = await tx.store.count({ where: { userId } });
+      if (store > 0) throw new ConflictException('Store already created.');
 
-    return this.prismaService.store.create({
-      data: {
-        userId,
-        domain: `${createStoreDto.name.replaceAll(' ', '-').toLowerCase()}-${Date.now().toString().slice(-3)}`,
-        ...createStoreDto,
-      },
+      const createdStore = await tx.store.create({
+        data: {
+          userId,
+          domain: `${createStoreDto.name.replaceAll(' ', '-').toLowerCase()}-${Date.now().toString().slice(-3)}`,
+          ...createStoreDto,
+        },
+      });
+
+      await tx.user.update({ where: { id: userId }, data: { hasStore: true } });
+      return createdStore;
     });
   }
 

@@ -35,6 +35,7 @@ export function InputFileHiddenControlled<T extends FieldValues>({
     if (props?.multiple) onChange(Array.from(e?.target?.files ?? []));
     const file = e?.target?.files?.[0];
     if (file) {
+      console.log(file, "FILE FROM HANDLEFILECHANGE");
       onChange(file);
       if (onFileChange) onFileChange(file);
     }

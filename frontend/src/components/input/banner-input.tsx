@@ -41,6 +41,7 @@ export function BannerInput<T extends FieldValues>({
         {imageSrc ? (
           <div className="w-full h-full absolute">
             <button
+              tabIndex={-1}
               onClick={handleCloseClick}
               className="rounded-full bg-transparent text-destructive w-8 h-8 hover:bg-transparent absolute right-0 top-0 flex justify-center items-center z-30"
             >

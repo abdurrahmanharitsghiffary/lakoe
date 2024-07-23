@@ -16,7 +16,6 @@ export const useStore = () => {
     formState: { errors },
     ...rest
   } = useForm<Store>({
-    mode: "onChange",
     resolver: zodResolver(storeSchema),
   });
   console.log(watch("logo"), "LOGO");

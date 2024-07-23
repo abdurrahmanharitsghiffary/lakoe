@@ -25,6 +25,7 @@ export function AvatarInput<T extends FieldValues>({
   };
 
   const handleCloseClick = () => {
+    console.log("CLICKED CLOSED");
     setImageSrc("");
   };
 
@@ -48,6 +49,7 @@ export function AvatarInput<T extends FieldValues>({
             animate={{ opacity: 1 }}
           >
             <button
+              tabIndex={-1}
               onClick={handleCloseClick}
               className="rounded-full bg-transparent text-destructive w-8 h-8 hover:bg-transparent absolute right-0 top-0 flex justify-center items-center"
             >

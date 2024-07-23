@@ -68,7 +68,7 @@ export function RegisterForm() {
             </div>
             <Input
               type="password"
-              placeholder="********"
+              placeholder="Enter password"
               {...register("password")}
               required
             />

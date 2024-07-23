@@ -125,8 +125,11 @@ export class ProductService {
           orderBy: [{ price: 'desc' }],
         },
         store: {
-          name: true,
-        }
+          select: {
+            name: true,
+            id: true,
+          },
+        },
       },
     });
 

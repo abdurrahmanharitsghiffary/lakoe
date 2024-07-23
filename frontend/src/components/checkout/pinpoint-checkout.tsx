@@ -1,11 +1,7 @@
 import { Card } from "../ui/card";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import { FaLocationDot } from "react-icons/fa6";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
-// import { SearchField } from "../map/map-search";
-// import { FlyToButton } from "../map/map-fly-to-location";
 import { useState, useRef, useEffect } from "react";
 import { getAddressFromLatLng } from "@/hooks/use-geocoding";
 import {
@@ -19,15 +15,14 @@ import {
 import { PiExclamationMarkDuotone } from "react-icons/pi";
 import { MdLocationOff } from "react-icons/md";
 import { MdLocationOn } from "react-icons/md";
-import { SearchField } from "../map/map-search";
-// import { ClickMap } from "../map/map-click";
+import { MapLeafleet } from "../map/leafleet";
 
 export function PinpointCheckout() {
   const [isPinpointOpen, setIsPinpointOpen] = useState(false);
   const [Position, setPosition] = useState<L.LatLng | null>(null);
   const [address, setAddress] = useState<string | undefined>(undefined);
   const markerRef = useRef<L.Marker<any>>(null);
-
+  console.log(Position, "POSITION");
   const updatePosition = async (latlng: L.LatLng) => {
     setPosition(latlng);
     const address = await getAddressFromLatLng(latlng.lat, latlng.lng);
@@ -57,14 +52,6 @@ export function PinpointCheckout() {
   //   const latlng = e.latlng;
   //   await updatePosition(latlng)
   // };
-
-  const onDragEnd = async () => {
-    const marker = markerRef.current;
-    if (marker != null) {
-      const latlng = marker.getLatLng();
-      await updatePosition(latlng);
-    }
-  };
 
   const coordinate = {
     lat: -6.3818,
@@ -127,52 +114,14 @@ export function PinpointCheckout() {
                     </p>
                   </Card>
                 </DialogDescription>
-                <div className="mt-5">
-                  <div>
-                    <MapContainer
-                      center={[coordinate.lat, coordinate.lng]}
-                      zoom={13}
-                      scrollWheelZoom={false}
-                      style={{ height: "55vh", width: "100%" }}
-                    >
-                      <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                      />
-                      {Position && (
-                        <>
-                          <Marker
-                            position={Position}
-                            draggable={true}
-                            eventHandlers={{
-                              dragend: onDragEnd,
-                            }}
-                            ref={markerRef}
-                          >
-                            <Popup>
-                              <span>
-                                Latitude: {Position.lat.toFixed(5)}, Longitude:{" "}
-                                {Position.lng.toFixed(5)}
-                              </span>
-                            </Popup>
-                          </Marker>
-                          {/* <FlyToButton position={Position} /> */}
-                        </>
-                      )}
-                      <SearchField setPosition={updatePosition} />
-                      {/* <ClickMap onClick={onMapClick}/> */}
-                    </MapContainer>
-                    <div className="mt-6 py-4 flex flex-row gap-2">
-                      <FaLocationDot
-                        className="h-6 w-6"
-                        color="blue
-                    "
-                      />
-
-                      <span className="text-lg mt-[-4px]">{address}</span>
-                    </div>
-                  </div>
-                </div>
+                <MapLeafleet
+                  coordinate={coordinate}
+                  markerRef={markerRef}
+                  onUpdateAddress={setAddress}
+                  onUpdatePosition={setPosition}
+                  position={Position}
+                  address={address}
+                />
               </DialogHeader>
               <DialogFooter>
                 <div className="flex flex-row w-full justify-center gap-4 py-3">
