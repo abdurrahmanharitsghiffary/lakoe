@@ -1,0 +1,11 @@
+REMOVE THROW ERROR ON UPDATE AND DELETE STORE CONTROLLER
+
+- BITESHIP ORDERS
+
+origin_collection_method string
+Optional
+Use the available_collection_method from Rates API. Value can be pickup, or drop_off. Default to pickup.
+pickup your package will be picked by courier based on origin that you specify.
+drop_off you must drop off the package to the nearest courier agent.
+
+LOGGER

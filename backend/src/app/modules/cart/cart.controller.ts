@@ -15,8 +15,6 @@ import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
 import {
   AddCartItemDto,
   addCartItemSchema,
-  CreateCartDto,
-  createCartSchema,
   UpdateCartCountDto,
   updateCartCountSchema,
 } from './dto/cart.dto';
@@ -32,12 +30,12 @@ export class CartController {
     return this.cartService.createCartCollection();
   }
 
-  @Post('carts')
-  async createCart(
-    @Body(new ZodValidationPipe(createCartSchema)) createCartDto: CreateCartDto,
-  ) {
-    return this.cartService.createCart(createCartDto);
-  }
+  // @Post('carts')
+  // async createCart(
+  //   @Body(new ZodValidationPipe(createCartSchema)) createCartDto: CreateCartDto,
+  // ) {
+  //   return this.cartService.createCart(createCartDto);
+  // }
 
   @Get('cart-collections/:id')
   findOneCartCollection(@Param('id') collectionId: string) {

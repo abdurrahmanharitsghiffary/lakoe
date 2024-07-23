@@ -7,7 +7,6 @@ class CartSku {
 }
 
 export class AddCartItemDto {
-  storeId: number;
   skus: CartSku[] = [
     {
       skuId: 1,
@@ -34,8 +33,7 @@ export const skuSchema = z.object({
 });
 
 export const addCartItemSchema = z.object({
-  storeId: z.number().min(1).positive(),
-  skus: z.array(skuSchema).max(5),
+  skus: z.array(skuSchema).max(10),
 });
 
 export type AddCartItemSchema = z.infer<typeof addCartItemSchema>;
