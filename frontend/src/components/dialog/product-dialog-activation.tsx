@@ -9,13 +9,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useFieldArray, useForm } from "react-hook-form";
-import { useToast } from "../ui/use-toast";
 import { Variant } from "@/types/variant";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 type ProductDialogActivationProps = {
   isOpen: boolean;
@@ -40,7 +40,6 @@ export function ProductDialogActivation({
       ],
     },
   });
-  const { toast } = useToast();
 
   const form = useForm({
     values: {
@@ -80,10 +79,7 @@ export function ProductDialogActivation({
   useEffect(() => {
     if (isSubmitSuccessful) {
       if (onConfirm) onConfirm(true);
-      toast({
-        description: "Produk berhasil diaktifkan!",
-        className: "bg-zinc-950 text-white py-4 border-none",
-      });
+      toast("Produk berhasil diaktifkan!");
       onOpen(false);
     }
   }, [isSubmitSuccessful]);

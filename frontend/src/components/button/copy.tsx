@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { Button, ButtonProps } from "../ui/button";
 import { useCopyToClipboard } from "@/hooks/use-copy";
-import { useToast } from "../ui/use-toast";
+import { toast } from "react-toastify";
 
 type ButtonCopyProps = {
   text?: string;
@@ -9,7 +9,6 @@ type ButtonCopyProps = {
 
 const ButtonCopy = forwardRef<HTMLButtonElement, ButtonCopyProps>(
   ({ text, onClick, ...props }, ref) => {
-    const { toast } = useToast();
     const [, copy] = useCopyToClipboard();
     return (
       <Button
@@ -18,10 +17,7 @@ const ButtonCopy = forwardRef<HTMLButtonElement, ButtonCopyProps>(
           if (onClick) onClick(e);
           if (text) {
             await copy(text);
-            toast({
-              title: "Copied to clipboard!",
-              className: "bg-zinc-950 text-white py-4 border-none",
-            });
+            toast("Copied to clipboard!");
           }
         }}
         ref={ref}

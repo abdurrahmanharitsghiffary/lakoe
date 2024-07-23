@@ -39,9 +39,7 @@ import { CartList } from "@/components/cart/cartlist";
 import { AuthorizeNav } from "@/components/authorize/authorize-nav";
 import { CartPage } from "./pages/buyer/cart";
 import { CheckoutPage } from "./pages/buyer/checkout/checkout";
-import { Landing } from "@/features/landing/landing";
-import { Store } from "@/features/store";
-
+import { MustHaveStoreOrRedirect } from "@/components/authorize/have-store-or-redirect";
 
 export const router = createBrowserRouter([
   {
@@ -61,21 +59,6 @@ export const router = createBrowserRouter([
         errorElement: <ErrorPage />,
       },
       {
-        path: "landing",
-        element: <Landing />,
-        errorElement: <ErrorPage />,
-      },
-      {
-        path: "store",
-        element: <Store />,
-        errorElement: <ErrorPage />,
-      },
-      {
-        path: "auth",
-        errorElement: <ErrorPage />,
-        children: [{ path: "new-store", element: <StorePage /> }],
-      },
-      {
         path: "checkout",
         errorElement: <ErrorPage />,
         element: <CheckoutPage />,
@@ -84,6 +67,11 @@ export const router = createBrowserRouter([
         path: "cart",
         errorElement: <ErrorPage />,
         element: <CartList />,
+      },
+      {
+        path: "stores",
+        errorElement: <ErrorPage />,
+        children: [{ path: "create", element: <StorePage /> }],
       },
       {
         path: "auth",
@@ -154,7 +142,11 @@ export const router = createBrowserRouter([
           {
             path: "seller",
             errorElement: <ErrorPage />,
-            element: <SellerLayout />,
+            element: (
+              <MustHaveStoreOrRedirect>
+                <SellerLayout />
+              </MustHaveStoreOrRedirect>
+            ),
             children: [
               { path: "", element: <HomePage /> },
               { path: "dashboard", element: <DashboardSeller /> },

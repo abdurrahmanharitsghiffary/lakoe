@@ -56,6 +56,7 @@ export class AuthService {
           id: true,
           role: true,
           isVerified: true,
+          store: { select: { id: true } },
           profile: {
             select: {
               fullName: true,
@@ -77,7 +78,11 @@ export class AuthService {
         },
       });
 
-      const payload = { id: user.id, role: user.role };
+      const payload = {
+        id: user.id,
+        role: user.role,
+        storeId: user?.store?.id,
+      };
 
       const token = this.jwt.sign(payload);
 
@@ -168,6 +173,7 @@ export class AuthService {
         where: {
           email: response.email,
         },
+        include: { store: { select: { id: true } } },
       });
 
       if (!user || user?.providerType !== null) {
@@ -180,10 +186,14 @@ export class AuthService {
         throw new UnauthorizedException('Invalid credentials.');
       }
 
-      const payload = { id: user.id, role: user.role };
+      const payload = {
+        id: user.id,
+        role: user.role,
+        storeId: user?.store?.id,
+      };
 
       const token = this.jwt.sign(payload);
-
+      console.log(token, 'GENERATED TOKEN');
       await tx.token.create({
         data: {
           token,

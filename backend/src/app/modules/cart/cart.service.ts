@@ -10,7 +10,7 @@ import {
   selectCartItems,
 } from 'src/common/query/cart.select';
 import { PrismaService } from 'src/common/services/prisma.service';
-import { AddCartItemDto, CreateCartDto } from './dto/cart.dto';
+import { AddCartItemDto } from './dto/cart.dto';
 import { ERROR_CODE } from 'src/common/constants';
 import { selectSKU } from 'src/common/query/sku.select';
 import { ApiErrorResponse } from 'src/common/class/api-response';
@@ -98,31 +98,31 @@ export class CartService {
     return this.checkCartCollectionMustExists(collectionId);
   }
 
-  async createCart(createCartDto: CreateCartDto, skipUniqueCheck?: boolean) {
-    if (!skipUniqueCheck)
-      await this.ensureCartIsUnique(
-        createCartDto.collectionId,
-        createCartDto.storeId,
-      );
+  // async createCart(createCartDto: CreateCartDto, skipUniqueCheck?: boolean) {
+  //   if (!skipUniqueCheck)
+  //     await this.ensureCartIsUnique(
+  //       createCartDto.collectionId,
+  //       createCartDto.storeId,
+  //     );
 
-    if (createCartDto?.skus)
-      await this.checkSkuIsExistsAndUnique(createCartDto as any);
+  //   if (createCartDto?.skus)
+  //     await this.validateSkus(createCartDto as any);
 
-    const cart = await this.prismaService.cart.create({
-      data: {
-        cartCollectionId: createCartDto.collectionId,
-        storeId: createCartDto.storeId,
-      },
-    });
+  //   const cart = await this.prismaService.cart.create({
+  //     data: {
+  //       cartCollectionId: createCartDto.collectionId,
+  //       storeId: createCartDto.storeId,
+  //     },
+  //   });
 
-    if (createCartDto?.skus)
-      await this.addCartItems(
-        createCartDto.collectionId,
-        createCartDto as any,
-        true,
-      );
-    return cart;
-  }
+  //   if (createCartDto?.skus)
+  //     await this.addCartItems(
+  //       createCartDto.collectionId,
+  //       createCartDto as any,
+  //       true,
+  //     );
+  //   return cart;
+  // }
 
   async createCartCollection() {
     const cartCollection = await this.prismaService.cartCollection.create({
@@ -178,36 +178,56 @@ export class CartService {
     return this.updateCartCountOrDelete(cartId, skuId, 1);
   }
 
-  async checkSkuIsExistsAndUnique(addCartItemDto: AddCartItemDto) {
+  async validateSkus(addCartItemDto: AddCartItemDto) {
     const errors = [];
 
     const skuIds = (addCartItemDto?.skus ?? []).map((sku) => sku.skuId);
 
     const skus = await this.prismaService.sKU.findMany({
       where: { id: { in: skuIds } },
-      select: { product: { select: { storeId: true } }, id: true },
+      select: {
+        isActive: true,
+        stock: true,
+        product: { select: { isActive: true, storeId: true, id: true } },
+        id: true,
+      },
     });
-    console.log(skuIds);
-    console.log(skus, 'SKUS');
-    skuIds.forEach((skuId) => {
-      const sku = skus.find((sku) => sku.id === skuId);
+
+    addCartItemDto.skus.forEach((sk) => {
+      const sku = skus.find((sku) => sku.id === sk.skuId);
 
       if (!sku)
         return errors.push({
           message: 'SKU is not found.',
-          skuId,
+          skuId: sk.skuId,
           code: ERROR_CODE.NOT_FOUND,
         });
-
-      if (sku.product.storeId !== addCartItemDto.storeId) {
+      console.log(sku, sk.qty);
+      if (sku.stock < sk.qty) {
         errors.push({
-          message: 'Cannot add SKU from a different store.',
-          skuId: sku.id,
-          skuStoreId: sku.product.storeId,
-          cartStoreId: addCartItemDto.storeId,
-          code: ERROR_CODE.FORBIDDEN,
+          message: 'Insufficient stock.',
+          requestedStock: sk.qty,
+          skuStock: sku.stock,
+          code: ERROR_CODE.INSUFFICIENT_STOCK,
         });
       }
+
+      // if (!sku.isActive) {
+      //   errors.push({
+      //     message: 'SKU is inactive.',
+      //     code: ERROR_CODE.INACTIVE,
+      //     skuId: sku.id,
+      //   });
+      // }
+
+      // if (!sku.product.isActive) {
+      //   errors.push({
+      //     message: 'Product sku is inactive.',
+      //     code: ERROR_CODE.INACTIVE,
+      //     skuId: sku.id,
+      //     productId: sku.product.id,
+      //   });
+      // }
     });
 
     if (errors.length > 0)
@@ -219,34 +239,58 @@ export class CartService {
     return skus;
   }
 
-  async addCartItems(
-    collectionId: string,
-    addCartItemDto: AddCartItemDto,
-    skipCheckSku?: boolean,
-  ) {
-    if (!skipCheckSku) await this.checkSkuIsExistsAndUnique(addCartItemDto);
-
-    return await this.prismaService.cart.upsert({
-      where: {
-        storeId_cartCollectionId: {
-          cartCollectionId: collectionId,
-          storeId: addCartItemDto.storeId,
+  async addCartItems(collectionId: string, addCartItemDto: AddCartItemDto) {
+    await this.validateSkus(addCartItemDto);
+    addCartItemDto.skus.map(async (sk) => {
+      const sku = await this.prismaService.sKU.findUnique({
+        where: { id: sk.skuId },
+        select: {
+          product: { select: { storeId: true } },
+          cartItems: { select: { cartId: true } },
         },
-      },
-      create: {
-        storeId: addCartItemDto.storeId,
-        cartCollectionId: collectionId,
-        cartItems: {
-          createMany: {
-            data: addCartItemDto.skus.map((sku) => ({
-              skuId: sku.skuId,
-              qty: sku.qty,
-            })),
-            skipDuplicates: true,
+      });
+
+      const storeId = sku?.product?.storeId || -1;
+      const cart = await this.prismaService.cart.findUnique({
+        where: {
+          storeId_cartCollectionId: {
+            storeId,
+            cartCollectionId: collectionId,
           },
         },
-      },
-      update: {},
+      });
+
+      const cartId = cart?.id || '';
+
+      return await this.prismaService.cart.upsert({
+        where: {
+          storeId_cartCollectionId: {
+            cartCollectionId: collectionId,
+            storeId,
+          },
+        },
+        create: {
+          storeId,
+          cartCollectionId: collectionId,
+          cartItems: {
+            create: { qty: sk.qty, skuId: sk.skuId },
+          },
+        },
+        update: {
+          cartItems: {
+            upsert: {
+              create: { qty: sk.qty, skuId: sk.skuId },
+              update: { qty: sk.qty },
+              where: {
+                cartId_skuId: {
+                  skuId: sk.skuId,
+                  cartId,
+                },
+              },
+            },
+          },
+        },
+      });
     });
   }
 

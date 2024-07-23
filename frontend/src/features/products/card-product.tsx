@@ -1,12 +1,12 @@
-import ProductDialogActivation from "@/components/dialog/product-dialog-activation";
+import { ProductDialogActivation } from "@/components/dialog/product-dialog-activation";
 import { Image } from "@/components/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export type ProductVariant = {
   name: string;
@@ -39,7 +39,6 @@ export function CardProduct({
   stock,
   productVariants = [],
 }: CardProductProps) {
-  const { toast } = useToast();
   const [isSwitched, setIsSwitched] = useState(isActive);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -55,11 +54,7 @@ export function CardProduct({
       setIsOpen(true);
       return;
     }
-    if (isSwitched)
-      toast({
-        description: "Produk berhasil diaktifkan!",
-        className: "bg-zinc-950 text-white py-4",
-      });
+    if (isSwitched) toast.success("Produk berhasil diaktifkan!");
     setIsSwitched((c) => !c);
   };
 

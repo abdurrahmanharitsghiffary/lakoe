@@ -46,7 +46,7 @@ export function LoginForm() {
             </div>
             <Input
               type="password"
-              placeholder="••••••••"
+              placeholder="Enter your account password"
               {...register("password")}
               required
             />
