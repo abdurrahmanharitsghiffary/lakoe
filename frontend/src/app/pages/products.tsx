@@ -1,16 +1,7 @@
-import LakoeCheckbox from "@/components/checkbox/lakoe";
+import { LakoeCheckbox } from "@/components/checkbox/lakoe";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-// import {
-//   MultiSelector,
-//   MultiSelectorContent,
-//   MultiSelectorInput,
-//   MultiSelectorItem,
-//   MultiSelectorList,
-//   MultiSelectorTrigger,
-// } from "@/components/ui/multi-select";
-
 import {
   Select,
   SelectContent,
@@ -18,7 +9,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Typography from "@/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import { dummyProducts } from "@/data/dummy-products";
 import { CardProduct } from "@/features/products/card-product";
 import { cn } from "@/lib/utils";

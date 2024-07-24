@@ -1,5 +1,4 @@
 import React from "react";
-import { useSession } from "@/hooks/use-session";
 import { Navigate } from "react-router-dom";
 import { useGetMe } from "@/features/me/api/me-api";
 
@@ -12,7 +11,7 @@ export function MustHaveStoreOrRedirect({
   redirectTo = "/seller/stores/create",
   children,
 }: MustHaveStoreOrRedirectProps) {
-  const { data, isSuccess } = useGetMe();
+  const { data, isSuccess } = useGetMe({ queryConfig: { retry: false } });
 
   const isNotHaveStore = !data?.data?.hasStore && isSuccess;
 
@@ -25,7 +24,7 @@ export function HaveStoreAndRedirect({
   redirectTo = "/seller/settings/store",
   children,
 }: MustHaveStoreOrRedirectProps) {
-  const { data, isSuccess } = useGetMe();
+  const { data, isSuccess } = useGetMe({ queryConfig: { retry: false } });
 
   const isHaveStore = data?.data?.hasStore && isSuccess;
 

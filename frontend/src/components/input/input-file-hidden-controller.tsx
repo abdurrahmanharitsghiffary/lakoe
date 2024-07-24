@@ -43,7 +43,7 @@ export function InputFileHiddenControlled<T extends FieldValues>({
   };
 
   return (
-    <div {...divP} className={cn("relative", className)}>
+    <div {...divP} className={cn("relative w-fit", className)}>
       <input
         {...props}
         {...field}

@@ -12,7 +12,7 @@ export function AuthorizeNav({
   children,
   whenVerified = false,
 }: AuthorizeNavProps) {
-  const { data, isSuccess } = useGetMe();
+  const { data, isSuccess } = useGetMe({ queryConfig: { retry: false } });
 
   if (
     (!data?.data.isVerified && !whenVerified && isSuccess) ||
