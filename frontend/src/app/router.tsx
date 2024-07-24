@@ -19,7 +19,6 @@ import { RejectedWithdrawalPage } from "./pages/admin/withdrawal/rejected";
 import { OnProcessWithdrawalPage } from "./pages/admin/withdrawal/on-process";
 import { LoginPage } from "./pages/auth/login";
 import { CreateProductPage } from "./pages/seller/create-product";
-import { CardOrderBuyer } from "@/features/orders/components/buyer/card-order";
 import { DashboardSeller } from "./pages/seller/dashboard";
 import { RegisterPage } from "./pages/auth/regist";
 import { Delivery } from "@/features/settings/components/delivery";
@@ -38,7 +37,11 @@ import { EditProfilePage } from "./pages/profile/edit-profile";
 import { CartList } from "@/components/cart/cartlist";
 import { AuthorizeNav } from "@/components/authorize/authorize-nav";
 import { CheckoutPage } from "./pages/buyer/checkout/checkout";
-import { MustHaveStoreOrRedirect } from "@/components/authorize/have-store-or-redirect";
+import {
+  HaveStoreAndRedirect,
+  MustHaveStoreOrRedirect,
+} from "@/components/authorize/have-store-or-redirect";
+import { Landing } from "@/features/landing/landing";
 
 export const router = createBrowserRouter([
   {
@@ -48,7 +51,7 @@ export const router = createBrowserRouter([
       {
         path: "/",
         children: [
-          { path: "", element: <CardOrderBuyer /> },
+          { path: "", element: <Landing /> },
           {
             path: "cart",
             element: <CartList />,
@@ -58,7 +61,6 @@ export const router = createBrowserRouter([
         element: <BuyerLayout />,
         errorElement: <ErrorPage />,
       },
-
       {
         path: "auth",
         element: <AuthLayout />,
@@ -96,7 +98,7 @@ export const router = createBrowserRouter([
       {
         path: "",
         id: "private-admin-only",
-        element: <Authorize roles={["ADMIN", "USER"]} />,
+        element: <Authorize roles={["ADMIN"]} />,
         children: [
           {
             path: "admin",
@@ -133,7 +135,16 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "stores",
-            children: [{ path: "create", element: <StorePage /> }],
+            children: [
+              {
+                path: "create",
+                element: (
+                  <HaveStoreAndRedirect>
+                    <StorePage />
+                  </HaveStoreAndRedirect>
+                ),
+              },
+            ],
           },
           {
             path: "",

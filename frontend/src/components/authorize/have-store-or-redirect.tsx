@@ -1,6 +1,7 @@
 import React from "react";
 import { useSession } from "@/hooks/use-session";
 import { Navigate } from "react-router-dom";
+import { useGetMe } from "@/features/me/api/me-api";
 
 type MustHaveStoreOrRedirectProps = {
   redirectTo?: string;
@@ -8,12 +9,27 @@ type MustHaveStoreOrRedirectProps = {
 };
 
 export function MustHaveStoreOrRedirect({
-  redirectTo = "/stores/create",
+  redirectTo = "/seller/stores/create",
   children,
 }: MustHaveStoreOrRedirectProps) {
-  const { user } = useSession();
-  console.log(user?.storeId, "USERE");
-  if (user && !user?.storeId) return <Navigate to={redirectTo} />;
+  const { data, isSuccess } = useGetMe();
+
+  const isNotHaveStore = !data?.data?.hasStore && isSuccess;
+
+  if (isNotHaveStore) return <Navigate to={redirectTo} />;
+
+  return children;
+}
+
+export function HaveStoreAndRedirect({
+  redirectTo = "/seller/settings/store",
+  children,
+}: MustHaveStoreOrRedirectProps) {
+  const { data, isSuccess } = useGetMe();
+
+  const isHaveStore = data?.data?.hasStore && isSuccess;
+
+  if (isHaveStore) return <Navigate to={redirectTo} />;
 
   return children;
 }

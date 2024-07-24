@@ -17,6 +17,7 @@ export const selectUser = {
   email: true,
   role: true,
   isVerified: true,
+  hasStore: true,
   profile: {
     select: {
       ...selectUserSimplified.profile.select,

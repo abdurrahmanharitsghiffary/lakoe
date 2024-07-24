@@ -20,6 +20,7 @@ import { PrismaService } from 'src/common/services/prisma.service';
 import { selectUser } from 'src/common/query/user.select';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
+import { omitProperties } from 'src/common/utils/omit-properties';
 
 @ApiTags('Me')
 @ApiJwtBearerAuth()
@@ -33,10 +34,16 @@ export class MeController {
 
   @Get()
   async getProfile(@User() user: UserPayload) {
-    return this.prismaService.user.findUnique({
+    const me = await this.prismaService.user.findUnique({
       where: { id: user?.id },
-      select: selectUser,
+      select: { ...selectUser, store: { select: { id: true } } },
     });
+
+    return {
+      ...omitProperties(me, ['store']),
+      hasStore: me?.store?.id !== null,
+      storeId: me?.store?.id,
+    };
   }
 
   @Get('stores')

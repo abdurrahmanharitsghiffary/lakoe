@@ -83,12 +83,6 @@ export class ProductService {
     });
   }
 
-  findAll() {
-    return this.prismaService.product.findMany({
-      select: selectProductSimplified,
-    });
-  }
-
   async search({ q, active, categories, sort_by }: GetProductOption) {
     let priceSortOptions;
     let stockSortOptions;
@@ -129,6 +123,12 @@ export class ProductService {
         skus: {
           select: { stock: true, price: true },
           orderBy: [{ price: 'desc' }],
+        },
+        store: {
+          select: {
+            name: true,
+            id: true,
+          },
         },
       },
     });

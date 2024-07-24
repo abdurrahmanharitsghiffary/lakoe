@@ -1,4 +1,6 @@
 export type Profile = {
+  hasStore: boolean;
+  storeId: number;
   profile: {
     fullName: string;
     username: string;

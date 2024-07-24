@@ -9,9 +9,7 @@ import {
 } from "../ui/dialog";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { FaCheck } from "react-icons/fa6";
-
 import { Label } from "../ui/label";
-
 import { Textarea } from "../ui/textarea";
 import { SelectInput } from "../input/select-input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -23,7 +21,10 @@ import {
   CommandItem,
 } from "../ui/command";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { MapLeafleet } from "../map/leafleet";
+import { getAddressFromLatLng } from "@/hooks/use-geocoding";
+import L from "leaflet";
 
 export type Props = {
   isOpen: boolean;
@@ -31,6 +32,46 @@ export type Props = {
 };
 
 export function AddLocationDialog({ isOpen, onOpen }: Props) {
+  // const [isPinpointOpen, setIsPinpointOpen] = useState(false);
+  const [Position, setPosition] = useState<L.LatLng | null>(null);
+  const [address, setAddress] = useState<string | undefined>(undefined);
+  const markerRef = useRef<L.Marker<any>>(null);
+  console.log(Position, "POSITION");
+  const updatePosition = async (latlng: L.LatLng) => {
+    setPosition(latlng);
+    const address = await getAddressFromLatLng(latlng.lat, latlng.lng);
+
+    setAddress(address);
+  };
+
+  useEffect(() => {
+    const handleSuccess = async (pos: GeolocationPosition) => {
+      const { latitude, longitude } = pos.coords;
+      const latLng = new L.LatLng(latitude, longitude);
+      await updatePosition(latLng);
+    };
+
+    const handleError = (error: GeolocationPositionError) => {
+      console.error(error);
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(handleSuccess, handleError);
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, []);
+
+  // const onMapClick = async (e: L.LeafletMouseEvent) => {
+  //   const latlng = e.latlng;
+  //   await updatePosition(latlng)
+  // };
+
+  const coordinate = {
+    lat: -6.3818,
+    lng: 106.7496,
+  };
+
   const postOptions = [
     { value: "jakarta", name: "154123" },
     { value: "depok", name: "19087" },
@@ -123,9 +164,13 @@ export function AddLocationDialog({ isOpen, onOpen }: Props) {
             <p className="text-sm text-gray-400">
               Tandain lokasi untuk mempermudah permintaan pickup kurir
             </p>
-            <img
-              className="w-full h-36"
-              src="https://images.unsplash.com/photo-1568317711805-97917847953d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            <MapLeafleet
+              coordinate={coordinate}
+              markerRef={markerRef}
+              onUpdateAddress={setAddress}
+              onUpdatePosition={setPosition}
+              position={Position}
+              address={address}
             />
           </div>
           <DialogFooter>

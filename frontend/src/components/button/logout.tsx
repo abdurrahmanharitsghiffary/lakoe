@@ -19,8 +19,8 @@ export function LogoutButton(props: ButtonProps) {
       actionProps: { variant: "destructive" },
       cancelProps: { variant: "secondary" },
     });
-    logout();
     queryClient.invalidateQueries({ queryKey: getMeOptions().queryKey });
+    logout();
     navigate("/auth/login");
   };
 

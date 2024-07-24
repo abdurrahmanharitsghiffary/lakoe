@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 
 export function Header() {
   return (
-    <div>
+    <div className=" flex flex-col w-full fixed z-10 bg-white mt-[-40px]">
       <Menubar className="text-gray-400 justify-end bg-gray-100 py-2">
         <MenubarMenu>
           <Link to="/landing">
@@ -28,7 +28,7 @@ export function Header() {
         </MenubarMenu>
       </Menubar>
 
-      <div className="flex items-center gap-5 my-5 px-4">
+      <div className="flex items-center gap-5 my-3 px-4">
         <Typography >Lakoe</Typography>
         <div className="relative w-full max-w-[500px] m-auto">
           <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -42,7 +42,9 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4 ml-auto">
-          {/* <SlBasket className="text-gray-500 w-6 h-6" /> */}
+         <Link to="/cart">
+         <SlBasket className="text-gray-500 w-6 h-6" />
+         </Link>
           <Link to="/auth/login">
             <Button variant="outline">Masuk</Button>
           </Link>

@@ -6,7 +6,7 @@ import { BannerInput } from "../input/banner-input";
 import { useStore } from "@/hooks/use-store";
 
 export function StoreForm() {
-  const { register, handleSubmit, errors, onSubmit } = useStore();
+  const { register, handleSubmit, errors, onSubmit, control } = useStore();
   console.log(errors);
 
   // const { onChange, ...bannerField } = register("bannerAttachment");
@@ -28,18 +28,10 @@ export function StoreForm() {
                 className="flex flex-col gap-2"
               >
                 <div className="flex justify-center">
-                  <AvatarInput {...register("logo")} />
+                  <AvatarInput control={control} name="logo" />
                 </div>
                 <div>
-                  <BannerInput
-                    {...register("banner")}
-                    // {...bannerField}
-                    // onChange={(e) => {
-                    //   const file = e.target?.files?.[0];
-                    //   onChange(file);
-                    //   e.target.value = "";
-                    // }}
-                  />
+                  <BannerInput control={control} name="banner" />
                 </div>
                 <div className="grid gap-2">
                   <InputForm
