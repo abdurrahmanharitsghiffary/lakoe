@@ -186,7 +186,7 @@ export class OrderService {
         data: {
           status: 'pending',
           amount: totalPrice,
-          serviceCharge: 0,
+          serviceCharge: 500,
           receiverContactName: invoiceData.receiverContactName,
           receiverContactPhone: invoiceData.receiverContactPhone,
           receiverName: invoiceData.receiverName,
@@ -478,11 +478,11 @@ export class OrderService {
     const orders = await this.prismaService.order.findMany({
       where: {
         storeId,
-        description: { contains: options?.q ?? '' },
-        courier: {
-          courierCode: { in: options?.couriers?.split(',') },
-        },
-        status: { in: options?.status?.split(',') as any },
+        // description: { contains: options?.q ?? '' },
+        // courier: {
+        //   courierCode: { in: options?.couriers?.split(',') },
+        // },
+        // status: { in: options?.status?.split(',') as any },
       },
       orderBy: [{ createdAt: createdDateSortOption }, { id: 'asc' }],
       select: selectOrderSimplified,

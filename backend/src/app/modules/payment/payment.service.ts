@@ -24,6 +24,7 @@ export class PaymentService {
               payment: { select: { id: true } },
               id: true,
               amount: true,
+              status: true,
             },
           },
           orderDetails: {
@@ -120,7 +121,7 @@ export class PaymentService {
       const { token, order_id, redirect_url } = transaction;
 
       await tx.payment.upsert({
-        where: { id: order?.invoice?.payment?.id },
+        where: { id: order?.invoice?.payment?.id || -1 },
         update: {
           bank: 'unknown',
           midtransOrderId,
@@ -200,6 +201,32 @@ export class PaymentService {
         data: { status: 'NEW_ORDER' },
       });
     }
+
+    if (
+      statusResponse.transaction_status === 'settlement' ||
+      statusResponse.transaction_status === 'capture'
+    ) {
+      const invoiceId = updatedPayment?.invoice?.orderId;
+
+      const invoice = await this.prisma.invoice.findUnique({
+        where: {
+          id: invoiceId,
+        },
+      });
+
+      if (invoice)
+        throw new NotFoundException(`Invoice with ${invoiceId} not found`);
+    }
+
+    await this.prisma.invoice.update({
+      where: {
+        id: updatedPayment?.invoice?.orderId,
+      },
+      data: {
+        amount: statusResponse.gross_amount,
+        status: statusResponse.transaction_status,
+      },
+    });
 
     return updatedPayment;
   }

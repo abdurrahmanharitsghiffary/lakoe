@@ -10,7 +10,7 @@ export function OrdersPage() {
         <title>Order</title>
       </Helmet>
       <OrderTabs />
-      <OrderList />
+      <OrderList storeId="1" />
     </Card>
   );
 }

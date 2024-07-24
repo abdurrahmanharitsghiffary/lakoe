@@ -28,3 +28,17 @@ export type OrderStatus =
   | "ON_DELIVERY"
   | "SUCCESS"
   | "CANCELLED";
+
+export type AllOrder = {
+  createdAt: string; // ISO date string
+  description: string;
+  id: string;
+  status: OrderStatus;
+  updatedAt: string; // ISO date string
+  invoice: string | null;
+  courier: string | null;
+  _count: {
+    orderDetails: number;
+  };
+  skus: any[];
+};
