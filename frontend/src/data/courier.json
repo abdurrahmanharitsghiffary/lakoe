@@ -1,0 +1,525 @@
+[
+  {
+    "courierCode": "gojek",
+    "courierServiceName": "Instant",
+    "courierServiceCode": "instant",
+    "description": "On Demand Instant (bike)"
+  },
+  {
+    "courierCode": "gojek",
+    "courierServiceName": "Same Day",
+    "courierServiceCode": "same_day",
+    "description": "On Demand within 8 hours (bike)"
+  },
+  {
+    "courierCode": "grab",
+    "courierServiceName": "Instant",
+    "courierServiceCode": "instant",
+    "description": "On Demand Instant (bike)"
+  },
+  {
+    "courierCode": "grab",
+    "courierServiceName": "Same Day",
+    "courierServiceCode": "same_day",
+    "description": "On Demand within 8 hours (bike)"
+  },
+  {
+    "courierCode": "grab",
+    "courierServiceName": "Instant Car",
+    "courierServiceCode": "instant_car",
+    "description": "Grab Car Express"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "Tronton Wing Box",
+    "courierServiceCode": "tronton_wing_box",
+    "description": "Tronton Wing Box"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "Tronton Box",
+    "courierServiceCode": "tronton_box",
+    "description": "Tronton Box"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "Fuso Heavy",
+    "courierServiceCode": "fuso_heavy",
+    "description": "Fuso Heavy"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "Fuso Lite",
+    "courierServiceCode": "fuso_light",
+    "description": "Fuso Lite"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "CDD Box",
+    "courierServiceCode": "cdd_box",
+    "description": "CDD Box"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "CDD Pickup",
+    "courierServiceCode": "cdd_pickup",
+    "description": "CDD Pickup"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "CDE - Frozen",
+    "courierServiceCode": "cde_frozen",
+    "description": "CDE - Frozen"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "CDE - Flammable",
+    "courierServiceCode": "cde_flammable",
+    "description": "CDE - Flammable"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "CDE - Chemical",
+    "courierServiceCode": "cde_chemical",
+    "description": "CDE - Chemical"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "Engkel Box",
+    "courierServiceCode": "engkel_box",
+    "description": "Engkel Box"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "Engkel Pickup",
+    "courierServiceCode": "engkel_pickup",
+    "description": "Engkel Pickup"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "Small Box",
+    "courierServiceCode": "small_box",
+    "description": "Small Box"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "Pickup",
+    "courierServiceCode": "pickup",
+    "description": "Pickup"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "Van",
+    "courierServiceCode": "van",
+    "description": "Van"
+  },
+  {
+    "courierCode": "deliveree",
+    "courierServiceName": "Economy",
+    "courierServiceCode": "economy",
+    "description": "Economy"
+  },
+  {
+    "courierCode": "jne",
+    "courierServiceName": "Reguler",
+    "courierServiceCode": "reg",
+    "description": "Regular service"
+  },
+  {
+    "courierCode": "jne",
+    "courierServiceName": "YES",
+    "courierServiceCode": "yes",
+    "description": "Express, next day"
+  },
+  {
+    "courierCode": "jne",
+    "courierServiceName": "OKE",
+    "courierServiceCode": "oke",
+    "description": "Economy servive"
+  },
+  {
+    "courierCode": "jne",
+    "courierServiceName": "JTR",
+    "courierServiceCode": "jtr",
+    "description": "Trucking with minimum weight of 10 kg"
+  },
+  {
+    "courierCode": "jne",
+    "courierServiceName": "JTR 150 250",
+    "courierServiceCode": "jtr_150_250",
+    "description": "Trucking for motorbike with 150cc to 250cc"
+  },
+  {
+    "courierCode": "jne",
+    "courierServiceName": "JTR 150",
+    "courierServiceCode": "jtr_150",
+    "description": "Trucking for motorbike below 150cc"
+  },
+  {
+    "courierCode": "jne",
+    "courierServiceName": "JTR 250",
+    "courierServiceCode": "jtr_250",
+    "description": "Trucking for motorbike above 250cc"
+  },
+  {
+    "courierCode": "tiki",
+    "courierServiceName": "EKO",
+    "courierServiceCode": "eko",
+    "description": "Economic service"
+  },
+  {
+    "courierCode": "tiki",
+    "courierServiceName": "SDS",
+    "courierServiceCode": "sds",
+    "description": "same day service"
+  },
+  {
+    "courierCode": "tiki",
+    "courierServiceName": "REG",
+    "courierServiceCode": "reg",
+    "description": "Layanan reguler"
+  },
+  {
+    "courierCode": "tiki",
+    "courierServiceName": "ONS",
+    "courierServiceCode": "ons",
+    "description": "One night service"
+  },
+  {
+    "courierCode": "tiki",
+    "courierServiceName": "T15",
+    "courierServiceCode": "t15",
+    "description": "Motor di bawah 150CC"
+  },
+  {
+    "courierCode": "tiki",
+    "courierServiceName": "T25",
+    "courierServiceCode": "t25",
+    "description": "Motor di bawah 250CC"
+  },
+  {
+    "courierCode": "tiki",
+    "courierServiceName": "T60",
+    "courierServiceCode": "t60",
+    "description": "Motor di bawah 600CC"
+  },
+  {
+    "courierCode": "tiki",
+    "courierServiceName": "Trucking",
+    "courierServiceCode": "trc",
+    "description": "TIKI Trucking"
+  },
+  {
+    "courierCode": "ninja",
+    "courierServiceName": "Standard",
+    "courierServiceCode": "standard",
+    "description": "Layanan standard"
+  },
+  {
+    "courierCode": "lion",
+    "courierServiceName": "Reg Pack",
+    "courierServiceCode": "reg_pack",
+    "description": "Layanan standard"
+  },
+  {
+    "courierCode": "lion",
+    "courierServiceName": "Land Pack",
+    "courierServiceCode": "land_pack",
+    "description": "Pengiriman menggunakan kereta api"
+  },
+  {
+    "courierCode": "lion",
+    "courierServiceName": "One Pack",
+    "courierServiceCode": "one_pack",
+    "description": "Layanan besok sampai"
+  },
+  {
+    "courierCode": "lion",
+    "courierServiceName": "Jago Pack",
+    "courierServiceCode": "jago_pack",
+    "description": "Pengiriman standard"
+  },
+  {
+    "courierCode": "lion",
+    "courierServiceName": "Docu Pack",
+    "courierServiceCode": "docu_pack",
+    "description": "Pengiriman dokumen"
+  },
+  {
+    "courierCode": "lion",
+    "courierServiceName": "Big Pack",
+    "courierServiceCode": "big_pack",
+    "description": "Layanan trucking Lion Parcel"
+  },
+  {
+    "courierCode": "rara",
+    "courierServiceName": "Instant",
+    "courierServiceCode": "instant",
+    "description": "Instant delivery service"
+  },
+  {
+    "courierCode": "sicepat",
+    "courierServiceName": "Reguler",
+    "courierServiceCode": "reg",
+    "description": "Layanan reguler"
+  },
+  {
+    "courierCode": "sicepat",
+    "courierServiceName": "Best",
+    "courierServiceCode": "best",
+    "description": "Besok sampai tujuan"
+  },
+  {
+    "courierCode": "sicepat",
+    "courierServiceName": "SDS",
+    "courierServiceCode": "sds",
+    "description": "Same day service"
+  },
+  {
+    "courierCode": "sicepat",
+    "courierServiceName": "GOKIL",
+    "courierServiceCode": "gokil",
+    "description": "Layanan kargo"
+  },
+  {
+    "courierCode": "jnt",
+    "courierServiceName": "EZ",
+    "courierServiceCode": "ez",
+    "description": "Layanan reguler"
+  },
+  {
+    "courierCode": "idexpress",
+    "courierServiceName": "Reguler",
+    "courierServiceCode": "reg",
+    "description": "Layanan reguler"
+  },
+  {
+    "courierCode": "idexpress",
+    "courierServiceName": "Same Day",
+    "courierServiceCode": "smd",
+    "description": "Layanan Same Day"
+  },
+  {
+    "courierCode": "idexpress",
+    "courierServiceName": "ID Truck",
+    "courierServiceCode": "idtruck",
+    "description": "Layanan Trucking"
+  },
+  {
+    "courierCode": "rpx",
+    "courierServiceName": "Same Day Package",
+    "courierServiceCode": "sdp",
+    "description": "Layanan sampai di hari yang sama."
+  },
+  {
+    "courierCode": "rpx",
+    "courierServiceName": "Mid Day Package",
+    "courierServiceCode": "mdp",
+    "description": "Layanan tiba sebelum jam 12 siang esoknya"
+  },
+  {
+    "courierCode": "rpx",
+    "courierServiceName": "Next Day Package",
+    "courierServiceCode": "ndp",
+    "description": "Layanan sampai 1 hari kerja."
+  },
+  {
+    "courierCode": "rpx",
+    "courierServiceName": "Reguler Package",
+    "courierServiceCode": "rgp",
+    "description": "Pengiriman standard"
+  },
+  {
+    "courierCode": "rpx",
+    "courierServiceName": "Paket Ambil Suka-suka",
+    "courierServiceCode": "pas",
+    "description": "Pengambilan barang mandiri di lokasi mitra RPX"
+  },
+  {
+    "courierCode": "rpx",
+    "courierServiceName": "Economy Delivery",
+    "courierServiceCode": "ecp",
+    "description": "Kirim paket >10 kg dengan biaya hemat"
+  },
+  {
+    "courierCode": "rpx",
+    "courierServiceName": "Heavy Weight Delivery",
+    "courierServiceCode": "hwp",
+    "description": "Kirim paket >20 kg dengan biaya hemat"
+  },
+
+  {
+    "courierCode": "wahana",
+    "courierServiceName": "Normal",
+    "courierServiceCode": "normal",
+    "description": "Layanan standard"
+  },
+  {
+    "courierCode": "pos",
+    "courierServiceName": "Kilat Khusus",
+    "courierServiceCode": "kilat_khusus",
+    "description": "Layanan kilat khusus"
+  },
+  {
+    "courierCode": "pos",
+    "courierServiceName": "Q9 Same Day",
+    "courierServiceCode": "q9_same_day",
+    "description": "Layanan max 9 jam sampai. Cut off pukul 16:00"
+  },
+  {
+    "courierCode": "pos",
+    "courierServiceName": "Same Day",
+    "courierServiceCode": "same_day",
+    "description": "Layanan sampai di hari yang sama"
+  },
+  {
+    "courierCode": "pos",
+    "courierServiceName": "Next Day",
+    "courierServiceCode": "next_day",
+    "description": "Layanan paket besok sampai"
+  },
+  {
+    "courierCode": "pos",
+    "courierServiceName": "Jumbo Ekonomi",
+    "courierServiceCode": "jumbo_ekonomi",
+    "description": "Layanan dengan tarif tingkat berat pertama mulai dari 3kg - 30kg"
+  },
+  {
+    "courierCode": "anteraja",
+    "courierServiceName": "Reguler",
+    "courierServiceCode": "reg",
+    "description": "Regular shipment"
+  },
+  {
+    "courierCode": "anteraja",
+    "courierServiceName": "Same Day",
+    "courierServiceCode": "same_day",
+    "description": "Same day service for Jakarta Area"
+  },
+  {
+    "courierCode": "anteraja",
+    "courierServiceName": "Next Day",
+    "courierServiceCode": "next_day",
+    "description": "Next day service delivery"
+  },
+  {
+    "courierCode": "sap",
+    "courierServiceName": "REG",
+    "courierServiceCode": "reg",
+    "description": "Regular service"
+  },
+  {
+    "courierCode": "sap",
+    "courierServiceName": "ODS",
+    "courierServiceCode": "ods",
+    "description": "One Day Service"
+  },
+  {
+    "courierCode": "sap",
+    "courierServiceName": "SDS",
+    "courierServiceCode": "sds",
+    "description": "Same Day Service"
+  },
+  {
+    "courierCode": "sap",
+    "courierServiceName": "Cargo",
+    "courierServiceCode": "cargo",
+    "description": "Cargo Land Service"
+  },
+  {
+    "courierCode": "paxel",
+    "courierServiceName": "Small Package",
+    "courierServiceCode": "small",
+    "description": "Layanan paket small"
+  },
+  {
+    "courierCode": "paxel",
+    "courierServiceName": "Medium Package",
+    "courierServiceCode": "medium",
+    "description": "Layanan paket medium"
+  },
+  {
+    "courierCode": "paxel",
+    "courierServiceName": "Large Package",
+    "courierServiceCode": "large",
+    "description": "Layanan paket large"
+  },
+  {
+    "courierCode": "paxel",
+    "courierServiceName": "Paxel Big",
+    "courierServiceCode": "paxel_big",
+    "description": "Layanan kargo paxel big"
+  },
+  {
+    "courierCode": "mrspeedy",
+    "courierServiceName": "Instant Bike",
+    "courierServiceCode": "instant_bike",
+    "description": "Delivery using bike"
+  },
+  {
+    "courierCode": "mrspeedy",
+    "courierServiceName": "Instant Car",
+    "courierServiceCode": "instant_car",
+    "description": "Delivery using car"
+  },
+  {
+    "courierCode": "borzo",
+    "courierServiceName": "Instant Bike",
+    "courierServiceCode": "instant_bike",
+    "description": "Delivery using bike"
+  },
+  {
+    "courierCode": "borzo",
+    "courierServiceName": "Instant Car",
+    "courierServiceCode": "instant_car",
+    "description": "Delivery using car"
+  },
+  {
+    "courierCode": "lalamove",
+    "courierServiceName": "Motorcycle",
+    "courierServiceCode": "motorcycle",
+    "description": "Layanan dapat digunakan dengan berat mulai dari 0 kg sampai 20 kg"
+  },
+  {
+    "courierCode": "lalamove",
+    "courierServiceName": "MPV",
+    "courierServiceCode": "mpv",
+    "description": "Layanan dapat digunakan dengan berat mulai dari 0 kg sampai 200 kg"
+  },
+  {
+    "courierCode": "lalamove",
+    "courierServiceName": "Van",
+    "courierServiceCode": "van",
+    "description": "Layanan dapat digunakan dengan berat mulai dari 200 kg sampai 600 kg"
+  },
+  {
+    "courierCode": "lalamove",
+    "courierServiceName": "Truck",
+    "courierServiceCode": "truck",
+    "description": "Layanan dapat digunakan dengan berat mulai dari 600 kg sampai 800 kg"
+  },
+  {
+    "courierCode": "lalamove",
+    "courierServiceName": "Cdd Bak",
+    "courierServiceCode": "cdd_bak",
+    "description": "Layanan dapat digunakan dengan berat mulai dari 2500 kg sampai 5000 kg"
+  },
+  {
+    "courierCode": "lalamove",
+    "courierServiceName": "Cdd Box",
+    "courierServiceCode": "cdd_box",
+    "description": "Layanan dapat digunakan dengan berat mulai dari 2500 kg sampai 5000 kg"
+  },
+  {
+    "courierCode": "lalamove",
+    "courierServiceName": "Engkel Box",
+    "courierServiceCode": "engkel_box",
+    "description": "Layanan dapat digunakan dengan berat mulai dari 1000 kg sampai 2000 kg"
+  },
+  {
+    "courierCode": "lalamove",
+    "courierServiceName": "Engkel Bak",
+    "courierServiceCode": "engkel_bak",
+    "description": "Layanan dapat digunakan dengan berat mulai dari 2000 kg sampai 2500 kg"
+  }
+]

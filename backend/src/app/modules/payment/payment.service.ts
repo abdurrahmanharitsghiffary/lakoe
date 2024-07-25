@@ -176,19 +176,12 @@ export class PaymentService {
       bank: statusResponse.bank,
     };
 
-    if (
-      statusResponse.transaction_status === 'capture' ||
-      statusResponse.transaction_status === 'settlement'
-    ) {
-      updateData.status = 'NEW_ORDER';
-    }
-
     const updatedPayment = await this.prisma.payment.update({
       where: {
         midtransOrderId: statusResponse.order_id,
       },
       data: updateData,
-      select: { invoice: { select: { orderId: true } } },
+      select: { invoice: { select: { id: true, orderId: true } } },
     });
 
     if (
@@ -202,25 +195,18 @@ export class PaymentService {
       });
     }
 
-    if (
-      statusResponse.transaction_status === 'settlement' ||
-      statusResponse.transaction_status === 'capture'
-    ) {
-      const invoiceId = updatedPayment?.invoice?.orderId;
+    const invoice = await this.prisma.invoice.findUnique({
+      where: {
+        id: updatedPayment?.invoice?.id,
+      },
+    });
 
-      const invoice = await this.prisma.invoice.findUnique({
-        where: {
-          id: invoiceId,
-        },
-      });
-
-      if (invoice)
-        throw new NotFoundException(`Invoice with ${invoiceId} not found`);
-    }
+    if (!invoice)
+      throw new NotFoundException(`Invoice with ${invoice} not found`);
 
     await this.prisma.invoice.update({
       where: {
-        id: updatedPayment?.invoice?.orderId,
+        id: invoice.id,
       },
       data: {
         amount: statusResponse.gross_amount,
