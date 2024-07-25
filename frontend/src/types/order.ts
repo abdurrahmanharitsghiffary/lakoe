@@ -1,24 +1,69 @@
-import { ProductVariant } from "@/features/products/components/card-product";
-import { Courier } from "./courier";
+type Attribute = {
+  name: string;
+};
 
-export type Order = {
+type SKUAttribute = {
+  value: string;
+  attribute: Attribute;
+};
+
+type Product = {
+  name: string;
+  isActive: boolean;
   id: number;
-  status: OrderStatus;
+};
+
+type SKU = {
+  sku: string;
+  product: Product;
+  discount: string;
+  createdAt: Date;
+  updatedAt: Date;
+  id: number;
+  discountType: string;
+  isActive: boolean;
+  image: string | null;
+  price: string;
+  stock: number;
+  weightInGram: number;
+  skuAttributes: SKUAttribute[];
+};
+
+type OrderDetail = {
+  sku: SKU;
   qty: number;
-  pricePerProduct: number;
-  discount: number;
+  pricePerProduct: string;
+  weightPerProductInGram: number;
+};
+
+type Invoice = {
+  id: string;
+  invoiceNumber: string;
+  amount: string;
   receiverAddress: string;
-  receiverPostalCode: string;
-  receiverCityDistrict: string;
-  receiverProvince: string;
+  receiverAddressPhone: string;
+  receiverCity: string;
+  receiverContactName: string;
+  receiverContactPhone: string;
+  receiverDistrict: string;
   receiverLatitude: string;
   receiverLongitude: string;
-
+  receiverName: string;
+  receiverPostalCode: string;
+  receiverProvince: string;
+  serviceCharge: string;
   updatedAt: Date;
   createdAt: Date;
+};
 
-  productVariant: ProductVariant;
-  courier: Courier;
+type Courier = {
+  id: number;
+  biteshipOrderId: string;
+  biteshipTrackingId: string;
+  biteshipWaybillId: string;
+  price: string;
+  courierCode: string;
+  courierServiceCode: string;
 };
 
 export type OrderStatus =
@@ -29,16 +74,16 @@ export type OrderStatus =
   | "SUCCESS"
   | "CANCELLED";
 
-export type AllOrder = {
-  createdAt: string; // ISO date string
+export type Order = {
+  createdAt: Date;
   description: string;
   id: string;
   status: OrderStatus;
-  updatedAt: string; // ISO date string
-  invoice: string | null;
-  courier: string | null;
+  updatedAt: Date;
+  invoice: Invoice;
+  courier: Courier;
+  orderDetails: OrderDetail[];
   _count: {
     orderDetails: number;
   };
-  skus: any[];
 };

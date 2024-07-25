@@ -51,13 +51,6 @@ const tabItems: TabItem[] = [
   },
 ];
 
-// Asumsikan `orders` adalah array yang diimpor dari sumber data
-const orders = [
-  { id: 1, name: "Order 1", price: 5000 },
-  { id: 2, name: "Order 2", price: 3000 },
-  { id: 3, name: "Order 3", price: 7000 },
-];
-
 export function OrderTabs() {
   return (
     <div className="w-full">
@@ -97,5 +90,5 @@ export function OrderTabs() {
         </Select>
       </div>
     </div>
-  )
+  );
 }

@@ -39,7 +39,7 @@ export function ResetForm() {
         throw new Error("Something went wrong");
       }
 
-      navigate("/auth/reset-success");
+      navigate("/auth/reset-success", { replace: true });
     } catch (error) {
       console.error("reset error", error);
     }

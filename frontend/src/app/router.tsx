@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { App } from "./app";
 import { ProductsPage } from "./pages/seller/products";
-import { HomePage } from "./pages/seller/home";
 import { OrdersPage } from "./pages/seller/orders";
 import { SettingsPage } from "./pages/seller/settings";
 import { OrderDetails } from "./pages/seller/orders-detail";
@@ -11,7 +10,6 @@ import { AdminLayout } from "./pages/admin/layout/root-layout";
 import { NotFoundPage } from "./pages/fallback/not-found";
 import { ErrorPage } from "./pages/fallback/error";
 import { AdminHomePage } from "./pages/admin/home";
-import { WithdrawalPage } from "./pages/admin/withdrawal";
 import { PendingWithdrawalPage } from "./pages/admin/withdrawal/pending";
 import { WithdrawalDetails } from "./pages/admin/withdrawal/details";
 import { SuccessWithdrawalPage } from "./pages/admin/withdrawal/success";
@@ -37,6 +35,7 @@ import { EditProfilePage } from "./pages/profile/edit-profile";
 import { CartList } from "@/components/cart/cartlist";
 import { AuthorizeNav } from "@/components/authorize/authorize-nav";
 import { CheckoutPage } from "./pages/buyer/checkout/checkout";
+import { BuyerHomePage } from "./pages/buyer/home";
 import {
   HaveStoreAndRedirect,
   MustHaveStoreOrRedirect,
@@ -58,6 +57,7 @@ export const router = createBrowserRouter([
             element: <CartList />,
           },
           { path: "checkout", element: <CheckoutPage /> },
+          { path: "products", element: <BuyerHomePage /> },
           { path: "products/:id", element: <ProductPage /> },
         ],
         element: <BuyerLayout />,
@@ -108,7 +108,6 @@ export const router = createBrowserRouter([
             element: <AdminLayout />,
             children: [
               { path: "", element: <AdminHomePage /> },
-              { path: "withdrawal", element: <WithdrawalPage /> },
               {
                 path: "withdrawal/pending",
                 element: <PendingWithdrawalPage />,
@@ -157,7 +156,6 @@ export const router = createBrowserRouter([
               </MustHaveStoreOrRedirect>
             ),
             children: [
-              { path: "", element: <HomePage /> },
               { path: "dashboard", element: <DashboardSeller /> },
               { path: "orders/:id", element: <OrderDetails /> },
               {

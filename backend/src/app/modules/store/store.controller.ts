@@ -38,6 +38,7 @@ import {
   DeleteCourierServiceDto,
   deleteCourierServiceSchema,
 } from './dto/delete-courier.dto';
+import { GetProductOption } from '../product/schema/get-products.dto';
 
 @ApiTags('Stores')
 @Controller('stores')
@@ -97,14 +98,18 @@ export class StoreController {
     @Param('id') id: string,
     @Query() options: FindAllOptions,
   ) {
-    return this.orderService.findAllByStoreId(+id, options);
+    const orders = await this.orderService.findAllByStoreId(+id, options);
+    const orderCounts = await this.orderService.getAllStatusCount(+id);
+    return { orders, ...orderCounts };
   }
 
   @Get(':id/products')
   @SkipAuth()
-  async findAllByStoreId(@Param('id') id: string) {
-    console.log(id, 'STORE ID');
-    return this.productService.findAllByStoreId(+id);
+  async findAllByStoreId(
+    @Query() options: GetProductOption,
+    @Param('id') id: string,
+  ) {
+    return this.productService.search({ ...options, storeId: +id });
   }
 
   @Post(':id/shipping-rates')

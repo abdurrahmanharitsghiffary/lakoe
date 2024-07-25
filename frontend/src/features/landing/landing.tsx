@@ -1,4 +1,4 @@
-import { Navbar } from "@/features/landing/navbar";
+// import { Navbar } from "@/features/landing/navbar";
 import { Typography } from "@/components/ui/typography";
 import { Home } from "@/features/landing/home";
 import { AboutUs } from "@/features/landing/about-us";
@@ -16,9 +16,9 @@ export function Landing() {
   const pricRef = useRef<HTMLElement>(null);
   const featureRef = useRef<HTMLElement>(null);
 
-  const scrollToRef = (ref: React.RefObject<HTMLElement>) => {
-    ref.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  // const scrollToRef = (ref: React.RefObject<HTMLElement>) => {
+  //   ref.current?.scrollIntoView({ behavior: "smooth" });
+  // };
 
   useEffect(() => {
     const setData = async (data: any) => {
@@ -43,13 +43,13 @@ export function Landing() {
 
   return (
     <div>
-      <Navbar
+      {/* <Navbar
         scrollToRef={scrollToRef}
         featureRef={featureRef}
         testyRef={testyRef}
         pricRef={pricRef}
         faqRef={faqRef}
-      />
+      /> */}
 
       <section
         className="hero-section relative py-16 px-4 w-full h-[700px] bg-fixed"
@@ -87,7 +87,7 @@ export function Landing() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
-            <Link to="/store">
+            <Link to="/products">
               <Button
                 variant={"lakoePrimary"}
                 className="mt-4 px-6 py-3 rounded-lg text-white hover:bg-blue-800 transition-all duration-300"

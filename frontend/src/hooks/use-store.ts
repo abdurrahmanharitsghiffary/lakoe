@@ -1,5 +1,4 @@
 import { axios } from "@/lib/axios";
-import { Store } from "@/types/store";
 import { getAxiosErrMessage } from "@/utils/get-axios-err-message";
 import { StoreSchema, storeSchema } from "@/validator/store-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -52,8 +51,8 @@ export const useStore = () => {
           },
         },
         success: {
-          render(props) {
-            navigate("/seller/dashboard");
+          render() {
+            navigate("/seller/dashboard", { replace: true });
             return "Store successfuly created.";
           },
         },

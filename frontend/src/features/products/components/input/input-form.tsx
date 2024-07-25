@@ -16,7 +16,7 @@ interface InputFormProps
   isRequired?: boolean;
 }
 
-const labelVariantProps = cva("relative", {
+export const labelVariantProps = cva("relative", {
   variants: {
     isRequired: {
       true: "after:content-['*'] after:text-destructive after:text-md after:ms-1",
@@ -53,7 +53,7 @@ const InputForm = React.forwardRef<HTMLInputElement, InputFormProps>(
   ) => {
     return (
       <>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           <Label className={labelVariantProps({ isRequired })}>{label}</Label>
           <Input
             ref={ref}

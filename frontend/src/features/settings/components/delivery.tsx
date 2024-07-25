@@ -7,7 +7,7 @@ import { useState } from "react";
 import couriersData from "@/data/courier.json";
 import { useGetMe } from "@/features/me/api/me-api";
 import { axios } from "@/lib/axios";
-import { useQuery } from "@tanstack/react-query";
+// import { useQuery } from "@tanstack/react-query";
 
 // interface Courier {
 //   courierCode: string;
@@ -20,23 +20,23 @@ import { useQuery } from "@tanstack/react-query";
 type Courier = "jnt" | "jne" | "sicepat" | "tiki" | "grab" | "gosend";
 
 export function Delivery() {
-  const [isOpen, setIsOpen] = useState<{
-    [key in Courier]: boolean;
-  }>({
-    jnt: false,
-    jne: false,
-    sicepat: false,
-    tiki: false,
-    grab: false,
-    gosend: false,
-  });
+  // const [isOpen, setIsOpen] = useState<{
+  //   [key in Courier]: boolean;
+  // }>({
+  //   jnt: false,
+  //   jne: false,
+  //   sicepat: false,
+  //   tiki: false,
+  //   grab: false,
+  //   gosend: false,
+  // });
 
-  const toggle = (courier: Courier) => () => {
-    setIsOpen((prev) => ({
-      ...prev,
-      [courier]: !prev[courier],
-    }));
-  };
+  // const toggle = (courier: Courier) => () => {
+  //   setIsOpen((prev) => ({
+  //     ...prev,
+  //     [courier]: !prev[courier],
+  //   }));
+  // };
 
   const [selectedCouriers, setSelectedCouriers] = useState<{
     [key in Courier]: boolean;

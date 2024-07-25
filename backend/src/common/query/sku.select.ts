@@ -12,7 +12,7 @@ export type SelectAttributesSKUPayload = Prisma.AttributeSKUGetPayload<{
 export const selectSKU = {
   sku: true,
   product: {
-    select: { name: true, isActive: true },
+    select: { name: true, isActive: true, id: true },
   },
   discount: true,
   createdAt: true,
