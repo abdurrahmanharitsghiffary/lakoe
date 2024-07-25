@@ -23,6 +23,11 @@ export function RightCard({ onInputChange, formData }: RightCardProps) {
 
   const skus = useGetSkus();
 
+  const totalProductsPrice = skus.reduce(
+    (a, { sku: { price }, qty }) => a + +price * qty,
+    0
+  );
+
   return (
     <div className="flex flex-col w-full">
       <Button
@@ -68,7 +73,7 @@ export function RightCard({ onInputChange, formData }: RightCardProps) {
 
           <div className="flex flex-row w-full justify-between mt-8">
             <p className="text-xl font-bold text-gray-400">Total Harga</p>
-            <p className="text-xl ">Rp. 50000</p>
+            <p className="text-xl ">Rp. {totalProductsPrice}</p>
           </div>
           <div className="flex flex-row justify-between mt-2 ">
             <div className="text-xl font-bold text-gray-400">

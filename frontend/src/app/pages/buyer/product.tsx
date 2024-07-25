@@ -18,7 +18,7 @@ import { useGetProduct } from "@/features/products/api/get-product";
 import { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa";
-import { useCheckoutActions } from "@/hooks/use-checkout";
+import { useSetSkus } from "@/hooks/use-checkout";
 import { useGetStoreAddress } from "@/features/address/api/get-store-address";
 import { Image } from "@/components/image";
 import {
@@ -31,7 +31,7 @@ import {
 
 export function ProductPage() {
   const { id } = useParams();
-  const { setSkus } = useCheckoutActions();
+  const setSkus = useSetSkus();
   const productId = Number(id);
   const navigate = useNavigate();
   const { data, isSuccess } = useGetProduct({ productId });
