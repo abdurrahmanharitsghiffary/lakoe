@@ -78,7 +78,7 @@ export class ProductController {
 
     return await this.productService.create(store.id, {
       ...createProductDto,
-      attachments: uploadedImageSecureUrl,
+      images: uploadedImageSecureUrl,
     });
   }
 

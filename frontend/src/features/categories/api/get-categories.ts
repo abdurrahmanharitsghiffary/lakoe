@@ -4,7 +4,9 @@ import { QueryConfig } from "@/types/query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getCategories = async (q?: string) => {
-  const response = await axios.get<ApiResponse<string[]>>("/category", {
+  const response = await axios.get<
+    ApiResponse<{ id: number; name: string; _count: { subVariants: number } }[]>
+  >("/categories", {
     params: { q },
   });
 
@@ -14,7 +16,7 @@ export const getCategories = async (q?: string) => {
 export const getCategoriesOptions = (q?: string) => {
   return queryOptions({
     queryKey: ["category"],
-    queryFn: () => getCategories(),
+    queryFn: () => getCategories(q),
   });
 };
 

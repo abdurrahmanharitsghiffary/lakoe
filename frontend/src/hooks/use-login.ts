@@ -29,7 +29,7 @@ export const useLogin = () => {
           if (token) {
             login(token);
           }
-          navigate("/seller/dashboard");
+          navigate("/seller/dashboard", { replace: true });
           return "Login successful";
         },
       },

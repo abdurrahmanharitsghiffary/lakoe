@@ -1,7 +1,6 @@
 import { axios } from "@/lib/axios";
-import { Store } from "@/types/store";
 import { getAxiosErrMessage } from "@/utils/get-axios-err-message";
-import { storeSchema } from "@/validator/store-validator";
+import { StoreSchema, storeSchema } from "@/validator/store-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -15,13 +14,14 @@ export const useStore = () => {
     watch,
     formState: { errors },
     ...rest
-  } = useForm<Store>({
+  } = useForm<StoreSchema>({
     resolver: zodResolver(storeSchema),
+    defaultValues: { description: "", name: "", slogan: "" },
   });
   console.log(watch("logo"), "LOGO");
   console.log("watch:", watch("banner"));
 
-  const onSubmit: SubmitHandler<Store> = async (data) => {
+  const onSubmit: SubmitHandler<StoreSchema> = async (data) => {
     // const formData = new FormData();
     // formData.append("name", data.name);
     // formData.append("description", data.description);
@@ -51,8 +51,8 @@ export const useStore = () => {
           },
         },
         success: {
-          render(props) {
-            navigate("/seller/dashboard");
+          render() {
+            navigate("/seller/dashboard", { replace: true });
             return "Store successfuly created.";
           },
         },

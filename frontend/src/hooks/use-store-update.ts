@@ -1,32 +1,55 @@
-import { axios } from "@/lib/axios";
-import { StoreUpdate } from "@/types/store";
-import { storeSchema } from "@/validator/store-validator";
+import {
+  UpdateStoreSchema,
+  updateStoreSchema,
+} from "@/validator/store-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useGetMyStore } from "@/features/store/api/get-my-store";
+import { useUpdateStore } from "@/features/store/api/update-store";
+import { toast } from "react-toastify";
+import { getAxiosErrMessage } from "@/utils/get-axios-err-message";
 
 export const useStoreUpdate = () => {
+  const { data } = useGetMyStore();
+  const { mutateAsync } = useUpdateStore();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<StoreUpdate>({
+    control,
+    watch,
+  } = useForm<UpdateStoreSchema>({
     mode: "onChange",
-    resolver: zodResolver(storeSchema),
+    resolver: zodResolver(updateStoreSchema),
+    values: {
+      banner: data?.data?.bannerAttachment,
+      description: data?.data?.description,
+      logo: data?.data?.logoAttachment,
+      name: data?.data?.name,
+      slogan: data?.data?.slogan,
+    },
   });
 
-  const onSubmit: SubmitHandler<StoreUpdate> = async (data) => {
-    try {
-      const response = await axios.patch(`/me/stores`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
+  const onSubmit: SubmitHandler<UpdateStoreSchema> = async (data) => {
+    console.log(data, "DATA");
+    if (!(data.banner instanceof File)) delete data.banner;
+    if (!(data.logo instanceof File)) delete data.logo;
+    toast.promise(mutateAsync(data), {
+      error: {
+        render({ data }) {
+          return getAxiosErrMessage(data);
         },
-      });
-      console.log("update: ", response.data);
-      reset();
-    } catch (error) {
-      console.error("update error: ", error);
-    }
+      },
+      success: {
+        render() {
+          reset();
+          return "Update success";
+        },
+      },
+      pending: "Updating store...",
+    });
   };
 
   return {
@@ -34,5 +57,7 @@ export const useStoreUpdate = () => {
     handleSubmit,
     errors,
     onSubmit,
+    control,
+    watch,
   };
 };

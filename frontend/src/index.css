@@ -66,6 +66,13 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none; /* Safari and Chrome */
   }
+  .hide-input-arrow::-webkit-inner-spin-button,
+  .hide-input-arrow::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
   :root {
     --lakoe-primary: #2196f3;
     --lakoe-primary-50: #e3f2fd;

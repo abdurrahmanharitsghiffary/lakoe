@@ -83,6 +83,14 @@ export class SkuService {
     });
   }
 
+  findAllByProductId(productId: number) {
+    return this.prismaService.sKU.findMany({
+      where: { product: { id: productId } },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      select: selectSKU,
+    });
+  }
+
   remove(skuId: number) {
     return this.prismaService.sKU.delete({ where: { id: skuId } });
   }

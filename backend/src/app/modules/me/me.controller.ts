@@ -38,10 +38,10 @@ export class MeController {
       where: { id: user?.id },
       select: { ...selectUser, store: { select: { id: true } } },
     });
-
+    console.log(me?.store?.id);
     return {
       ...omitProperties(me, ['store']),
-      hasStore: me?.store?.id !== null,
+      hasStore: me?.store?.id ? true : false,
       storeId: me?.store?.id,
     };
   }

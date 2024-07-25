@@ -13,15 +13,16 @@ export function LogoutButton(props: ButtonProps) {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await confirm({
+    const confirmed = await confirm({
       title: "Logout",
       body: "Are you sure want to logout?",
       actionProps: { variant: "destructive" },
       cancelProps: { variant: "secondary" },
     });
+    if (!confirmed) return;
     queryClient.invalidateQueries({ queryKey: getMeOptions().queryKey });
     logout();
-    navigate("/auth/login");
+    navigate("/auth/login", { replace: true });
   };
 
   return (
