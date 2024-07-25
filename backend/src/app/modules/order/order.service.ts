@@ -474,11 +474,15 @@ export class OrderService {
     const orders = await this.prismaService.order.findMany({
       where: {
         storeId,
-        description: { contains: options?.q ?? '' },
+        description: { contains: options?.q || undefined },
         courier: {
-          courierCode: { in: options?.couriers?.split(',') },
+          courierCode: {
+            in: emptyArrayAndUndefined(options?.couriers?.split(',')),
+          },
         },
-        status: { in: options?.status?.split(',') as any },
+        status: {
+          in: emptyArrayAndUndefined(options?.status?.split(',')) as any,
+        },
       },
       orderBy: [{ createdAt: createdDateSortOption }, { id: 'asc' }],
       select: selectOrderSimplified,

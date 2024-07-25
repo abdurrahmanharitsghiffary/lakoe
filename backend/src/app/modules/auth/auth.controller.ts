@@ -41,7 +41,7 @@ export class AuthController {
     return await this.authService.register(response);
   }
 
-  // @Throttle({ default: { ttl: hours(1), limit: 5 } })
+  @Throttle({ default: { ttl: hours(1), limit: 5 } })
   @HttpCode(HttpStatus.OK)
   @SkipAuth()
   @Post('login')
