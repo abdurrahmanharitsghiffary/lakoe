@@ -6,16 +6,16 @@ import {
 } from '@nestjs/common';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from '@/common/services/prisma.service';
 import {
   selectStore,
   selectStoreSimplified,
-} from 'src/common/query/store.select';
-import { BiteshipService } from 'src/common/modules/biteship/biteship.service';
+} from '@/common/query/store.select';
+import { BiteshipService } from '@/common/modules/biteship/biteship.service';
 import { CreateInvoiceDto } from '../order/dto/create-order.dto';
 import { AddCourierDto } from './dto/add-courier.dto';
-import { GetShippingRateOptions } from 'src/common/types/biteship';
-import { ERR } from 'src/common/constants';
+import { GetShippingRateOptions } from '@/common/types/biteship';
+import { ERR } from '@/common/constants';
 
 @Injectable()
 export class StoreService {

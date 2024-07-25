@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSkuDto } from './dto/create-sku.dto';
 import { UpdateSkuDto } from './dto/update-sku.dto';
-import { PrismaService } from 'src/common/services/prisma.service';
-import { genSku } from 'src/common/utils/gen-sku';
-import { selectSKU } from 'src/common/query/sku.select';
+import { PrismaService } from '@/common/services/prisma.service';
+import { genSku } from '@/common/utils/gen-sku';
+import { selectSKU } from '@/common/query/sku.select';
 
 @Injectable()
 export class SkuService {

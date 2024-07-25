@@ -12,11 +12,11 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto, createUserSchema } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
-import { Roles } from 'src/common/decorators/roles/roles.decorator';
+import { ZodValidationPipe } from '@/common/pipes/zod-validation/zod-validation.pipe';
+import { Roles } from '@/common/decorators/roles/roles.decorator';
 import { ApiTags } from '@nestjs/swagger';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
-import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
+import { ApiJwtBearerAuth } from '@/common/decorators/jwt-bearer.decorator';
 
 @Controller('users')
 @ApiTags('Users')

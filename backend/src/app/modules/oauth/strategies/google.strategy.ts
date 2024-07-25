@@ -2,8 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { PrismaService } from 'src/common/services/prisma.service';
-import { UserPayload } from 'src/common/types';
+import { PrismaService } from '@/common/services/prisma.service';
+import { UserPayload } from '@/common/types';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {

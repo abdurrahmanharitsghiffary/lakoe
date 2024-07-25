@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Z } from 'src/common/libs/zod';
+import { Z } from '@/common/libs/zod';
 import { z } from 'zod';
 
 export class Sku {

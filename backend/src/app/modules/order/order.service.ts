@@ -3,26 +3,26 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from '@/common/services/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { BiteshipService } from 'src/common/modules/biteship/biteship.service';
-import { ERR, ERROR_CODE } from 'src/common/constants';
+import { BiteshipService } from '@/common/modules/biteship/biteship.service';
+import { ERR, ERROR_CODE } from '@/common/constants';
 import {
   selectOrder,
   SelectOrderPayload,
   selectOrderSimplified,
   SelectOrderSimplifiedPayload,
-} from 'src/common/query/order.select';
+} from '@/common/query/order.select';
 import { FindAllOptions } from './dto/index.dto';
-import { omitProperties } from 'src/common/utils/omit-properties';
-import { genInvoice } from 'src/common/utils/gen-inv';
+import { omitProperties } from '@/common/utils/omit-properties';
+import { genInvoice } from '@/common/utils/gen-inv';
 import { AddressService } from '../address/address.service';
 import { StoreService } from '../store/store.service';
-import { BiteshipCreateOrderOptions } from 'src/common/types/biteship';
+import { BiteshipCreateOrderOptions } from '@/common/types/biteship';
 import { $Enums } from '@prisma/client';
-import { coreMidtrans } from 'src/common/libs/midtrans';
+import { coreMidtrans } from '@/common/libs/midtrans';
 import { isAxiosError } from 'axios';
-import { emptyArrayAndUndefined } from 'src/common/utils/empty-array-and-undefined';
+import { emptyArrayAndUndefined } from '@/common/utils/empty-array-and-undefined';
 
 @Injectable()
 export class OrderService {

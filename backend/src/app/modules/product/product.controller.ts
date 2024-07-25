@@ -23,17 +23,17 @@ import {
   UpdateProductDto,
   updateProductSchema,
 } from './dto/update-product.dto';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
+import { ZodValidationPipe } from '@/common/pipes/zod-validation/zod-validation.pipe';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
 import { GetProductOption, getProductsSchema } from './schema/get-products.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { CloudinaryService } from 'src/common/services/cloudinary.service';
+import { CloudinaryService } from '@/common/services/cloudinary.service';
 import { User } from '../../../common/decorators/user.decorator';
-import { UserPayload } from 'src/common/types';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { UserPayload } from '@/common/types';
+import { PrismaService } from '@/common/services/prisma.service';
 import { ProductGuard } from './guards/product.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
+import { ApiJwtBearerAuth } from '@/common/decorators/jwt-bearer.decorator';
 
 @ApiTags('Products')
 @Controller('products')

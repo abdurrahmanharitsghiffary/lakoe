@@ -1,16 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from '@/common/services/prisma.service';
 import {
   selectProduct,
   selectProductSimplified,
-} from 'src/common/query/product.select';
+} from '@/common/query/product.select';
 import { GetProductOption } from './schema/get-products.dto';
-import { parseStringBool } from 'src/common/utils/parse-string-bool';
-import { genSku } from 'src/common/utils/gen-sku';
-import { omitProperties } from 'src/common/utils/omit-properties';
+import { parseStringBool } from '@/common/utils/parse-string-bool';
+import { genSku } from '@/common/utils/gen-sku';
+import { omitProperties } from '@/common/utils/omit-properties';
 import { CreateProductDto } from './dto/create-product.dto';
-import { emptyArrayAndUndefined } from 'src/common/utils/empty-array-and-undefined';
+import { emptyArrayAndUndefined } from '@/common/utils/empty-array-and-undefined';
 
 @Injectable()
 export class ProductService {

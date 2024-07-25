@@ -15,8 +15,8 @@ import { SkuService } from './sku.service';
 import { CreateSkuDto } from './dto/create-sku.dto';
 import { UpdateSkuDto } from './dto/update-sku.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
+import { ApiJwtBearerAuth } from '@/common/decorators/jwt-bearer.decorator';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
 import { SkuGuard } from './guards/sku.guard';
 import { ProductGuard } from '../product/guards/product.guard';
 
