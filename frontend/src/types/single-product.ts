@@ -8,7 +8,7 @@ export type SkuAttribute = {
   attribute: Attribute;
 };
 
-type Sku = {
+export type SKU = {
   sku: string;
   discount: string;
   createdAt: Date;
@@ -52,5 +52,5 @@ export type SingleProduct = {
   _count: {
     skus: number;
   };
-  skus: Sku[];
+  skus: SKU[];
 };

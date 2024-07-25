@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
-import { User } from 'src/common/decorators/user.decorator';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
+import { User } from '@/common/decorators/user.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { OauthService } from './oauth.service';
 

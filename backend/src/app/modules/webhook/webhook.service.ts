@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { $Enums } from '@prisma/client';
-import { PrismaService } from 'src/common/services/prisma.service';
-import { OrderStatusEvent } from 'src/common/types/biteship/order-status';
+import { PrismaService } from '@/common/services/prisma.service';
+import { OrderStatusEvent } from '@/common/types/biteship/order-status';
 import { OrderService } from '../order/order.service';
-import { coreMidtrans } from 'src/common/libs/midtrans';
+import { coreMidtrans } from '@/common/libs/midtrans';
 
 @Injectable()
 export class WebhookService {

@@ -11,14 +11,14 @@ import {
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { ApiTags } from '@nestjs/swagger';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
 import {
   AddCartItemDto,
   addCartItemSchema,
   UpdateCartCountDto,
   updateCartCountSchema,
 } from './dto/cart.dto';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
+import { ZodValidationPipe } from '@/common/pipes/zod-validation/zod-validation.pipe';
 
 @ApiTags('Carts')
 @Controller()

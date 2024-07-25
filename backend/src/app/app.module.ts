@@ -11,7 +11,7 @@ import { PaymentModule } from './modules/payment/payment.module';
 import { AppController } from './app.controller';
 import { AddressModule } from './modules/address/address.module';
 import { TemplateModule } from './modules/template/template.module';
-import { CommonModule } from 'src/common/common.module';
+import { CommonModule } from '@/common/common.module';
 import { CartModule } from './modules/cart/cart.module';
 import { CategoryModule } from './modules/category/category.module';
 import { SkuModule } from './modules/sku/sku.module';

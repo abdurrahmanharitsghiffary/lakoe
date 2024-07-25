@@ -8,12 +8,12 @@ import {
   selectCart,
   selectCartCollection,
   selectCartItems,
-} from 'src/common/query/cart.select';
-import { PrismaService } from 'src/common/services/prisma.service';
+} from '@/common/query/cart.select';
+import { PrismaService } from '@/common/services/prisma.service';
 import { AddCartItemDto } from './dto/cart.dto';
-import { ERROR_CODE } from 'src/common/constants';
-import { selectSKU } from 'src/common/query/sku.select';
-import { ApiErrorResponse } from 'src/common/class/api-response';
+import { ERROR_CODE } from '@/common/constants';
+import { selectSKU } from '@/common/query/sku.select';
+import { ApiErrorResponse } from '@/common/class/api-response';
 
 @Injectable()
 export class CartService {

@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-import { genRanNumber } from 'src/common/utils/gen-ran-num';
+import { genRanNumber } from '@/common/utils/gen-ran-num';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 

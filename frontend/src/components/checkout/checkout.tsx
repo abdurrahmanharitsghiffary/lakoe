@@ -17,16 +17,15 @@ export function NewCheckout() {
   const checkout = useForm<FormCheckout>({
     resolver: zodResolver(addCheckoutSchema),
     defaultValues: {
-      recipientName: "",
-      telephone: "",
-      subDistrict: "",
-      ward: "",
-      cities: "",
-      province: "",
-      addressDetails: "",
-      address: "",
-      note: "",
-      methodDelivery: "",
+      receiverContactName: "",
+      receiverContactPhone: "",
+      receiverDistrict: "",
+      receiverCity: "",
+      receiverProvince: "",
+      receiverAddress: "",
+      orderNote: "",
+      receiverLatitude: "",
+      receiverLongitude: "",
     },
   });
 
@@ -35,16 +34,17 @@ export function NewCheckout() {
   };
 
   const [formCheckout, setFormCheckout] = useState<FormCheckout>({
-    recipientName: "",
-    telephone: "",
-    subDistrict: "",
-    ward: "",
-    cities: "",
-    province: "",
+    receiverPostalCode: "",
+    receiverContactName: "",
     addressDetails: "",
-    address: "",
-    note: "",
-    methodDelivery: "",
+    receiverContactPhone: "",
+    receiverDistrict: "",
+    receiverCity: "",
+    receiverProvince: "",
+    receiverAddress: "",
+    orderNote: "",
+    receiverLatitude: "",
+    receiverLongitude: "",
   });
 
   const handleInputChange = (name: keyof FormCheckout, value: string) => {
@@ -99,7 +99,10 @@ export function NewCheckout() {
                       onInputChange={handleInputChange}
                       formData={formCheckout}
                     />
-                    <CardFooterCheckout />
+                    <CardFooterCheckout
+                      onInputChange={handleInputChange}
+                      formData={formCheckout}
+                    />
                   </TabsContent>
                 </Tabs>
               </div>

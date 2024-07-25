@@ -1,4 +1,4 @@
-import { genRanNumber } from 'src/common/utils/gen-ran-num';
+import { genRanNumber } from '@/common/utils/gen-ran-num';
 import { createSkuSchema } from './create-sku.dto';
 
 export class UpdateSkuDto {

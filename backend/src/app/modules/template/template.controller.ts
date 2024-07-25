@@ -19,12 +19,12 @@ import {
   UpdateTemplateDto,
   updateTemplateMessageSchema,
 } from './dto/update-template.dto';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
+import { ZodValidationPipe } from '@/common/pipes/zod-validation/zod-validation.pipe';
 import { TemplateGuard } from './guards/template.guard';
 import { StoreGuard } from '../store/guards/store.guard';
 import { StoreService } from '../store/store.service';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
+import { ApiJwtBearerAuth } from '@/common/decorators/jwt-bearer.decorator';
 
 @Controller()
 @ApiJwtBearerAuth()

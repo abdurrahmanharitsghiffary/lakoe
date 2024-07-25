@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
+import { PrismaService } from '@/common/services/prisma.service';
 
 export const selectCategories = {
   _count: { select: { subCategories: true } },

@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { WebhookService } from './webhook.service';
-import { OrderStatusEvent } from 'src/common/types/biteship/order-status';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
+import { OrderStatusEvent } from '@/common/types/biteship/order-status';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
 
 @Controller('webhook')
 export class WebhookController {

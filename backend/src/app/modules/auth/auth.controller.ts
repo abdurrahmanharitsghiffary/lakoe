@@ -16,14 +16,14 @@ import {
   LoginDto,
   loginSchema,
 } from './dto/create-auth.dto';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
+import { ZodValidationPipe } from '@/common/pipes/zod-validation/zod-validation.pipe';
 import { hours, Throttle } from '@nestjs/throttler';
 import { z } from 'zod';
 import { ApiTags } from '@nestjs/swagger';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
-import { User } from 'src/common/decorators/user.decorator';
-import { UserPayload } from 'src/common/types';
-import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
+import { User } from '@/common/decorators/user.decorator';
+import { UserPayload } from '@/common/types';
+import { ApiJwtBearerAuth } from '@/common/decorators/jwt-bearer.decorator';
 import { Response } from 'express';
 
 @ApiTags('Auth')

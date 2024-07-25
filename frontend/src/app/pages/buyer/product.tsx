@@ -7,6 +7,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
+import { Link } from "react-router-dom";
 import { FiTruck } from "react-icons/fi";
 import { FiMapPin } from "react-icons/fi";
 import { Typography } from "@/components/ui/typography";
@@ -17,13 +18,23 @@ import { useGetProduct } from "@/features/products/api/get-product";
 import { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa";
-import { useCheckoutActions } from "@/hooks/use-checkout";
+import { useSetSkus, useSetStoreId } from "@/hooks/use-checkout";
 import { useGetStoreAddress } from "@/features/address/api/get-store-address";
 import { Image } from "@/components/image";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export function ProductPage() {
   const { id } = useParams();
-  const { setSkus } = useCheckoutActions();
+  const setSkus = useSetSkus();
+
+  const setStoreId = useSetStoreId();
+
   const productId = Number(id);
   const navigate = useNavigate();
   const { data, isSuccess } = useGetProduct({ productId });
@@ -72,7 +83,8 @@ export function ProductPage() {
 
   const handleCheckout = () => {
     if (selectedSku?.id) {
-      setSkus([{ id: selectedSku?.id, qty }]);
+      setSkus([{ sku: selectedSku, qty, name: product?.name ?? "" }]);
+      setStoreId(product?.store?.id || -1);
       navigate("/checkout");
     }
   };
@@ -102,6 +114,27 @@ export function ProductPage() {
       </div>
 
       <div className="w-[40%] pt-28 flex flex-col gap-2 px-2 overflow-y-auto max-h-[100dvh] hide-scrollbar p-4">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/">Home</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/products">Products</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to={`/products/${product?.id}`}>{product?.name}</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <Typography className="text-2xl font-bold">{product?.name}</Typography>
         <Typography
           className="text-3xl font-bold

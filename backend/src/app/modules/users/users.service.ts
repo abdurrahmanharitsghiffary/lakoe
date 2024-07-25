@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
-import { selectUserSimplified } from 'src/common/query/user.select';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { selectUserSimplified } from '@/common/query/user.select';
+import { PrismaService } from '@/common/services/prisma.service';
 
 @Injectable()
 export class UsersService {

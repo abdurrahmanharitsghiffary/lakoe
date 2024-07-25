@@ -3,9 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from '@/common/services/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
-import { snap } from 'src/common/libs/midtrans';
+import { snap } from '@/common/libs/midtrans';
 import { MidtransNotification } from './payment.dto';
 
 @Injectable()
