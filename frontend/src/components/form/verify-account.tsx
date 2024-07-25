@@ -15,7 +15,7 @@ type Verify = z.infer<typeof verifySchema>;
 export function VerifyForm() {
   const { handleSubmit } = useForm<Verify>();
 
-  const onSubmit: SubmitHandler<Verify> = async (data) => {
+  const onSubmit: SubmitHandler<Verify> = async () => {
     toast.promise(
       axios
         .post<ApiResponse<any>>("/auth/verify-email")

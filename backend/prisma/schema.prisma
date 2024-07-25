@@ -162,7 +162,6 @@ model Invoice {
   id                   String   @id @default(uuid())
   amount               Decimal  @db.Decimal(10, 2)
   serviceCharge        Decimal? @db.Decimal(10, 2)
-  status               String
   receiverContactName  String
   receiverContactPhone String   @db.VarChar(30)
   receiverName         String

@@ -2,7 +2,11 @@ import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
-import { createSkuSchema, CreateSkuDto } from '../../sku/dto/create-sku.dto';
+import {
+  createSkuSchema,
+  CreateSkuDto,
+  zfdCreateSkuSchema,
+} from '../../sku/dto/create-sku.dto';
 import { genRanNumber } from 'src/common/utils/gen-ran-num';
 
 export class CreateProductDto {
@@ -22,6 +26,6 @@ export const createProductSchema = z.object({
   minimumOrder: zfd.numeric(z.number().min(1).positive()),
   categories: zfd.repeatable(z.array(zfd.text())).optional(),
   name: zfd.text(z.string().min(2)),
-  skus: z.array(createSkuSchema).min(1),
+  skus: z.array(zfdCreateSkuSchema).min(1),
   isActive: z.boolean().optional(),
 });

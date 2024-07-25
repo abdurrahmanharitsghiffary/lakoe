@@ -41,7 +41,7 @@ export function OAuthCallback() {
         },
       }
     );
-  }, [code, navigate, toast]);
+  }, [code, login, navigate]);
 
   useEffect(() => {
     let isIgnore = false;

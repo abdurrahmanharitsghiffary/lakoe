@@ -43,7 +43,7 @@ export const useStoreUpdate = () => {
         },
       },
       success: {
-        render(props) {
+        render() {
           reset();
           return "Update success";
         },

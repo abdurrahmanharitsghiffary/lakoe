@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Menubar, MenubarTrigger, MenubarMenu } from "@/components/ui/menubar";
 import { Link } from "react-router-dom";
+import { LakoeTitle } from "@/components/lakoe-title";
 
 type NavbarProps = {
   scrollToRef: (ref: React.RefObject<HTMLElement>) => void;
@@ -23,10 +24,7 @@ export function Navbar({
       style={{ zIndex: 1000 }}
     >
       <Menubar className="max-w-7xl mx-auto py-4 flex items-center border-none">
-        <div className="flex-1 gap-2 flex items-center font-bold text-2xl">
-          <img src="/assets/lakoe.png" className="w-8" alt="Lakoe Logo" />
-          <span>Lakoe</span>
-        </div>
+        <LakoeTitle />
         <div className="flex-1 flex justify-center items-center space-x-6">
           <MenubarMenu>
             <MenubarTrigger

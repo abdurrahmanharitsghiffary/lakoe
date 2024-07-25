@@ -1,5 +1,5 @@
 import { Button, buttonVariants } from "@/components/ui/button";
-import Typography from "@/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import { Link, useNavigate } from "react-router-dom";
 

@@ -24,7 +24,7 @@ import { BiteshipModule } from './modules/biteship/biteship.module';
     ThrottlerModule.forRoot([
       {
         ttl: minutes(10),
-        limit: 100,
+        limit: 10000,
       },
     ]),
   ],

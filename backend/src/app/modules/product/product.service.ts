@@ -10,6 +10,7 @@ import { parseStringBool } from 'src/common/utils/parse-string-bool';
 import { genSku } from 'src/common/utils/gen-sku';
 import { omitProperties } from 'src/common/utils/omit-properties';
 import { CreateProductDto } from './dto/create-product.dto';
+import { emptyArrayAndUndefined } from 'src/common/utils/empty-array-and-undefined';
 
 @Injectable()
 export class ProductService {
@@ -17,7 +18,7 @@ export class ProductService {
 
   async create(
     storeId: number,
-    { categories, skus, ...dto }: CreateProductDto & { attachments?: string[] },
+    { categories, skus, ...dto }: CreateProductDto & { images?: string[] },
   ) {
     return await this.prismaService.$transaction(async (tx) => {
       const createdProduct = await tx.product.create({
@@ -42,33 +43,34 @@ export class ProductService {
               sku: genSku(dto.name),
             },
           });
-          await Promise.all(
-            skuAttribute.map(async (attribute) => {
-              console.log(attribute, 'Attribute');
-              const createdAttribute = await tx.attribute.upsert({
-                create: {
-                  name: attribute.attributeName,
-                  productId: createdProduct.id,
-                },
-                where: {
-                  productId_name: {
+          if (skuAttribute?.length > 0)
+            await Promise.all(
+              skuAttribute.map(async (attribute) => {
+                console.log(attribute, 'Attribute');
+                const createdAttribute = await tx.attribute.upsert({
+                  create: {
                     name: attribute.attributeName,
                     productId: createdProduct.id,
                   },
-                },
-                update: {},
-              });
-              console.log(createdAttribute, 'Created Attr');
-              const attributeSku = await tx.attributeSKU.create({
-                data: {
-                  value: attribute.value,
-                  attributeId: createdAttribute.id,
-                  skuId: createdSku.id,
-                },
-              });
-              console.log(attributeSku, 'Attr Sku');
-            }),
-          );
+                  where: {
+                    productId_name: {
+                      name: attribute.attributeName,
+                      productId: createdProduct.id,
+                    },
+                  },
+                  update: {},
+                });
+                console.log(createdAttribute, 'Created Attr');
+                const attributeSku = await tx.attributeSKU.create({
+                  data: {
+                    value: attribute.value,
+                    attributeId: createdAttribute.id,
+                    skuId: createdSku.id,
+                  },
+                });
+                console.log(attributeSku, 'Attr Sku');
+              }),
+            );
         }),
       );
 
@@ -83,7 +85,13 @@ export class ProductService {
     });
   }
 
-  async search({ q, active, categories, sort_by }: GetProductOption) {
+  async search({
+    q,
+    active,
+    categories,
+    sort_by,
+    storeId,
+  }: GetProductOption & { storeId?: number }) {
     let priceSortOptions;
     let stockSortOptions;
     switch (sort_by) {
@@ -107,15 +115,26 @@ export class ProductService {
 
     const results = await this.prismaService.product.findMany({
       where: {
+        storeId: storeId || undefined,
         isActive: parseStringBool(active),
         categories: {
-          some: { name: { in: categories?.split(','), mode: 'insensitive' } },
+          some: {
+            name: {
+              in: emptyArrayAndUndefined(categories?.split(',')),
+              mode: 'insensitive',
+            },
+          },
         },
         OR: [
           {
-            name: { contains: q, mode: 'insensitive' },
+            name: { contains: q || undefined, mode: 'insensitive' },
           },
-          { skus: { some: { sku: { contains: q, mode: 'insensitive' } } } },
+          {
+            skus: {
+              some: { sku: { contains: q || undefined, mode: 'insensitive' } },
+            },
+          },
+          { description: { contains: q || undefined } },
         ],
       },
       select: {
@@ -196,3 +215,5 @@ export class ProductService {
     });
   }
 }
+
+// given attribute like this

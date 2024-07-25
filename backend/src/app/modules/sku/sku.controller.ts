@@ -31,6 +31,12 @@ export class SkuController {
     return this.skuService.findAllByStoreId(id);
   }
 
+  @Get('products/:id/skus')
+  @SkipAuth()
+  findAllByProductId(@Param('id', ParseIntPipe) id: number) {
+    return this.skuService.findAllByProductId(id);
+  }
+
   @ApiJwtBearerAuth()
   @Post('products/:id/skus')
   @UseGuards(ProductGuard)

@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
 import { selectSKU } from './sku.select';
-import { selectAttributeSimplified } from './attribute.select';
 
 export const selectProductSimplified = {
   id: true,
@@ -10,7 +9,12 @@ export const selectProductSimplified = {
   isActive: true,
   minimumOrder: true,
   name: true,
-  attributtes: { select: selectAttributeSimplified },
+  attributtes: {
+    select: {
+      name: true,
+      skuAttributes: { select: { value: true }, distinct: ['value'] },
+    },
+  },
   _count: { select: { skus: true } },
 } satisfies Prisma.ProductSelect;
 

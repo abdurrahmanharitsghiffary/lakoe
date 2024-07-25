@@ -22,6 +22,7 @@ import { BiteshipCreateOrderOptions } from 'src/common/types/biteship';
 import { $Enums } from '@prisma/client';
 import { coreMidtrans } from 'src/common/libs/midtrans';
 import { isAxiosError } from 'axios';
+import { emptyArrayAndUndefined } from 'src/common/utils/empty-array-and-undefined';
 
 @Injectable()
 export class OrderService {
@@ -471,24 +472,18 @@ export class OrderService {
         break;
     }
 
-    const counts = await this.prismaService.order.count({
-      select: { status: true },
-    });
-
-    console.log(counts);
-    const orderedOrder = await this.prismaService.order.groupBy({
-      by: ['status'],
-      orderBy: { _count: { status: 'desc' } },
-    });
-    console.log(orderedOrder, 'ORDERED ORDER');
     const orders = await this.prismaService.order.findMany({
       where: {
         storeId,
-        description: { contains: options?.q ?? '' },
+        description: { contains: options?.q || undefined },
         courier: {
-          courierCode: { in: options?.couriers?.split(',') },
+          courierCode: {
+            in: emptyArrayAndUndefined(options?.couriers?.split(',')),
+          },
         },
-        status: { in: options?.status?.split(',') as any },
+        status: {
+          in: emptyArrayAndUndefined(options?.status?.split(',')) as any,
+        },
       },
       orderBy: [{ createdAt: createdDateSortOption }, { id: 'asc' }],
       select: selectOrderSimplified,
