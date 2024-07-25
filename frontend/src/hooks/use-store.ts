@@ -52,7 +52,7 @@ export const useStore = () => {
         },
         success: {
           render() {
-            navigate("/seller/dashboard");
+            navigate("/seller/dashboard", { replace: true });
             return "Store successfuly created.";
           },
         },

@@ -10,6 +10,7 @@ import { memo, useState } from "react";
 import { ProductMenu } from "./product-menu";
 import { useGetProductSkus } from "../api/get-product-skus";
 import { useActivation } from "../api/activation";
+import { EditProductDialog } from "@/components/dialog/edit-product-dialog";
 
 export type CardProductProps = {
   onCheckedChange?: (args: { isChecked: boolean; id: number }) => void;
@@ -21,6 +22,8 @@ function Comp({ isChecked, onCheckedChange, product }: CardProductProps) {
   console.log("RE RENDER");
   const [isSwitched, setIsSwitched] = useState(product?.isActive ?? false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isProductEditOpen, setIsProductEditOpen] = useState(false);
+
   const { data } = useGetProductSkus({
     productId: product?.id || -1,
   });
@@ -37,6 +40,8 @@ function Comp({ isChecked, onCheckedChange, product }: CardProductProps) {
       isActive: isSwitched,
     });
   };
+
+  const sortedSkus = skus.slice().sort((a, b) => +a.price - +b.price);
 
   return (
     <Card className="p-2 gap-2 flex">
@@ -57,8 +62,10 @@ function Comp({ isChecked, onCheckedChange, product }: CardProductProps) {
           </CardTitle>
           <CardDescription className="!text-sm font-semibold">
             <span className="text-black">
-              Rp {skus?.[0]?.price}{" "}
-              {skus?.length > 1 ? `- Rp ${skus?.slice(-1)?.[0]?.price}` : ""}
+              Rp {sortedSkus?.[0]?.price}{" "}
+              {sortedSkus?.length > 1
+                ? `- Rp ${sortedSkus?.slice(-1)?.[0]?.price}`
+                : ""}
             </span>{" "}
             • Stok {skus?.reduce((a, { stock }) => a + stock, 0)} •
             {product?._count?.skus === 1
@@ -68,7 +75,7 @@ function Comp({ isChecked, onCheckedChange, product }: CardProductProps) {
         </div>
         <div className="flex gap-1">
           <Button
-            onClick={() => setIsOpen(true)}
+            onClick={() => setIsProductEditOpen(true)}
             size="sm"
             variant="outline"
             className="rounded-full h-6"
@@ -108,6 +115,11 @@ function Comp({ isChecked, onCheckedChange, product }: CardProductProps) {
         variants={skus}
         isOpen={isOpen}
         onOpen={setIsOpen}
+      />
+      <EditProductDialog
+        isOpen={isProductEditOpen}
+        onOpen={setIsProductEditOpen}
+        product={product}
       />
       {/* <ProductDialogChangePrice
         product={product}

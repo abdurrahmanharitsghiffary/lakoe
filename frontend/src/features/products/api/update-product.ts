@@ -3,9 +3,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import z from "zod";
 
 export const updateProductSchema = z.object({
-  name: z.string().min(2).optional(),
-  description: z.string().optional(),
-  minimumOrder: z.number().min(1).positive().optional(),
+  name: z.string().min(2, "Nama produk tidak boleh kosong.").optional(),
+  description: z
+    .string()
+    .min(1, "Deskripsi produk tidak boleh kosong.")
+    .optional(),
+  minimumOrder: z
+    .number()
+    .min(1, "Order minimum tidak boleh kosong.")
+    .positive()
+    .optional(),
   categories: z.array(z.string()).optional(),
 });
 

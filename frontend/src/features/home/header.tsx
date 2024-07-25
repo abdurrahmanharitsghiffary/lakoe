@@ -4,10 +4,15 @@ import { FaSearch } from "react-icons/fa";
 import { SlBasket } from "react-icons/sl";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { IoStorefrontOutline } from "react-icons/io5";
+import { useSession } from "@/hooks/use-session";
+import { LogoutButton } from "@/components/button/logout";
 
 export function Header() {
+  const { user } = useSession();
+
   return (
-    <div className=" flex flex-col w-full fixed z-10 bg-white shadow-sm">
+    <div className=" flex flex-col w-full fixed z-50 bg-white shadow-sm">
       <Menubar className="text-gray-400 justify-end bg-gray-100 py-2">
         <MenubarMenu>
           <Link to="/landing">
@@ -37,12 +42,22 @@ export function Header() {
           <Link to="/cart">
             <SlBasket className="text-gray-500 w-6 h-6" />
           </Link>
-          <Link to="/auth/login">
-            <Button variant="outline">Masuk</Button>
+          <Link to="/seller">
+            <IoStorefrontOutline className="text-gray-500 w-6 h-6" />
           </Link>
-          <Link to="/auth/register">
-            <Button variant="lakoePrimary">Daftar</Button>
-          </Link>
+
+          {user ? (
+            <LogoutButton />
+          ) : (
+            <>
+              <Link to="/auth/login">
+                <Button variant="outline">Masuk</Button>
+              </Link>
+              <Link to="/auth/register">
+                <Button variant="lakoePrimary">Daftar</Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

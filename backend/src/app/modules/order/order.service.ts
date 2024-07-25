@@ -185,7 +185,6 @@ export class OrderService {
 
       await tx.invoice.create({
         data: {
-          status: 'pending',
           amount: totalPrice,
           serviceCharge: 0,
           receiverContactName: invoiceData.receiverContactName,

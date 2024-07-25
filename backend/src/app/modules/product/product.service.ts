@@ -190,7 +190,7 @@ export class ProductService {
     return product;
   }
 
-  async update(id: number, { categories, ...dto }: UpdateProductDto) {
+  async update(id: number, { categories = [], ...dto }: UpdateProductDto) {
     const updatedProducts = await this.prismaService.product.update({
       where: { id },
       data: {

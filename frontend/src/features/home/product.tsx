@@ -8,6 +8,7 @@ import {
 import { Typography } from "@/components/ui/typography";
 import { axios } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 interface Product {
   id: number;
@@ -61,7 +62,11 @@ export function Product() {
                 className="w-full h-48 object-cover rounded-lg mb-4"
               />
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative">
+              <Link
+                className="absolute inset-0"
+                to={`/products/${product.id}`}
+              ></Link>
               <CardTitle className="text-xl font-semibold">
                 {product.name}
               </CardTitle>

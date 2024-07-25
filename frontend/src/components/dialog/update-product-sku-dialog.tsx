@@ -88,7 +88,7 @@ export function UpdateProductSkuDialog({
         <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>
-              Edit SKU Product - {variants?.[0]?.product?.name}
+              Edit SKU Produk - {variants?.[0]?.product?.name}
             </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">

@@ -2,11 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
-import {
-  createSkuSchema,
-  CreateSkuDto,
-  zfdCreateSkuSchema,
-} from '../../sku/dto/create-sku.dto';
+import { CreateSkuDto, zfdCreateSkuSchema } from '../../sku/dto/create-sku.dto';
 import { genRanNumber } from 'src/common/utils/gen-ran-num';
 
 export class CreateProductDto {

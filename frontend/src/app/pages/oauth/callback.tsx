@@ -26,16 +26,16 @@ export function OAuthCallback() {
             console.log(data, "DATA");
             login(data?.data?.token);
             if (data?.data?.token) {
-              navigate("/seller/dashboard");
+              navigate("/seller/dashboard", { replace: true });
             } else {
-              navigate("/auth/login");
+              navigate("/auth/login", { replace: true });
             }
             return "Login success";
           },
         },
         error: {
           render: ({ data }) => {
-            navigate("/auth/login");
+            navigate("/auth/login", { replace: true });
             return getAxiosErrMessage(data);
           },
         },

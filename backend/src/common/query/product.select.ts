@@ -1,5 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { selectSKU } from './sku.select';
+import { omitProperties } from '../utils/omit-properties';
+import { selectStore } from './store.select';
 
 export const selectProductSimplified = {
   id: true,
@@ -20,8 +22,9 @@ export const selectProductSimplified = {
 
 export const selectProduct = {
   ...selectProductSimplified,
+  store: { select: omitProperties(selectStore, ['user', '_count']) },
   skus: {
-    select: selectSKU,
+    select: omitProperties(selectSKU, ['product']),
   },
 } satisfies Prisma.ProductSelect;
 

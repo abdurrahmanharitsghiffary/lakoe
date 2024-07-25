@@ -30,7 +30,7 @@ export const useRegist = () => {
           if (token) {
             login(token);
           }
-          navigate("/auth/verify-account");
+          navigate("/auth/verify-account", { replace: true });
           return "Account successfully registered.";
         },
       },

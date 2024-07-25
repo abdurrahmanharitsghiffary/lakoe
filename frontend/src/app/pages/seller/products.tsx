@@ -130,12 +130,9 @@ export function ProductsPage() {
 
   const handleValueChange = (type: string) => {
     searchParams.set("active", type);
-    navigate(
-      {
-        search: "?" + getAllSearchParams(searchParams),
-      },
-      { replace: true }
-    );
+    navigate({
+      search: "?" + getAllSearchParams(searchParams),
+    });
   };
 
   const handleCheckedChange = (checked: boolean) => {
