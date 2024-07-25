@@ -25,7 +25,11 @@ interface CardBodyProps {
 }
 
 export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
-  const { control, register, formState: { errors } } = useFormContext<FormCheckout>();
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext<FormCheckout>();
   return (
     <div className="flex w-full mt-4">
       <Card className="flex w-full h-auto py-4">
@@ -47,8 +51,9 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                     className="text-lg h-12 mb-4 mx-3 w-100"
                   />
                   {errors.recipientName && (
-                    <p className="ml-4 text-red-500 mt-[-10px] mb-3">{errors.recipientName.message}</p>
-
+                    <p className="ml-4 text-red-500 mt-[-10px] mb-3">
+                      {errors.recipientName.message}
+                    </p>
                   )}
                 </>
 
@@ -63,8 +68,11 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                     {...register("telephone")}
                     value={formData.telephone}
                   />
-                  {errors.telephone && <p className="ml-4 text-red-500 mt-[-15px] mb-3">{errors.telephone.message}</p>}
-
+                  {errors.telephone && (
+                    <p className="ml-4 text-red-500 mt-[-15px] mb-3">
+                      {errors.telephone.message}
+                    </p>
+                  )}
                 </>
                 <div className="flex-col px-3 mb-4">
                   <>
@@ -82,7 +90,7 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                           {...field}
                           onValueChange={(value) => {
                             field.onChange(value);
-                            onInputChange('subDistrict', value);
+                            onInputChange("subDistrict", value);
                           }}
                           value={formData.subDistrict}
                         >
@@ -101,7 +109,11 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                         </Select>
                       )}
                     />
-                    {errors.subDistrict && <p className="text-red-500 mb-3">{errors.subDistrict.message}</p>}
+                    {errors.subDistrict && (
+                      <p className="text-red-500 mb-3">
+                        {errors.subDistrict.message}
+                      </p>
+                    )}
                   </>
                 </div>
 
@@ -118,7 +130,7 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                           {...field}
                           onValueChange={(value) => {
                             field.onChange(value);
-                            onInputChange('ward', value);
+                            onInputChange("ward", value);
                           }}
                           value={formData.ward}
                         >
@@ -137,7 +149,9 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                         </Select>
                       )}
                     />
-                    {errors.ward && <p className="text-red-500 mb-3">{errors.ward.message}</p>}
+                    {errors.ward && (
+                      <p className="text-red-500 mb-3">{errors.ward.message}</p>
+                    )}
                   </>
                 </div>
                 <div className="flex-col px-3 mb-4">
@@ -153,7 +167,7 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                           {...field}
                           onValueChange={(value) => {
                             field.onChange(value);
-                            onInputChange('cities', value);
+                            onInputChange("cities", value);
                           }}
                           value={formData.cities}
                         >
@@ -172,12 +186,19 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                         </Select>
                       )}
                     />
-                    {errors.cities && <p className="text-red-500 mb-3">{errors.cities.message}</p>}
+                    {errors.cities && (
+                      <p className="text-red-500 mb-3">
+                        {errors.cities.message}
+                      </p>
+                    )}
                   </>
                 </div>
                 <div className="flex-col px-3 mb-4">
                   <>
-                    <Label htmlFor="provinci" className="text-lg px-1 mb-[-10px]">
+                    <Label
+                      htmlFor="provinci"
+                      className="text-lg px-1 mb-[-10px]"
+                    >
                       Provinsi
                     </Label>
                     <Controller
@@ -188,7 +209,7 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                           {...field}
                           onValueChange={(value) => {
                             field.onChange(value);
-                            onInputChange('province', value);
+                            onInputChange("province", value);
                           }}
                           value={formData.province}
                         >
@@ -207,7 +228,11 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                         </Select>
                       )}
                     />
-                    {errors.province && <p className="text-red-500 mb-3">{errors.province.message}</p>}
+                    {errors.province && (
+                      <p className="text-red-500 mb-3">
+                        {errors.province.message}
+                      </p>
+                    )}
                   </>
                 </div>
                 <div className="flex-col px-3 mb-4">
@@ -219,7 +244,9 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                       id="addressDetails"
                       {...register("addressDetails")}
                       value={formData.addressDetails}
-                      onChange={(e) => onInputChange('addressDetails', e.target.value)}
+                      onChange={(e) =>
+                        onInputChange("addressDetails", e.target.value)
+                      }
                       placeholder="Isi dengan nama jalan, nomor rumah, nomor gedung, lantai atau nomor unit"
                       className="text-lg h-12"
                     />

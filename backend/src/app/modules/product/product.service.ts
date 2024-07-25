@@ -150,6 +150,7 @@ export class ProductService {
           },
         },
       },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     });
 
     const sortedResults = results.slice();
