@@ -4,7 +4,7 @@ import { QueryConfig } from "@/types/query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getCategories = async (q?: string) => {
-  const response = await axios.get<ApiResponse<string[]>>("/category", {
+  const response = await axios.get<ApiResponse<string[]>>("/categories", {
     params: { q },
   });
 

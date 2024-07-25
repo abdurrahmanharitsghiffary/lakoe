@@ -42,6 +42,7 @@ import {
   MustHaveStoreOrRedirect,
 } from "@/components/authorize/have-store-or-redirect";
 import { Landing } from "@/features/landing/landing";
+import { ProductPage } from "./pages/buyer/product";
 
 export const router = createBrowserRouter([
   {
@@ -57,6 +58,7 @@ export const router = createBrowserRouter([
             element: <CartList />,
           },
           { path: "checkout", element: <CheckoutPage /> },
+          { path: "products/:id", element: <ProductPage /> },
         ],
         element: <BuyerLayout />,
         errorElement: <ErrorPage />,

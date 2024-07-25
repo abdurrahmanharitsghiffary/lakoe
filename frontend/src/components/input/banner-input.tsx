@@ -12,6 +12,7 @@ type BannerInputProps<T extends FieldValues> = React.DetailedHTMLProps<
 
 export function BannerInput<T extends FieldValues>({
   children,
+  classNames,
   ...props
 }: BannerInputProps<T>) {
   const [imageSrc, setImageSrc] = useState("");
@@ -30,18 +31,19 @@ export function BannerInput<T extends FieldValues>({
     <InputFileHiddenControlled
       {...props}
       className="z-20"
+      divProps={{ className: classNames?.wrapper }}
       onFileChange={handleFileChange}
       accept="image/jpg, image/jpeg, image/png, image/webp"
     >
       <div
         className={cn(
-          "border-solid border-2 border-gray-400 rounded-md w-full h-28 flex justify-center items-center overflow-hidden relative"
+          "border-solid border-2 border-input rounded-md w-full h-28 flex justify-center items-center overflow-hidden relative"
         )}
       >
         {imageSrc ? (
           <div className="w-full h-full absolute">
             <button
-              tabIndex={-1}
+              type="button"
               onClick={handleCloseClick}
               className="rounded-full bg-transparent text-destructive w-8 h-8 hover:bg-transparent absolute right-0 top-0 flex justify-center items-center z-30"
             >
