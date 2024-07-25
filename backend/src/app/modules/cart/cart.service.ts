@@ -261,4 +261,28 @@ export class CartService {
     await this.checkCartMustExist(cartId);
     await this.prismaService.cart.delete({ where: { id: cartId } });
   }
+
+  async deleteSku(cartId: string, skuId: number): Promise<void> {
+    await this.checkCartItemMustExists(cartId, skuId);
+
+    // if (!cart) {
+    //   throw new NotFoundException(`Cart with id ${cartId} not found`);
+    // }
+
+    // // Check if the SKU exists in the cart
+    // const cartItem = cart.cartItems.find((item) => item.skuId === skuId);
+    // if (!cartItem) {
+    //   throw new NotFoundException(`SKU with id ${skuId} not found in cart`);
+    // }
+
+    // Delete the SKU from the cart
+    await this.prismaService.cartItem.delete({
+      where: {
+        cartId_skuId: {
+          cartId: cartId,
+          skuId: skuId,
+        },
+      },
+    });
+  }
 }
