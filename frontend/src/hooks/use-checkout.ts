@@ -1,18 +1,22 @@
+import { SKU } from "@/types/single-product";
 import { create } from "zustand";
 
-type SKU = { id: number; qty: number };
+type SKUDetail = { sku: SKU; qty: number; name: string };
 
 type State = {
-  skus: SKU[];
+  skus: SKUDetail[];
+  actions: Actions;
 };
 
 type Actions = {
-  setSkus: (skus: SKU[]) => void;
+  setSkus: (skus: SKUDetail[]) => void;
 };
 
 export const useCheckoutStore = create<State & { actions: Actions }>((set) => ({
-  actions: { setSkus: (skus) => set((state) => ({ ...state, skus })) },
   skus: [],
+  actions: {
+    setSkus: (skus) => set((state) => ({ ...state, skus })),
+  },
 }));
 
 export const useGetSkus = () => useCheckoutStore((state) => state.skus);

@@ -1,14 +1,14 @@
 import * as moduleAlias from 'module-alias';
-// import * as path from 'path';
+import * as path from 'path';
 
-// const ROOT_SRC = path.join(__dirname, '../src');
+const ROOT_SRC = path.join(__dirname, '../src');
 
-// console.log(ROOT_SRC);
+console.log(ROOT_SRC);
 
-moduleAlias.addAlias('@', '.');
+moduleAlias.addAlias('@', ROOT_SRC);
 
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '@/app/app.module';
+import { AppModule } from '../src/app/app.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import { document } from '@/common/libs/swagger';
 import helmet from 'helmet';

@@ -7,6 +7,7 @@ import { CheckoutDialogVoucher } from "../dialog/checkout-dilalog-voucher";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { FormCheckout } from "@/validator/checkout-validator";
+import { useGetSkus } from "@/hooks/use-checkout";
 
 interface RightCardProps {
   onInputChange: (name: keyof FormCheckout, value: string) => void;
@@ -19,6 +20,9 @@ export function RightCard({ onInputChange, formData }: RightCardProps) {
     formState: { errors },
   } = useFormContext<FormCheckout>();
   const [isVoucherOpen, setIsVoucherOpen] = useState(false);
+
+  const skus = useGetSkus();
+
   return (
     <div className="flex flex-col w-full">
       <Button
@@ -40,18 +44,28 @@ export function RightCard({ onInputChange, formData }: RightCardProps) {
       <Card className="flex w-full mt-5 bg-blue-100 border-blue-500">
         <div className="flex flex-col w-full mx-10 py-8 ">
           <h1 className="text-2xl font-bold">Ringkasan Pesanan</h1>
-          <div className="flex flex-row mt-[30px]">
-            <img
-              src="assets/sepatuputih.jpeg"
-              alt="sepatu putih"
-              className="h-[60px] w-[60px] rounded-[8px]"
-            />
-            <div className="flex flex-col px-4 mt-[-10px]">
-              <span className="font-bold">Sepatu Mantap</span>
-              <span className="text-gray-400">1 item (123g)</span>
-              <span>Rp. 50000</span>
-            </div>
+          <div className="flex flex-col gap-4">
+            {skus.map((sku) => (
+              <div className="flex flex-row mt-[30px]">
+                <img
+                  src="assets/sepatuputih.jpeg"
+                  alt="sepatu putih"
+                  className="h-[60px] w-[60px] rounded-[8px]"
+                />
+                <div className="flex flex-col px-4 mt-[-10px]">
+                  <span className="font-bold">
+                    {sku.name}{" "}
+                    {sku.sku.skuAttributes.map((attr) => attr.value).join(", ")}
+                  </span>
+                  <span className="text-gray-400">
+                    {sku.qty} item ({sku.sku.weightInGram * sku.qty}g)
+                  </span>
+                  <span>Rp. {sku.sku.price}</span>
+                </div>
+              </div>
+            ))}
           </div>
+
           <div className="flex flex-row w-full justify-between mt-8">
             <p className="text-xl font-bold text-gray-400">Total Harga</p>
             <p className="text-xl ">Rp. 50000</p>

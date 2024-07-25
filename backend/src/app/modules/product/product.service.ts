@@ -81,6 +81,7 @@ export class ProductService {
   findAllByStoreId(storeId: number = -1, active: boolean = undefined) {
     return this.prismaService.product.findMany({
       where: { isActive: active, storeId },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       select: selectProductSimplified,
     });
   }
@@ -154,6 +155,8 @@ export class ProductService {
     });
 
     const sortedResults = results.slice();
+
+    if (!sort_by) return results;
 
     if (['highest_stock', 'lowest_stock'].includes(sort_by)) {
       return sortedResults
