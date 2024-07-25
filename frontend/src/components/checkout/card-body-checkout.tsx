@@ -43,16 +43,16 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                     Nama Penerima
                   </Label>
                   <Input
-                    id="recipientName"
+                    id="receiverContactName"
                     placeholder="Masukkan Nama Anda"
                     type="text"
-                    {...register("recipientName")}
-                    value={formData.recipientName}
+                    {...register("receiverContactName")}
+                    value={formData.receiverContactName}
                     className="text-lg h-12 mb-4 mx-3 w-100"
                   />
-                  {errors.recipientName && (
+                  {errors.receiverContactName && (
                     <p className="ml-4 text-red-500 mt-[-10px] mb-3">
-                      {errors.recipientName.message}
+                      {errors.receiverContactName.message}
                     </p>
                   )}
                 </>
@@ -60,39 +60,39 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                 <>
                   <Label className="text-lg px-4 mb-[-10px]">No HP</Label>
                   <Input
-                    id="telephone"
+                    id="receiverContactPhone"
                     className="text-lg h-12 mb-4 mx-3 w-100"
                     placeholder="Masukkan No Telp yang Valid"
                     startAdornment="+62"
                     type="text"
-                    {...register("telephone")}
-                    value={formData.telephone}
+                    {...register("receiverContactPhone")}
+                    value={formData.receiverContactPhone}
                   />
-                  {errors.telephone && (
+                  {errors.receiverContactPhone && (
                     <p className="ml-4 text-red-500 mt-[-15px] mb-3">
-                      {errors.telephone.message}
+                      {errors.receiverContactPhone.message}
                     </p>
                   )}
                 </>
                 <div className="flex-col px-3 mb-4">
                   <>
                     <Label
-                      htmlFor="subDistrict"
+                      htmlFor="receiverDistrict"
                       className="text-lg px-1 mb-[-10px]"
                     >
                       Kecamatan
                     </Label>
                     <Controller
-                      name="subDistrict"
+                      name="receiverDistrict"
                       control={control}
                       render={({ field }) => (
                         <Select
                           {...field}
                           onValueChange={(value) => {
                             field.onChange(value);
-                            onInputChange("subDistrict", value);
+                            onInputChange("receiverDistrict", value);
                           }}
-                          value={formData.subDistrict}
+                          value={formData.receiverDistrict}
                         >
                           <SelectTrigger className="text-lg h-12">
                             <SelectValue placeholder="Select Kecamatan" />
@@ -109,15 +109,15 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                         </Select>
                       )}
                     />
-                    {errors.subDistrict && (
+                    {errors.receiverDistrict && (
                       <p className="text-red-500 mb-3">
-                        {errors.subDistrict.message}
+                        {errors.receiverDistrict.message}
                       </p>
                     )}
                   </>
                 </div>
 
-                <div className="flex-col px-3 mb-4">
+                {/* <div className="flex-col px-3 mb-4">
                   <>
                     <Label htmlFor="ward" className="text-lg px-1 mb-[-10px]">
                       Kelurahan
@@ -144,7 +144,6 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                             <SelectItem value="kelurahan2" className="text-lg">
                               Jombang
                             </SelectItem>
-                            {/* Add more options as needed */}
                           </SelectContent>
                         </Select>
                       )}
@@ -153,23 +152,23 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                       <p className="text-red-500 mb-3">{errors.ward.message}</p>
                     )}
                   </>
-                </div>
+                </div> */}
                 <div className="flex-col px-3 mb-4">
                   <>
                     <Label htmlFor="cities" className="text-lg px-1 mb-[-10px]">
                       Kota
                     </Label>
                     <Controller
-                      name="cities"
+                      name="receiverCity"
                       control={control}
                       render={({ field }) => (
                         <Select
                           {...field}
                           onValueChange={(value) => {
                             field.onChange(value);
-                            onInputChange("cities", value);
+                            onInputChange("receiverCity", value);
                           }}
-                          value={formData.cities}
+                          value={formData.receiverCity}
                         >
                           <SelectTrigger className="text-lg h-12">
                             <SelectValue placeholder="Select Kota" />
@@ -186,9 +185,9 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                         </Select>
                       )}
                     />
-                    {errors.cities && (
+                    {errors.receiverCity && (
                       <p className="text-red-500 mb-3">
-                        {errors.cities.message}
+                        {errors.receiverCity.message}
                       </p>
                     )}
                   </>
@@ -202,16 +201,16 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                       Provinsi
                     </Label>
                     <Controller
-                      name="province"
+                      name="receiverProvince"
                       control={control}
                       render={({ field }) => (
                         <Select
                           {...field}
                           onValueChange={(value) => {
                             field.onChange(value);
-                            onInputChange("province", value);
+                            onInputChange("receiverProvince", value);
                           }}
-                          value={formData.province}
+                          value={formData.receiverProvince}
                         >
                           <SelectTrigger className="text-lg h-12">
                             <SelectValue placeholder="Select Province" />
@@ -228,9 +227,26 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                         </Select>
                       )}
                     />
-                    {errors.province && (
+                    {errors.receiverProvince && (
                       <p className="text-red-500 mb-3">
-                        {errors.province.message}
+                        {errors.receiverProvince.message}
+                      </p>
+                    )}
+                  </>
+                </div>
+                <div className="flex-col mb-4">
+                  <>
+                    <Label className="text-lg px-3 mb-[-10px]">Kode Pos</Label>
+                    <Input
+                      id="receiverPostalCode"
+                      placeholder="Masukkan Kode Pos Anda"
+                      type="text"
+                      {...register("receiverPostalCode")}
+                      className="text-lg h-12 mb-4 mx-3 w-100"
+                    />
+                    {errors.receiverPostalCode && (
+                      <p className="ml-4 text-red-500 mt-[-10px] mb-3">
+                        {errors.receiverPostalCode.message}
                       </p>
                     )}
                   </>
@@ -252,7 +268,7 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                     />
                   </>
                 </div>
-                <PinpointCheckout />
+                <PinpointCheckout onInputChange={onInputChange} />
                 <div className="flex-col px-3 mb-4">
                   <Checkbox id="terms" className="h-5 w-5" />
                   <label

@@ -86,7 +86,7 @@ export function RightCard({ onInputChange, formData }: RightCardProps) {
             <div className="text-xl font-bold text-gray-400">
               Total Pembayaran
             </div>
-            <div className="text-xl">Rp. 59000</div>
+            <div className="text-xl">Rp.{totalProductsPrice}</div>
           </div>
         </div>
       </Card>
@@ -99,20 +99,20 @@ export function RightCard({ onInputChange, formData }: RightCardProps) {
           <div className="flex flex-col w-full mt-8 float-right">
             <Textarea
               id="note"
-              {...register("note")}
-              value={formData.note}
+              {...register("orderNote")}
+              value={formData.orderNote}
               placeholder="Tuliskan Catatan di sini"
               className="text-lg h-12"
               onChange={(e) => {
                 const value = e.target.value;
                 if (value.length <= 50) {
-                  onInputChange("note", value);
+                  onInputChange("orderNote", value);
                 }
               }}
             />
-            {errors.note && <p>{errors.note.message}</p>}
+            {errors.orderNote && <p>{errors.orderNote.message}</p>}
             <div className="flex w-full justify-end">
-              <span className="text-lg">{formData.note.length}/150</span>
+              <span className="text-lg">{formData.orderNote.length}/150</span>
             </div>
           </div>
         </div>

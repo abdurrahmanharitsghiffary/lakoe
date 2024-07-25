@@ -16,8 +16,13 @@ import { PiExclamationMarkDuotone } from "react-icons/pi";
 import { MdLocationOff } from "react-icons/md";
 import { MdLocationOn } from "react-icons/md";
 import { MapLeafleet } from "../map/leafleet";
+import { FormCheckout } from "@/validator/checkout-validator";
 
-export function PinpointCheckout() {
+interface Props {
+  onInputChange: (name: keyof FormCheckout, value: string) => void;
+}
+
+export function PinpointCheckout({ onInputChange }: Props) {
   const [isPinpointOpen, setIsPinpointOpen] = useState(false);
   const [Position, setPosition] = useState<L.LatLng | null>(null);
   const [address, setAddress] = useState<string | undefined>(undefined);
@@ -26,6 +31,10 @@ export function PinpointCheckout() {
   const updatePosition = async (latlng: L.LatLng) => {
     setPosition(latlng);
     const address = await getAddressFromLatLng(latlng.lat, latlng.lng);
+
+    onInputChange("receiverAddress", address);
+    onInputChange("receiverLatitude", latlng.lat.toString());
+    onInputChange("receiverLongitude", latlng.lng.toString());
 
     setAddress(address);
   };

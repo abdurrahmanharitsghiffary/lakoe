@@ -18,7 +18,7 @@ import { useGetProduct } from "@/features/products/api/get-product";
 import { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa";
-import { useSetSkus } from "@/hooks/use-checkout";
+import { useSetSkus, useSetStoreId } from "@/hooks/use-checkout";
 import { useGetStoreAddress } from "@/features/address/api/get-store-address";
 import { Image } from "@/components/image";
 import {
@@ -32,6 +32,9 @@ import {
 export function ProductPage() {
   const { id } = useParams();
   const setSkus = useSetSkus();
+
+  const setStoreId = useSetStoreId();
+
   const productId = Number(id);
   const navigate = useNavigate();
   const { data, isSuccess } = useGetProduct({ productId });
@@ -81,6 +84,7 @@ export function ProductPage() {
   const handleCheckout = () => {
     if (selectedSku?.id) {
       setSkus([{ sku: selectedSku, qty, name: product?.name ?? "" }]);
+      setStoreId(product?.store?.id || -1);
       navigate("/checkout");
     }
   };
