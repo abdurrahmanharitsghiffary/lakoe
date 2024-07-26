@@ -9,6 +9,7 @@ export interface MidtransNotification {
   bank: string;
   card_type: string;
   va_number?: string;
+  gross_amount: string;
 }
 
 export class PaymentId {

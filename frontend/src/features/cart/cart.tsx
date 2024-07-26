@@ -48,80 +48,78 @@ export function Cart() {
     );
   };
   return (
-    <>
-      <div className="container mx-auto px-4 md:px-6 py-8">
-        <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
-        <div className="flex gap-2">
-          <IoStorefrontOutline size={24} />
-          <h2 className="text-xl font-semibold mb-4">Name Store</h2>
-        </div>
-        <div className="grid md:grid-cols-[1fr_300px] gap-8">
-          <div className="space-y-6">
-            {items.map((item) => (
-              <div
-                className="grid grid-cols-[80px_1fr_100px] items-center gap-4 border-b pb-4"
-                key={item.id}
-              >
-                <img
-                  src={item.image}
-                  alt="Product Image"
-                  width={80}
-                  height={80}
-                  className="rounded-md object-cover"
-                />
-                <div>
-                  <h3 className="font-medium">{item.name}</h3>
-                  <p className="text-muted-foreground text-sm">
-                    {item.description}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    onClick={() => handleDecrement(item.id)}
-                    variant="outline"
-                    size="icon"
-                    className="p-1"
-                  >
-                    <MinusIcon className="h-4 w-4" />
-                  </Button>
-                  <span className="text-center w-8">{item.count}</span>
-                  <Button
-                    onClick={() => handleIncrement(item.id)}
-                    variant="outline"
-                    size="icon"
-                    className="p-1"
-                  >
-                    <PlusIcon className="h-4 w-4" />
-                  </Button>
-                </div>
+    <div className="container mx-auto px-4 md:px-6 py-8">
+      <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
+      <div className="flex gap-2">
+        <IoStorefrontOutline size={24} />
+        <h2 className="text-xl font-semibold mb-4">Name Store</h2>
+      </div>
+      <div className="grid md:grid-cols-[1fr_300px] gap-8">
+        <div className="space-y-6">
+          {items.map((item) => (
+            <div
+              className="grid grid-cols-[80px_1fr_100px] items-center gap-4 border-b pb-4"
+              key={item.id}
+            >
+              <img
+                src={item.image}
+                alt="Product Image"
+                width={80}
+                height={80}
+                className="rounded-md object-cover"
+              />
+              <div>
+                <h3 className="font-medium">{item.name}</h3>
+                <p className="text-muted-foreground text-sm">
+                  {item.description}
+                </p>
               </div>
-            ))}
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={() => handleDecrement(item.id)}
+                  variant="outline"
+                  size="icon"
+                  className="p-1"
+                >
+                  <MinusIcon className="h-4 w-4" />
+                </Button>
+                <span className="text-center w-8">{item.count}</span>
+                <Button
+                  onClick={() => handleIncrement(item.id)}
+                  variant="outline"
+                  size="icon"
+                  className="p-1"
+                >
+                  <PlusIcon className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className=" rounded-lg p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="font-medium">Subtotal</span>
+            <span className="font-bold">$99.97</span>
           </div>
-          <div className=" rounded-lg p-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="font-medium">Subtotal</span>
-              <span className="font-bold">$99.97</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="font-medium">Shipping</span>
-              <span className="font-bold">$5.00</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="font-medium">Total</span>
-              <span className="font-bold text-2xl">$104.97</span>
-            </div>
-            <div className="flex flex-col md:flex-row gap-2">
-              <Button variant="outline" className="flex-1">
-                Continue Shopping
-              </Button>
-              <Button variant="lakoePrimary" className="flex-1">
-                Proceed to Checkout
-              </Button>
-            </div>
+          <div className="flex items-center justify-between">
+            <span className="font-medium">Shipping</span>
+            <span className="font-bold">$5.00</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="font-medium">Total</span>
+            <span className="font-bold text-2xl">$104.97</span>
+          </div>
+          <div className="flex flex-col md:flex-row gap-2">
+            <Button variant="outline" className="flex-1">
+              Continue Shopping
+            </Button>
+            <Button variant="lakoePrimary" className="flex-1">
+              Proceed to Checkout
+            </Button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

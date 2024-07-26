@@ -1,49 +1,46 @@
 import { cn } from "@/lib/utils";
-import { forwardRef, useState } from "react";
+import { useState } from "react";
 import { BiX } from "react-icons/bi";
 import { motion } from "framer-motion";
-
 import { MdAddBusiness } from "react-icons/md";
+import { InputFileHiddenControlled } from "./input-file-hidden-controller";
+import { FieldValues, UseControllerProps } from "react-hook-form";
 
-type AvatarInputProps = React.DetailedHTMLProps<
-  React.HTMLAttributes<HTMLDivElement>,
-  HTMLDivElement
-> & { classNames?: { wrapper?: string } };
+type AvatarInputProps<T extends FieldValues> = React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+> & { classNames?: { wrapper?: string } } & UseControllerProps<T>;
 
-const AvatarInput = forwardRef<HTMLInputElement, AvatarInputProps>(
-  ({ children, classNames, ...props }, ref) => {
-    const [imageSrc, setImageSrc] = useState("");
+export function AvatarInput<T extends FieldValues>({
+  children,
+  classNames,
+  ...props
+}: AvatarInputProps<T>) {
+  const [imageSrc, setImageSrc] = useState("");
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e?.target?.files?.[0];
-      if (file && file instanceof FileList) {
-        const imageUrl = URL.createObjectURL(file);
-        setImageSrc(imageUrl);
-      }
-      e.target.value = "";
-    };
+  const handleFileChange = (file: File) => {
+    if (!file) return;
+    const imageUrl = URL.createObjectURL(file);
+    setImageSrc(imageUrl);
+  };
+  const handleCloseClick = () => {
+    console.log("CLICKED CLOSED");
+    setImageSrc("");
+  };
 
-    const handleCloseClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      setImageSrc("");
-    };
-
-    return (
+  return (
+    <InputFileHiddenControlled
+      {...props}
+      className="z-20"
+      accept="image/jpg, image/jpeg, image/png, image/webp"
+      onFileChange={handleFileChange}
+    >
       <div
         className={cn(
-          "border-solid border-2 border-gray-400 rounded-full w-20 h-20 flex justify-center items-center overflow-hidden relative",
+          "border-solid border-2 border-input rounded-full w-20 h-20 flex justify-center items-center overflow-hidden relative",
           classNames?.wrapper
         )}
       >
-        <input
-          type="file"
-          accept="image/jpg, image/jpeg, image/png, image/webp"
-          onChange={(e) => {
-            if (props?.onChange) props.onChange(e);
-            handleFileChange(e);
-          }}
-          ref={ref}
-          className="absolute inset-0 opacity-0 cursor-pointer"
-        />
         {imageSrc ? (
           <motion.div
             className="w-full h-full absolute rounded-full"
@@ -51,6 +48,7 @@ const AvatarInput = forwardRef<HTMLInputElement, AvatarInputProps>(
             animate={{ opacity: 1 }}
           >
             <button
+              type="button"
               onClick={handleCloseClick}
               className="rounded-full bg-transparent text-destructive w-8 h-8 hover:bg-transparent absolute right-0 top-0 flex justify-center items-center"
             >
@@ -69,10 +67,6 @@ const AvatarInput = forwardRef<HTMLInputElement, AvatarInputProps>(
           </div>
         )}
       </div>
-    );
-  }
-);
-
-AvatarInput.displayName = "AvatarInput";
-
-export { AvatarInput };
+    </InputFileHiddenControlled>
+  );
+}

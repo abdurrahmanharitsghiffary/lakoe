@@ -1,7 +1,4 @@
-import {
-  TableCell,
-  TableRow,
-} from "@/components/ui/table";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { FaTrash } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa6";
@@ -13,6 +10,7 @@ import { useConfirm } from "@/providers/alert-dialog-provider";
 import { ProductType, SKUAttribute } from "@/types/cart";
 
 interface ProductProps {
+
   storeId: number;
   product: ProductType;
   onIncrement: (storeId: number, productId: number, attributes: SKUAttribute[]) => void;
@@ -74,6 +72,7 @@ export function ProductTable({ storeId, product, onIncrement, onDecrement, onPro
           <Button
             variant={"outline"}
             className="px-2 border-blue-500"
+
             onClick={() => onDecrement(storeId, product.id, product.attributes)}
             disabled={product.count <= 1 || storeDisabled}
           >
@@ -83,10 +82,12 @@ export function ProductTable({ storeId, product, onIncrement, onDecrement, onPro
             name="jumlah"
             className="w-10 text-lg text-right hover:border-black"
             value={product.count}
+
           />
           <Button
             variant={"outline"}
             className="px-2 border-blue-500"
+
             onClick={() => onIncrement(storeId, product.id, product.attributes)}
             disabled={storeDisabled}
           >

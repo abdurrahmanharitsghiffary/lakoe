@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSkuDto } from './dto/create-sku.dto';
 import { UpdateSkuDto } from './dto/update-sku.dto';
-import { PrismaService } from 'src/common/services/prisma.service';
-import { genSku } from 'src/common/utils/gen-sku';
-import { selectSKU } from 'src/common/query/sku.select';
+import { PrismaService } from '@/common/services/prisma.service';
+import { genSku } from '@/common/utils/gen-sku';
+import { selectSKU } from '@/common/query/sku.select';
 
 @Injectable()
 export class SkuService {
@@ -78,6 +78,14 @@ export class SkuService {
   findAllByStoreId(storeId: number) {
     return this.prismaService.sKU.findMany({
       where: { product: { storeId } },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      select: selectSKU,
+    });
+  }
+
+  findAllByProductId(productId: number) {
+    return this.prismaService.sKU.findMany({
+      where: { product: { id: productId } },
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       select: selectSKU,
     });

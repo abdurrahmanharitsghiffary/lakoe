@@ -104,7 +104,10 @@ const getNavItems = (navItems: NavItem[]) => {
 export function Sidebar({ navItems }: { navItems: NavItem[] }) {
   return (
     <div className="h-[100dvh] w-[280px] bg-white dark:bg-slate-800 shadow-md border-r-[1px] overflow-y-auto">
-      <h1 className="text-3xl font-bold p-4 h-[10%]">Lakoe</h1>
+      <div className="p-4 flex gap-2 items-center mb-2">
+        <img src="/assets/lakoe.png" className="w-8" alt="Lakoe Logo" />
+        <h1 className="text-2xl font-bold h-[10%]">Lakoe</h1>
+      </div>
       <nav className="h-[90%]">
         <ul className="flex flex-col w-full h-full">
           {getNavItems(navItems)}

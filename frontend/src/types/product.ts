@@ -1,14 +1,34 @@
-import { Variant } from "./variant";
+type Category = {
+  name: string;
+};
+
+type SkuAttribute = {
+  value: string;
+};
+
+type Attribute = {
+  name: string;
+  skuAttributes: SkuAttribute[];
+};
+
+type Store = {
+  name: string;
+  id: number;
+};
+
+type Count = {
+  skus: number;
+};
 
 export type Product = {
   id: number;
-  name: string;
-  isActive: boolean;
+  images: string[];
+  categories: Category[];
   description: string;
-  attachments: string[];
+  isActive: boolean;
   minimumOrder: number;
-  categories: {
-    name: string;
-  }[];
-  variants: Variant[];
+  name: string;
+  attributtes: Attribute[];
+  _count: Count;
+  store: Store;
 };

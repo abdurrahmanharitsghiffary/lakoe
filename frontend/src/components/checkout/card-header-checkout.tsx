@@ -10,9 +10,15 @@ interface CardHeaderProps {
   onInputChange: (name: keyof FormCheckout, value: string) => void;
   formData: FormCheckout;
 }
-export function CardHeaderCheckout({ onInputChange, formData }: CardHeaderProps) {
+export function CardHeaderCheckout({
+  onInputChange,
+  formData,
+}: CardHeaderProps) {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const { register, formState: { errors } } = useFormContext<FormCheckout>();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormCheckout>();
 
   return (
     <div className="flex w-full mt-4">
@@ -23,40 +29,42 @@ export function CardHeaderCheckout({ onInputChange, formData }: CardHeaderProps)
             <div className="flex flex-col w-full mt-5">
               <>
                 <Label
-                  htmlFor="recipientName"
+                  htmlFor="receiverContactName"
                   className="text-lg px-4 mt-5"
                 >
                   Nama kontak
                 </Label>
                 <Input
-                  id="recipientName"
+                  id="receiverContactName"
                   placeholder="Masukkan Nama Anda"
-                  {...register("recipientName")}
+                  {...register("receiverContactName")}
                   type="text"
-                  value={formData.recipientName}
+                  value={formData.receiverContactName}
                   className="text-lg h-12 mb-[-10px] mx-3 w-[600px]"
                   onChange={(e) => {
                     const value = e.target.value;
                     if (value.length <= 50) {
-                      onInputChange('recipientName', value);
+                      onInputChange("receiverContactName", value);
                     }
                   }}
                 />
                 <Label className="text-lg text-right mr-[90px] mt-[10px] font-light">
-                  {formData.recipientName.length}/50
+                  {formData.receiverContactName.length}/50
                 </Label>
 
-                {errors.recipientName &&
-                  <p className="ml-4 text-red-500 mt-[-10px]">{errors.recipientName.message}</p>}
-
+                {errors.receiverContactName && (
+                  <p className="ml-4 text-red-500 mt-[-10px]">
+                    {errors.receiverContactName.message}
+                  </p>
+                )}
               </>
               <>
                 <Label
-                  htmlFor="telephone"
+                  htmlFor="receiverContactPhone"
                   className="flex flex-row text-lg px-3 mt-[30px] mb-[-10px] justify-between"
                 >
                   <p>Nomor Whatsapp</p>
-                  <a
+                  {/* <a
                     className="text-blue-500 cursor-pointer mr-[80px]"
                     onClick={() => setIsLoginOpen(true)}
                   >
@@ -65,18 +73,20 @@ export function CardHeaderCheckout({ onInputChange, formData }: CardHeaderProps)
                   <CheckoutDialogLogin
                     onOpen={setIsLoginOpen}
                     isOpen={isLoginOpen}
-                  />
+                  /> */}
                 </Label>
 
                 <Input
-                  id="telephone"
+                  id="receiverContactPhone"
                   className="text-lg h-12 mx-3 w-[600px] mt-3"
                   placeholder="Masukkan No Telp yang Valid"
                   startAdornment="+62"
-                  {...register("telephone")}
+                  {...register("receiverContactPhone")}
                   type="text"
-                  value={formData.telephone}
-                  onChange={(e) => onInputChange('telephone', e.target.value)}
+                  value={formData.receiverContactPhone}
+                  onChange={(e) =>
+                    onInputChange("receiverContactPhone", e.target.value)
+                  }
                 />
                 <span className="flex mx-3">
                   <p className="mb-[20px]">
@@ -85,7 +95,11 @@ export function CardHeaderCheckout({ onInputChange, formData }: CardHeaderProps)
                   </p>
                 </span>
 
-                {errors.telephone && <p className="ml-4 text-red-500 mt-[-10px] mb-3">{errors.telephone.message}</p>}
+                {errors.receiverContactPhone && (
+                  <p className="ml-4 text-red-500 mt-[-10px] mb-3">
+                    {errors.receiverContactPhone.message}
+                  </p>
+                )}
               </>
             </div>
           </div>

@@ -7,12 +7,12 @@ import {
   Query,
 } from '@nestjs/common';
 import { ActivationDto, activationSchema } from './app.dto';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
+import { ZodValidationPipe } from '@/common/pipes/zod-validation/zod-validation.pipe';
 import { z } from 'zod';
-import { PrismaService } from 'src/common/services/prisma.service';
-import { User } from 'src/common/decorators/user.decorator';
-import { UserPayload } from 'src/common/types';
-import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
+import { PrismaService } from '@/common/services/prisma.service';
+import { User } from '@/common/decorators/user.decorator';
+import { UserPayload } from '@/common/types';
+import { ApiJwtBearerAuth } from '@/common/decorators/jwt-bearer.decorator';
 
 @Controller()
 export class AppController {

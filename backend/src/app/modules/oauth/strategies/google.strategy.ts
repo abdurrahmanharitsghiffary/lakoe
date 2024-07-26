@@ -2,7 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from '@/common/services/prisma.service';
+import { UserPayload } from '@/common/types';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
@@ -26,7 +27,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       console.log(profile, 'PROFILE');
       const user = await this.prismaService.user.findUnique({
         where: { email },
-        select: { providerType: true, id: true, role: true },
+        select: {
+          providerType: true,
+          id: true,
+          role: true,
+          store: { select: { id: true } },
+        },
       });
 
       if (!user) {
@@ -64,12 +70,21 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
               },
             },
           },
+          select: { id: true, store: { select: { id: true } }, role: true },
         });
 
-        return done(null, newUser);
+        return done(null, {
+          id: newUser?.id,
+          role: newUser?.role,
+          storeId: newUser?.store?.id,
+        } as UserPayload);
       }
 
-      done(null, user);
+      done(null, {
+        id: user?.id,
+        role: user?.role,
+        storeId: user?.store?.id,
+      } as UserPayload);
     } catch (err) {
       done(new UnauthorizedException(err?.message), false);
     }

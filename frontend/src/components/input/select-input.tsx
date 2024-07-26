@@ -11,14 +11,21 @@ interface SelectProps {
   label?: string;
   placeHolder: string;
   options: { value: string; name: string }[];
-  //   onChange: (value: string) => void;
+  value?: string;
+  onChange: (value: string) => void;
 }
-export function SelectInput({ label, placeHolder, options }: SelectProps) {
+export function SelectInput({
+  label,
+  placeHolder,
+  options,
+  value,
+  onChange,
+}: SelectProps) {
   return (
     <>
       <div className="flex flex-col gap-2">
         <Label>{label}</Label>
-        <Select>
+        <Select value={value} onValueChange={onChange}>
           <SelectTrigger>
             <SelectValue placeholder={placeHolder} />
           </SelectTrigger>

@@ -1,18 +1,17 @@
+
 import { useState, useEffect } from 'react';
-import { Store } from './store';
+import { Store } from './store'
 import { Card } from "../ui/card";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { Button } from "../ui/button";
 import { BiSolidDiscount } from "react-icons/bi";
 import { IoIosArrowForward } from "react-icons/io";
-import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { formatRupiah } from "@/utils/format-currency";
 import { CheckoutDialogVoucher } from '../dialog/checkout-dilalog-voucher';
 import { SKUAttribute,StoreType} from '@/types/cart';
 import { useCartCollection } from '@/features/cart/api/get-cart';
 import { deleteProduct,deleteCart } from '@/features/cart/api/delete-cart';
-
 export function CartList() {
   const cartId = '034a015c-bd4b-41cc-82e3-0fc7d57409fb';
   const [totalPrice, setTotalPrice] = useState(0);
@@ -61,6 +60,7 @@ export function CartList() {
     const total = stores.reduce((sum, cart) =>
       sum + cart.products.reduce((productSum, product) =>
         product.checked ? productSum + product.price * product.count : productSum, 0), 0);
+
     setTotalPrice(total);
   }, [stores]);
 
@@ -68,6 +68,7 @@ export function CartList() {
     const total = stores.reduce((sum, cart) =>
       sum + cart.products.reduce((productSum, product) =>
         product.checked ? productSum + product.count : productSum, 0), 0);
+
     setTotalCount(total);
   }, [stores]);
 
@@ -185,8 +186,6 @@ export function CartList() {
 
     console.log(checkoutData);
 
-  };
-
   const HandleDeleteProduct = async (cartId:string, skuId:number) =>{
     try {
       await deleteProduct(cartId, skuId);
@@ -242,6 +241,7 @@ export function CartList() {
         <div className="basis-1/4">
           <Card className="rounded-xl border-blue-500 mt-6 ml-[-8px] mr-2 ">
             <Button className="border-b-2 bg-transparent text-black hover:bg-white rounded-b-none w-full flex justify-between py-8" onClick={() => setIsVoucherOpen(true)}>
+      
               <div className="flex flex-row w-100 ">
                 <div className="flex flex-row w-full items-center gap-4">
                   <BiSolidDiscount className="h-7 w-7" color="blue" />
@@ -265,10 +265,12 @@ export function CartList() {
               </div>
             </div>
           </Card>
+
           <Card className='rounded-xl mt-6 ml-[-8px] mr-2  border-blue-500'>
+
             <div className="flex flex-col px-5 text-lg py-7 gap-1">
               <Label className="text-xl font-bold ">Catatan</Label>
-              <div className='flex flex-col'>
+              <div className="flex flex-col">
                 <Input
                   placeholder="Tulis Catatan/intruksi pesananmu"
                   className="text-lg  rounded-[10px] py-6 w-full"

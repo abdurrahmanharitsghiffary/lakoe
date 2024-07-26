@@ -3,9 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from '@/common/services/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
-import { snap } from 'src/common/libs/midtrans';
+import { snap } from '@/common/libs/midtrans';
 import { MidtransNotification } from './payment.dto';
 
 @Injectable()
@@ -120,7 +120,7 @@ export class PaymentService {
       const { token, order_id, redirect_url } = transaction;
 
       await tx.payment.upsert({
-        where: { id: order?.invoice?.payment?.id },
+        where: { id: order?.invoice?.payment?.id || -1 },
         update: {
           bank: 'unknown',
           midtransOrderId,
@@ -180,7 +180,7 @@ export class PaymentService {
         midtransOrderId: statusResponse.order_id,
       },
       data: updateData,
-      select: { invoice: { select: { orderId: true } } },
+      select: { invoice: { select: { id: true, orderId: true } } },
     });
 
     if (
@@ -193,6 +193,24 @@ export class PaymentService {
         data: { status: 'NEW_ORDER' },
       });
     }
+
+    const invoice = await this.prisma.invoice.findUnique({
+      where: {
+        id: updatedPayment?.invoice?.id,
+      },
+    });
+
+    if (!invoice)
+      throw new NotFoundException(`Invoice with ${invoice} not found`);
+
+    await this.prisma.invoice.update({
+      where: {
+        id: invoice.id,
+      },
+      data: {
+        amount: statusResponse.gross_amount,
+      },
+    });
 
     return updatedPayment;
   }

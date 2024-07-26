@@ -22,22 +22,23 @@ import {
 } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { User } from '../../../common/decorators/user.decorator';
-import { UserPayload } from 'src/common/types';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
+import { UserPayload } from '@/common/types';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
-import { CloudinaryService } from 'src/common/services/cloudinary.service';
+import { ZodValidationPipe } from '@/common/pipes/zod-validation/zod-validation.pipe';
+import { CloudinaryService } from '@/common/services/cloudinary.service';
 import { ApiTags } from '@nestjs/swagger';
 import { ProductService } from '../product/product.service';
 import { OrderService } from '../order/order.service';
 import { FindAllOptions } from '../order/dto/index.dto';
-import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
+import { ApiJwtBearerAuth } from '@/common/decorators/jwt-bearer.decorator';
 import { StoreGuard } from './guards/store.guard';
 import { AddCourierDto } from './dto/add-courier.dto';
 import {
   DeleteCourierServiceDto,
   deleteCourierServiceSchema,
 } from './dto/delete-courier.dto';
+import { GetProductOption } from '../product/schema/get-products.dto';
 
 @ApiTags('Stores')
 @Controller('stores')
@@ -97,14 +98,18 @@ export class StoreController {
     @Param('id') id: string,
     @Query() options: FindAllOptions,
   ) {
-    return this.orderService.findAllByStoreId(+id, options);
+    const orders = await this.orderService.findAllByStoreId(+id, options);
+    const orderCounts = await this.orderService.getAllStatusCount(+id);
+    return { orders, ...orderCounts };
   }
 
   @Get(':id/products')
   @SkipAuth()
-  async findAllByStoreId(@Param('id') id: string) {
-    console.log(id, 'STORE ID');
-    return this.productService.findAllByStoreId(+id);
+  async findAllByStoreId(
+    @Query() options: GetProductOption,
+    @Param('id') id: string,
+  ) {
+    return this.productService.search({ ...options, storeId: +id });
   }
 
   @Post(':id/shipping-rates')
@@ -214,5 +219,23 @@ export class StoreController {
   @UseGuards(StoreGuard)
   async findAllCourierServices(@Param('id') id: string) {
     return this.storeService.findAllCourierServices(+id);
+  }
+
+  @ApiJwtBearerAuth()
+  @Delete(':id/couriers/:code')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(StoreGuard)
+  async removeCourierByCode(
+    @Param('id') id: string,
+    @Param('code') code: string,
+  ) {
+    const storeId = +id;
+
+    const store = await this.storeService.removeCourierServiceByCode(storeId, {
+      courierCode: code,
+      courierServiceCode: 'reg',
+    });
+
+    return store;
   }
 }

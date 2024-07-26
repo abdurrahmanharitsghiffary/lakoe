@@ -19,12 +19,13 @@ import {
   UpdateAddressDto,
   updateAddressSchema,
 } from './dto/update-address.dto';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
+import { ZodValidationPipe } from '@/common/pipes/zod-validation/zod-validation.pipe';
 import { AddressGuard } from './guards/address.guard';
 import { StoreGuard } from '../store/guards/store.guard';
 import { StoreService } from '../store/store.service';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
+import { ApiJwtBearerAuth } from '@/common/decorators/jwt-bearer.decorator';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
 
 @ApiTags('Address')
 @ApiJwtBearerAuth()
@@ -45,8 +46,8 @@ export class AddressController {
     return this.addressService.create(+id, createAddressDto);
   }
 
+  @SkipAuth()
   @Get('stores/:id/address')
-  @UseGuards(StoreGuard)
   async findAllAddressByStoreId(@Param('id') id: string) {
     await this.storeService.findOne(+id);
     return this.addressService.findAllByStoreId(+id);

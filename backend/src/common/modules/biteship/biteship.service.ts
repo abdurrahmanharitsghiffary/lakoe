@@ -9,8 +9,8 @@ import {
 import { Tracking } from '../../types/biteship/tracking';
 import { PublicTracking } from '../../types/biteship/public-tracking';
 import { HttpService } from '@nestjs/axios';
-import { AreaResponse } from 'src/common/types/biteship/area';
-import { CourierPricingResponse } from 'src/common/types/biteship/shipping-rates';
+import { AreaResponse } from '@/common/types/biteship/area';
+import { CourierPricingResponse } from '@/common/types/biteship/shipping-rates';
 
 @Injectable()
 export class BiteshipService {
@@ -25,6 +25,7 @@ export class BiteshipService {
           couriers: options.couriers.join(','),
         },
       );
+    console.log(response.data);
     return response.data;
   }
 

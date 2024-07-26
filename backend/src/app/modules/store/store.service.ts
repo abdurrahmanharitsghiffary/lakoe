@@ -6,16 +6,16 @@ import {
 } from '@nestjs/common';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from '@/common/services/prisma.service';
 import {
   selectStore,
   selectStoreSimplified,
-} from 'src/common/query/store.select';
-import { BiteshipService } from 'src/common/modules/biteship/biteship.service';
+} from '@/common/query/store.select';
+import { BiteshipService } from '@/common/modules/biteship/biteship.service';
 import { CreateInvoiceDto } from '../order/dto/create-order.dto';
 import { AddCourierDto } from './dto/add-courier.dto';
-import { GetShippingRateOptions } from 'src/common/types/biteship';
-import { ERR } from 'src/common/constants';
+import { GetShippingRateOptions } from '@/common/types/biteship';
+import { ERR } from '@/common/constants';
 
 @Injectable()
 export class StoreService {
@@ -31,15 +31,20 @@ export class StoreService {
       logoAttachment?: string;
     },
   ) {
-    const store = await this.prismaService.store.count({ where: { userId } });
-    if (store > 0) throw new ConflictException('Store already created.');
+    return this.prismaService.$transaction(async (tx) => {
+      const store = await tx.store.count({ where: { userId } });
+      if (store > 0) throw new ConflictException('Store already created.');
 
-    return this.prismaService.store.create({
-      data: {
-        userId,
-        domain: `${createStoreDto.name.replaceAll(' ', '-').toLowerCase()}-${Date.now().toString().slice(-3)}`,
-        ...createStoreDto,
-      },
+      const createdStore = await tx.store.create({
+        data: {
+          userId,
+          domain: `${createStoreDto.name.replaceAll(' ', '-').toLowerCase()}-${Date.now().toString().slice(-3)}`,
+          ...createStoreDto,
+        },
+      });
+
+      await tx.user.update({ where: { id: userId }, data: { hasStore: true } });
+      return createdStore;
     });
   }
 
@@ -213,5 +218,24 @@ export class StoreService {
     });
     if (!store) throw new NotFoundException('Store is not found.');
     return store;
+  }
+
+  async removeCourierServiceByCode(
+    storeId: number,
+    {
+      courierCode,
+      courierServiceCode,
+    }: { courierCode: string; courierServiceCode: string },
+  ) {
+    await this.checkStoreMustExists(storeId);
+    return await this.prismaService.courierService.delete({
+      where: {
+        courierCode_courierServiceCode_storeId: {
+          courierCode,
+          courierServiceCode,
+          storeId,
+        },
+      },
+    });
   }
 }

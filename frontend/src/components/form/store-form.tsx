@@ -4,12 +4,11 @@ import { InputForm } from "@/features/products/components/input/input-form";
 import { AvatarInput } from "../input/logo-input";
 import { BannerInput } from "../input/banner-input";
 import { useStore } from "@/hooks/use-store";
+import { DescInput } from "../input/desc-input";
 
 export function StoreForm() {
-  const { register, handleSubmit, errors, onSubmit } = useStore();
+  const { register, handleSubmit, errors, onSubmit, control } = useStore();
   console.log(errors);
-
-  // const { onChange, ...bannerField } = register("bannerAttachment");
 
   return (
     <>
@@ -27,18 +26,16 @@ export function StoreForm() {
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col gap-2"
               >
-                <div className="flex justify-center">
-                  <AvatarInput {...register("logo")} />
+                <div className="flex flex-col items-center gap-1">
+                  <h2 className="font-semibold">Logo</h2>
+                  <AvatarInput control={control} name="logo" />
                 </div>
-                <div>
+                <div className="flex flex-col gap-1">
+                  <h2 className="font-semibold">Banner</h2>
                   <BannerInput
-                    {...register("banner")}
-                    // {...bannerField}
-                    // onChange={(e) => {
-                    //   const file = e.target?.files?.[0];
-                    //   onChange(file);
-                    //   e.target.value = "";
-                    // }}
+                    classNames={{ wrapper: "w-full" }}
+                    control={control}
+                    name="banner"
                   />
                 </div>
                 <div className="grid gap-2">
@@ -66,11 +63,10 @@ export function StoreForm() {
                   </p>
                 </div>
                 <div className="grid gap-2">
-                  <InputForm
+                  <DescInput
                     label="Deskripsikan Toko Kamu"
                     isRequired
                     focus="lakoePrimary"
-                    type="text"
                     {...register("description")}
                   />
                   <p className="text-xs text-destructive">

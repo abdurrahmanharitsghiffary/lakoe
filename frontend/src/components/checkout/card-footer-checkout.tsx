@@ -13,6 +13,8 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useGetSkus } from "@/hooks/use-checkout";
+import { axios } from "@/lib/axios";
 
 interface opsiPengirimanType {
   nama: string;
@@ -42,10 +44,50 @@ const opsiPengiriman: opsiPengirimanType[] = [
   },
 ];
 
-export function CardFooterCheckout() {
+import { useGetStoreId } from "@/hooks/use-checkout";
+import { FormCheckout } from "@/validator/checkout-validator";
+import { ApiResponse } from "@/types/api-response";
+import { Pricing } from "@/types/biteship";
+
+export function CardFooterCheckout({
+  formData,
+  onInputChange,
+}: {
+  formData: FormCheckout;
+  onInputChange: (name: keyof FormCheckout, value: any) => void;
+}) {
   const [isSendOpen, setIsSendOpen] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState<
-    opsiPengirimanType | undefined>(undefined);
+    opsiPengirimanType | undefined
+  >(undefined);
+
+  const [courierRates, setCourierRates] = useState<Pricing[]>([]);
+
+  const skus = useGetSkus();
+  const storeId = useGetStoreId();
+
+  const handleGetCourierMethod = async () => {
+    setIsSendOpen(true);
+    console.log(formData, "FormData");
+    const response = await axios.post<ApiResponse<Pricing[]>>(
+      `/stores/${storeId}/shipping-rates`,
+      {
+        address: {
+          ...formData,
+          receiverAddressPhone: formData?.receiverContactPhone,
+          receiverName: formData?.receiverContactName,
+          receiverPostalCode: "16630",
+        },
+        skus: skus.map((sku) => ({ id: sku?.sku?.id, qty: sku?.qty })),
+      }
+    );
+    const data = response?.data;
+    console.log(data, "DATA");
+    setCourierRates(data?.data ?? []);
+  };
+
+  console.log(courierRates);
+
   return (
     <div className="flex w-full mt-4 ">
       <Card className="flex w-full h-auto py-4">
@@ -53,7 +95,7 @@ export function CardFooterCheckout() {
           <h1 className="text-2xl font-bold mx-3">Metode Pengiriman</h1>
           {!deliveryMethod ? (
             <Button
-              onClick={() => setIsSendOpen(true)}
+              onClick={handleGetCourierMethod}
               className="bg-blue-600 text-lg py-7 mx-3"
             >
               Pilih Metode Pengiriman
@@ -65,10 +107,7 @@ export function CardFooterCheckout() {
               className="border-blue-300 py-10 mx-3"
             >
               <div className="flex w-full h-auto gap-4">
-                <img
-                  src={deliveryMethod.image}
-                  className="h-[40px] mt-3"
-                />
+                <img src={deliveryMethod.image} className="h-[40px] mt-3" />
                 <div className="flex flex-col w-full mt-[-5px] justify-center ">
                   <p>Nextday</p>
                   <p className="text-blue-600 text-lg">{deliveryMethod.nama}</p>
@@ -96,50 +135,57 @@ export function CardFooterCheckout() {
                   Metode Pengiriman
                 </DialogTitle>
                 <div className="border-b-2 w-full"></div>
-                <DialogTitle className="text-xl">Besok(2 hari)</DialogTitle>
+                {/* <DialogTitle className="text-xl">Besok(2 hari)</DialogTitle>
                 <DialogDescription className="flex w-100 text-lg">
                   Pembelian Diatas Jam 2 dikirim besok
-                </DialogDescription>
+                </DialogDescription> */}
               </DialogHeader>
               <RadioGroup className="px-4 space-y-4 ">
-                {opsiPengiriman.map((data) => (
+                {courierRates.map((data) => (
                   <Button
-                    key={data.nama}
+                    key={data?.company + data?.type}
                     onClick={() => {
                       setIsSendOpen(false);
-                      console.log("ini data", data);
-                      setDeliveryMethod({
-                        harga: data.harga,
-                        image: data.image,
-                        IsAvailableForCOD: data.IsAvailableForCOD,
-                        nama: data.nama,
-                      });
+                      onInputChange("courierCode", data?.company);
+                      onInputChange("courierServiceCode", data?.type);
+
+                      // console.log("ini data", data);
+                      // setDeliveryMethod({
+                      //   harga: data.harga,
+                      //   image: data.image,
+                      //   IsAvailableForCOD: data.IsAvailableForCOD,
+                      //   nama: data.nama,
+                      // });
                     }}
-                    className="bg-white  h-14 hover:bg-blue-200 rounded-sm text-black-0"
+                    className="bg-white  h-20 hover:bg-blue-200 rounded-sm text-black-0"
                   >
                     <div className="flex items-center w-full space-x-4 ">
                       <RadioGroupItem
-                        value="antaraja"
-                        id="r1"
+                        value={data?.company}
+                        id={data?.company}
                         className="h-5 w-5 text-blue-500 border-blue-500"
                       />
                       <Label
-                        htmlFor="r1"
+                        htmlFor={data?.company}
                         className="flex flex-row w-full my-[-25px] justify-between items-center"
                       >
                         <div className="flex flex-row justify-between w-[200px]">
-                          <img
-                            src={data.image}
-                            alt=""
-                            className="h-[40px]"
-                          />
-                          <p className="text-lg mt-[10px] mx-[10px] text-black-0">
-                            {data.nama}
-                          </p>
+                          {/* <img src={data.image} alt="" className="h-[40px]" /> */}
+                          <div className="flex capitalize flex-col gap-2 text-start">
+                            <p className="text-lg text-black-0">
+                              {data?.courier_name} {data?.duration}
+                            </p>
+                            <p className="text-md text-black-0">
+                              {data?.courier_service_name}
+                            </p>
+                            <p className="text-md text-black-0">
+                              {data?.description}
+                            </p>
+                          </div>
                         </div>
                         <div className="flex flex-row ">
                           <p className="text-xl text-blue-500">
-                            Rp.{data.harga}
+                            Rp.{data?.price}
                           </p>
                         </div>
                       </Label>

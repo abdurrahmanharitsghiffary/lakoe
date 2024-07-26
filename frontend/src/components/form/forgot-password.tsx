@@ -1,7 +1,9 @@
 import { useForgot } from "@/hooks/use-forgot";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 export function ForgotForm() {
   const { register, handleSubmit, onSubmit, errors } = useForgot();
@@ -27,12 +29,19 @@ export function ForgotForm() {
           </div>
 
           <div className="mt-3">
-            <Button type="submit" className="w-full mb-2">
+            <Button
+              type="submit"
+              className="w-full mb-2"
+              variant="lakoePrimary"
+            >
               Submit
             </Button>
-            <Button variant="outline" className="w-full">
+            <Link
+              to="/auth/login"
+              className={cn("w-full", buttonVariants({ variant: "outline" }))}
+            >
               Back to login
-            </Button>
+            </Link>
           </div>
         </form>
       </div>

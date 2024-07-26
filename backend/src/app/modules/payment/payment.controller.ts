@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PaymentService } from './payment.service';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
 import { PaymentDto, PaymentId } from './payment.dto';
 
 @Controller('payments')

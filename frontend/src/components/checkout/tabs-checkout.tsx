@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CardHeaderCheckout } from "./card-header-checkout";
-import { CardBodyCheckout } from "./card-body-checkout";
+// import { CardHeaderCheckout } from "./card-header-checkout";
+// import { CardBodyCheckout } from "./card-body-checkout";
 import { CardFooterCheckout } from "./card-footer-checkout";
 
 export function TabsCheckout() {
@@ -33,8 +33,8 @@ export function TabsCheckout() {
         </TabsList>
         <div className="border-b-2 mt-4 ml-6 w-[945px]"></div>
         <TabsContent value="Pengiriman" className="mt-2">
-          <CardHeaderCheckout />
-          <CardBodyCheckout />
+          {/* <CardHeaderCheckout />
+          <CardBodyCheckout /> */}
           <CardFooterCheckout />
         </TabsContent>
       </Tabs>

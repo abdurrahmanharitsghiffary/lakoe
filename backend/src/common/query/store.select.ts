@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
-import { selectProfile } from 'src/common/query/profile.select';
-import { selectUserSimplified } from 'src/common/query/user.select';
+import { selectProfile } from '@/common/query/profile.select';
+import { selectUserSimplified } from '@/common/query/user.select';
 
 export type SelectStorePayload = Prisma.StoreGetPayload<{
   select: typeof selectStore;

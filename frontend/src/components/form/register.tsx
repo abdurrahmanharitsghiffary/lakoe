@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import { FcGoogle } from "react-icons/fc";
 import { useRegist } from "@/hooks/use-regist";
 
 export function RegisterForm() {
@@ -69,7 +68,7 @@ export function RegisterForm() {
             </div>
             <Input
               type="password"
-              placeholder="********"
+              placeholder="Enter password"
               {...register("password")}
               required
             />
@@ -77,7 +76,7 @@ export function RegisterForm() {
               {errors.password?.message}
             </p>
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" variant="lakoePrimary">
             Create account
           </Button>
           {/* <Button variant="outline" className="w-full" type="submit">

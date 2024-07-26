@@ -6,6 +6,6 @@ export class ActivationDto {
 }
 
 export const activationSchema = z.object({
-  ids: z.array(z.number()).max(10),
+  ids: z.array(z.number()),
   isActive: z.boolean(),
 });

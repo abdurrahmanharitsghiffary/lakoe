@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
 import { z } from 'zod';
-import { Z } from 'src/common/libs/zod';
+import { Z } from '@/common/libs/zod';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}
 

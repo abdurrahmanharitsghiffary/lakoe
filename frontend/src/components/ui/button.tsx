@@ -20,6 +20,8 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         lakoePrimary:
           "bg-lakoe-primary hover:bg-lakoe-secondary text-primary-foreground",
+        lakoeOutline:
+          "border border-lakoe-primary bg-accent text-lakoe-primary",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -29,7 +31,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "lakoePrimary",
       size: "default",
     },
   }

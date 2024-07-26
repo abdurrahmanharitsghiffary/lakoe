@@ -66,18 +66,25 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none; /* Safari and Chrome */
   }
+  .hide-input-arrow::-webkit-inner-spin-button,
+  .hide-input-arrow::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
   :root {
-    --lakoe-primary: #0086b4;
-    --lakoe-primary-50: #f1f8fb;
-    --lakoe-primary-100: #c8e5ef;
-    --lakoe-primary-200: #97cee1;
-    --lakoe-primary-300: #5ab1ce;
-    --lakoe-primary-400: #359fc4;
-    --lakoe-primary-500: #0186b4;
-    --lakoe-primary-600: #007198;
-    --lakoe-primary-700: #005b7b;
-    --lakoe-primary-800: #004d68;
-    --lakoe-primary-900: #00384b;
+    --lakoe-primary: #2196f3;
+    --lakoe-primary-50: #e3f2fd;
+    --lakoe-primary-100: #bbdefb;
+    --lakoe-primary-200: #90caf9;
+    --lakoe-primary-300: #64b5f6;
+    --lakoe-primary-400: #42a5f5;
+    --lakoe-primary-500: #2196f3;
+    --lakoe-primary-600: #1e88e5;
+    --lakoe-primary-700: #1976d2;
+    --lakoe-primary-800: #1565c0;
+    --lakoe-primary-900: #0d47a1;
 
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;

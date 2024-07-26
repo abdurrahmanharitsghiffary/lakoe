@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
-import { PrismaService } from 'src/common/services/prisma.service';
-import { selectTemplateMessage } from 'src/common/query/message-template.select';
+import { PrismaService } from '@/common/services/prisma.service';
+import { selectTemplateMessage } from '@/common/query/message-template.select';
 
 @Injectable()
 export class TemplateService {

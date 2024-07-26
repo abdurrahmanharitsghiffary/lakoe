@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-import { genRanNumber } from 'src/common/utils/gen-ran-num';
+import { genRanNumber } from '@/common/utils/gen-ran-num';
 import { z } from 'zod';
+import { zfd } from 'zod-form-data';
 
 export class CreateSkuDto {
   stock: number = genRanNumber();
@@ -32,4 +33,19 @@ export const createSkuSchema = z.object({
   weightInGram: z.number().min(1).positive(),
   price: z.number().min(1).positive(),
   skuAttribute: z.array(createSkuAttributeSchema).optional(),
+});
+
+export const zfdCreateSkuAttributeSchema = z.object({
+  value: zfd.text(z.string().min(1)),
+  attributeName: zfd.text(z.string().min(1)),
+});
+
+export const zfdCreateSkuSchema = z.object({
+  stock: zfd.numeric(z.number().min(1).positive()),
+  isActive: zfd.checkbox({ trueValue: 'true' }),
+  discount: zfd.numeric(z.number().optional()),
+  discountType: zfd.text(z.enum(['FIXED', 'PERCENTAGE']).optional()),
+  weightInGram: zfd.numeric(z.number().min(1).positive()),
+  price: zfd.numeric(z.number().min(1).positive()),
+  skuAttribute: zfd.repeatable(z.array(zfdCreateSkuAttributeSchema).optional()),
 });

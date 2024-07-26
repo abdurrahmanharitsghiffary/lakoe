@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
-import { PrismaService } from 'src/common/services/prisma.service';
-import { selectAddress } from 'src/common/query/address.select';
-import { ERR } from 'src/common/constants';
+import { PrismaService } from '@/common/services/prisma.service';
+import { selectAddress } from '@/common/query/address.select';
+import { ERR } from '@/common/constants';
 
 @Injectable()
 export class AddressService {

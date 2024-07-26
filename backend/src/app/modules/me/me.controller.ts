@@ -12,14 +12,15 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UpdateStoreDto } from '../store/dto/update-store.dto';
-import { CloudinaryService } from 'src/common/services/cloudinary.service';
+import { CloudinaryService } from '@/common/services/cloudinary.service';
 import { StoreService } from '../store/store.service';
-import { User } from 'src/common/decorators/user.decorator';
-import { UserPayload } from 'src/common/types';
-import { PrismaService } from 'src/common/services/prisma.service';
-import { selectUser } from 'src/common/query/user.select';
+import { User } from '@/common/decorators/user.decorator';
+import { UserPayload } from '@/common/types';
+import { PrismaService } from '@/common/services/prisma.service';
+import { selectUser } from '@/common/query/user.select';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
+import { ApiJwtBearerAuth } from '@/common/decorators/jwt-bearer.decorator';
+import { omitProperties } from '@/common/utils/omit-properties';
 
 @ApiTags('Me')
 @ApiJwtBearerAuth()
@@ -33,10 +34,16 @@ export class MeController {
 
   @Get()
   async getProfile(@User() user: UserPayload) {
-    return this.prismaService.user.findUnique({
+    const me = await this.prismaService.user.findUnique({
       where: { id: user?.id },
-      select: selectUser,
+      select: { ...selectUser, store: { select: { id: true } } },
     });
+    console.log(me?.store?.id);
+    return {
+      ...omitProperties(me, ['store']),
+      hasStore: me?.store?.id ? true : false,
+      storeId: me?.store?.id,
+    };
   }
 
   @Get('stores')

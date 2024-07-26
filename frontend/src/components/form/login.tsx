@@ -46,12 +46,12 @@ export function LoginForm() {
             </div>
             <Input
               type="password"
-              placeholder="••••••••"
+              placeholder="Enter your account password"
               {...register("password")}
               required
             />
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" variant="lakoePrimary">
             Login
           </Button>
           <Link

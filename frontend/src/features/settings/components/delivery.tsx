@@ -1,30 +1,42 @@
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
-import {Typography} from "@/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
-import { IoIosArrowDown } from "react-icons/io";
-import { motion } from "framer-motion";
+// import { IoIosArrowDown } from "react-icons/io";
+// import { motion } from "framer-motion";
+import couriersData from "@/data/courier.json";
+import { useGetMe } from "@/features/me/api/me-api";
+import { axios } from "@/lib/axios";
+// import { useQuery } from "@tanstack/react-query";
 
+// interface Courier {
+//   courierCode: string;
+//   courierServiceName: string;
+//   description: string;
+//   courierServiceCode: string;
+// }
+
+// const courier: Courier[] = couriers;
 type Courier = "jnt" | "jne" | "sicepat" | "tiki" | "grab" | "gosend";
 
 export function Delivery() {
-  const [isOpen, setIsOpen] = useState<{
-    [key in Courier]: boolean;
-  }>({
-    jnt: false,
-    jne: false,
-    sicepat: false,
-    tiki: false,
-    grab: false,
-    gosend: false,
-  });
+  // const [isOpen, setIsOpen] = useState<{
+  //   [key in Courier]: boolean;
+  // }>({
+  //   jnt: false,
+  //   jne: false,
+  //   sicepat: false,
+  //   tiki: false,
+  //   grab: false,
+  //   gosend: false,
+  // });
 
-  const toggle = (courier: Courier) => () => {
-    setIsOpen((prev) => ({
-      ...prev,
-      [courier]: !prev[courier],
-    }));
-  };
+  // const toggle = (courier: Courier) => () => {
+  //   setIsOpen((prev) => ({
+  //     ...prev,
+  //     [courier]: !prev[courier],
+  //   }));
+  // };
 
   const [selectedCouriers, setSelectedCouriers] = useState<{
     [key in Courier]: boolean;
@@ -37,13 +49,86 @@ export function Delivery() {
     gosend: false,
   });
 
-  const handleSwitchChange = (courier: Courier) => (checked: boolean) => {
+  const { data } = useGetMe();
+  const storeId = data?.data?.storeId;
+
+  const couriers = couriersData as {
+    courierCode: Courier;
+    courierServiceName: string;
+    courierServiceCode: string;
+    description: string;
+  }[];
+
+  const handleSwitchChange = (courier: Courier) => async (checked: boolean) => {
     console.log("Switch clicked for:", courier);
-    setSelectedCouriers({
-      ...selectedCouriers,
-      [courier]: checked,
+
+    setSelectedCouriers((prev) => {
+      const updated = { ...prev, [courier]: checked };
+      return updated;
     });
+
+    try {
+      const selectedCourier = couriers.find((c) => c.courierCode === courier);
+
+      if (!selectedCourier) {
+        console.error("Courier not found:", courier);
+        return;
+      }
+      if (checked) {
+        await axios.put(`/stores/${storeId}/couriers`, {
+          courierServices: [
+            {
+              courierCode: selectedCourier.courierCode,
+              courierServiceName: selectedCourier.courierServiceName,
+              courierServiceCode: selectedCourier.courierServiceCode,
+            },
+          ],
+        });
+        console.log("Courier added:", courier);
+      } else {
+        await axios.delete(`/stores/${storeId}/couriers/${courier}`);
+        console.log("Courier removed:", courier);
+      }
+    } catch (error) {
+      console.error("Error updating courier:", error);
+    }
   };
+
+  const renderCard = (
+    courier: Courier,
+    logo: string,
+    title: string,
+    service: string,
+    description: string
+  ) => (
+    <div className="flex justify-center items-center pt-5">
+      <Card className="h-[120px] w-[500px] flex items-center">
+        <div className="flex flex-row items-center w-full justify-between">
+          <div className="flex flex-row w-full items-center">
+            <img src={logo} className="w-[120px] m-5 mt-6" />
+            <div className="flex flex-col w-full justify-center">
+              <div className="flex">
+                <CardTitle className="text-lg capitalize">{title}</CardTitle>
+                <h1 className="mx-3">-</h1>
+                <CardTitle className="text-lg">{service}</CardTitle>
+              </div>
+              <CardDescription>{description}</CardDescription>
+            </div>
+          </div>
+          <Switch
+            id={courier}
+            className="ml-5 data-[state=checked]:bg-lakoe-primary mr-7"
+            checked={selectedCouriers[courier]}
+            onCheckedChange={handleSwitchChange(courier)}
+          />
+        </div>
+      </Card>
+    </div>
+  );
+
+  const filteredCourier = couriers.filter(
+    (courier) => courier.courierServiceCode === "reg"
+  );
 
   return (
     <div>
@@ -51,302 +136,29 @@ export function Delivery() {
       <Typography variant={"p"}>
         Atur kurir yang ingin kamu sediakan di tokomu
       </Typography>
-
-      <div className="flex justify-center">
-        <div>
-          {/* J&T Express */}
-          <div className="flex justify-center items-center pt-5 ">
-            <Card className="h-[120px] w-[500px] flex items-center ">
-              <div className="flex flex-row items-center w-[2100px] justify-between ">
-                <div className="flex flex-row w-full">
-                  <img
-                    src="/assets/logo-logistic/j&t.svg"
-                    className="w-[120px] m-5 mt-6"
-                  />
-                  <div className="flex flex-col w-full justify-center">
-                    <CardTitle>J&T</CardTitle>
-                    <CardDescription>Next Day Reguler</CardDescription>
-                  </div>
-                </div>
-                <div className="flex float-right">
-                  <Switch
-                    id="jnt"
-                    className="ml-10 data-[state=checked]:bg-lakoe-primary"
-                    checked={selectedCouriers.jnt}
-                    onCheckedChange={handleSwitchChange("jnt")}
-                  />
-                </div>
-              </div>
-
-              <div className="relative w-full pr-2">
-                <div
-                  className="flex justify-end items-center w-full cursor-pointer"
-                  onClick={toggle("jnt")}
-                >
-                  <motion.span
-                    className="relative"
-                    style={{ transformOrigin: "center" }}
-                    animate={{ rotate: isOpen.jnt ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <IoIosArrowDown className="w-5 h-5 m-5" />
-                  </motion.span>
-                </div>
-
-                {isOpen.jnt && (
-                  <div className="absolute flex-col font-semibold">
-                    <div className="mt-3">
-                      <label className="flex items-center">
-                        <input type="checkbox" />
-                        <p>Same Day</p>
-                      </label>
-                    </div>
-                    <div className="mt-3">
-                      <label className="flex items-center">
-                        <input type="checkbox" />
-                        <p>Next Day</p>
-                      </label>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-            </Card>
-          </div>
-
-          {/* JNE */}
-          <div className="flex justify-center items-center pt-5">
-            <Card className="h-[120px] w-[500px] flex items-center ">
-              <div className="flex flex-row items-center w-[2100px] justify-between ">
-                <div className="flex flex-row w-full">
-                  <img
-                    src="/assets/logo-logistic/jne.svg"
-                    className="w-[120px] m-5 mt-6"
-                  />
-                  <div className="flex flex-col w-full justify-center">
-                    <CardTitle>JNE</CardTitle>
-                    <CardDescription>Next Day Reguler</CardDescription>
-                  </div>
-                </div>
-                <div className="flex float-right">
-                  <Switch
-                    id="jnt"
-                    className="ml-10 data-[state=checked]:bg-lakoe-primary"
-                    checked={selectedCouriers.jne}
-                    onCheckedChange={handleSwitchChange("jne")}
-                  />
-                </div>
-              </div>
-              <div className="relative w-full pr-2">
-                <div
-                  className="flex justify-end items-center w-full cursor-pointer"
-                  onClick={toggle("jne")}
-                >
-                  <motion.span
-                    className="relative"
-                    style={{ transformOrigin: "center" }}
-                    animate={{ rotate: isOpen.jne ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <IoIosArrowDown className="w-5 h-5 m-5" />
-                  </motion.span>
-                </div>
-
-                {isOpen.jne && (
-                  <div className="flex-col absolute font-semibold">
-                    <div className="mt-3">
-                      <label className="flex items-center">
-                        <input type="checkbox" />
-                        <p>Same Day</p>
-                      </label>
-                    </div>
-                    <div className="mt-3">
-                      <label className="flex items-center">
-                        <input type="checkbox" />
-                        <p>Next Day</p>
-                      </label>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </Card>
-          </div>
-
-          {/* Sicepat */}
-          <div className="flex justify-center items-center pt-5">
-            <Card className="h-[120px] w-[500px] flex items-center ">
-              <div className="flex flex-row items-center w-[2100px] justify-between ">
-                <div className="flex flex-row w-full">
-                  <img
-                    src="/assets/logo-logistic/sicepat.svg"
-                    className="w-[120px] m-5 mt-6"
-                  />
-                  <div className="flex flex-col w-full justify-center">
-                    <CardTitle>SiCepat</CardTitle>
-                    <CardDescription>Next Day Reguler</CardDescription>
-                  </div>
-                </div>
-                <div className="flex float-right">
-                  <Switch
-                    id="sicepat"
-                    className="ml-10 data-[state=checked]:bg-lakoe-primary"
-                    checked={selectedCouriers.sicepat}
-                    onCheckedChange={handleSwitchChange("sicepat")}
-                  />
-                </div>
-              </div>
-              <div className="relative w-full pr-2">
-                <div
-                  className="flex justify-end items-center w-full cursor-pointer"
-                  onClick={toggle("sicepat")}
-                >
-                  <motion.span
-                    className="relative"
-                    style={{ transformOrigin: "center" }}
-                    animate={{ rotate: isOpen.sicepat ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <IoIosArrowDown className="w-5 h-5 m-5" />
-                  </motion.span>
-                </div>
-
-                {isOpen.sicepat && (
-                  <div className="flex-col absolute font-semibold">
-                    <div className="mt-3">
-                      <label className="flex items-center">
-                        <input type="checkbox" />
-                        <p>Same Day</p>
-                      </label>
-                    </div>
-                    <div className="mt-3">
-                      <label className="flex items-center">
-                        <input type="checkbox" />
-                        <p>Next Day</p>
-                      </label>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </Card>
-          </div>
-
-          {/* Tambahan untuk kurir lainnya */}
-          <div className="ml-3 mt-2">
-            {/* Grab */}
-            <div className="flex justify-center items-center pt-5">
-              <Card className="h-[120px] w-[500px] flex items-center ">
-                <div className="flex flex-row items-center w-[2100px] justify-between ">
-                  <div className="flex flex-row w-full">
-                    <img
-                      src="/assets/logo-logistic/grab.png"
-                      className="w-[120px] m-5 mt-6"
-                    />
-                    <div className="flex flex-col w-full justify-center">
-                      <CardTitle>Grab</CardTitle>
-                      <CardDescription>Next Day Reguler</CardDescription>
-                    </div>
-                  </div>
-                  <div className="flex float-right">
-                    <Switch
-                      id="grab"
-                      className="ml-10 data-[state=checked]:bg-lakoe-primary"
-                      checked={selectedCouriers.grab}
-                      onCheckedChange={handleSwitchChange("grab")}
-                    />
-                  </div>
-                </div>
-                <div className="relative w-full pr-2">
-                  <div
-                    className="flex justify-end items-center w-full cursor-pointer"
-                    onClick={toggle("grab")}
-                  >
-                    <motion.span
-                      className="relative"
-                      style={{ transformOrigin: "center" }}
-                      animate={{ rotate: isOpen.grab ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <IoIosArrowDown className="w-5 h-5 m-5" />
-                    </motion.span>
-                  </div>
-
-                  {isOpen.grab && (
-                    <div className="flex-col absolute font-semibold">
-                      <div className="mt-3">
-                        <label className="flex items-center">
-                          <input type="checkbox" />
-                          <p>Same Day</p>
-                        </label>
-                      </div>
-                      <div className="mt-3">
-                        <label className="flex items-center">
-                          <input type="checkbox" />
-                          <p>Next Day</p>
-                        </label>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </Card>
-            </div>
-
-            {/* Gosend */}
-            <div className="flex justify-center items-center pt-5">
-              <Card className="w-full flex flex-col items-center border-2">
-                <div className="w-full flex items-center">
-                  <div className="flex flex-1 items-center">
-                    <img
-                      src="/assets/logo-logistic/gosent.png"
-                      className="w-[120px] m-5 mt-6"
-                    />
-
-                    <div className="flex flex-col w-full justify-center">
-                      <CardTitle>Gosend</CardTitle>
-                      <CardDescription>Next Day Reguler</CardDescription>
-                    </div>
-                  </div>
-
-                  <div className="flex float-right">
-                    <Switch
-                      id="gosend"
-                      className="data-[state=checked]:bg-lakoe-primary ml-10"
-                      checked={selectedCouriers.gosend}
-                      onCheckedChange={handleSwitchChange("gosend")}
-                    />
-                  </div>
-                  <div
-                    className="cursor-pointer"
-                    onClick={toggle("gosend")}
-                  >
-                    <motion.span
-                      className="relative"
-                      style={{ transformOrigin: "center" }}
-                      animate={{ rotate: isOpen.gosend ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <IoIosArrowDown className="w-5 h-5 m-5" />
-                    </motion.span>
-                  </div>
-                </div>
-                {isOpen.gosend && (
-                  <div className="w-full flex-col font-semibold p-4">
-                    <div className="mt-3">
-                      <input type="checkbox" />
-                      <p>Same Day</p>
-                    </div>
-                    <div className="mt-3">
-                      <label className="flex items-center">
-                        <input type="checkbox" />
-                        <p>Next Day</p>
-                      </label>
-                    </div>
-                  </div>
-                )}
-              </Card>
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-col items-center">
+        {filteredCourier.map((courier) =>
+          renderCard(
+            courier.courierCode as Courier,
+            `/assets/logo-logistic/${courier.courierCode}.svg`,
+            courier.courierCode,
+            courier.courierServiceName,
+            courier.description
+          )
+        )}
       </div>
     </div>
   );
 }
+
+// const { data } = useGetMe();
+// const storeId = data?.data?.storeId;
+
+// const url = checked
+//   ? `/stores/${storeId}/couriers`
+//   : `/stores/${storeId}/couriers/${code}`;
+// const options = {
+//   method: checked ? "POST" : "DELETE",
+//   url: url,
+//   data: checked ? { code: courier } : undefined,
+// };

@@ -11,16 +11,14 @@ import {
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { ApiTags } from '@nestjs/swagger';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
 import {
   AddCartItemDto,
   addCartItemSchema,
-  CreateCartDto,
-  createCartSchema,
   UpdateCartCountDto,
   updateCartCountSchema,
 } from './dto/cart.dto';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
+import { ZodValidationPipe } from '@/common/pipes/zod-validation/zod-validation.pipe';
 
 @ApiTags('Carts')
 @Controller()
@@ -32,12 +30,12 @@ export class CartController {
     return this.cartService.createCartCollection();
   }
 
-  @Post('carts')
-  async createCart(
-    @Body(new ZodValidationPipe(createCartSchema)) createCartDto: CreateCartDto,
-  ) {
-    return this.cartService.createCart(createCartDto);
-  }
+  // @Post('carts')
+  // async createCart(
+  //   @Body(new ZodValidationPipe(createCartSchema)) createCartDto: CreateCartDto,
+  // ) {
+  //   return this.cartService.createCart(createCartDto);
+  // }
 
   @Get('cart-collections/:id')
   findOneCartCollection(@Param('id') collectionId: string) {

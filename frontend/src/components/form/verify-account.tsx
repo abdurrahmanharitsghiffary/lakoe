@@ -2,6 +2,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import { axios } from "@/lib/axios";
 import { z } from "zod";
+import { toast } from "react-toastify";
+import { getAxiosErrMessage } from "@/utils/get-axios-err-message";
+import { ApiResponse } from "@/types/api-response";
 
 const verifySchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
@@ -12,13 +15,26 @@ type Verify = z.infer<typeof verifySchema>;
 export function VerifyForm() {
   const { handleSubmit } = useForm<Verify>();
 
-  const onSubmit: SubmitHandler<Verify> = async (data) => {
-    try {
-      const response = await axios.post("/auth/verify-email");
-      console.log("verify: ", response.data);
-    } catch (error) {
-      console.error("verify error: ", error);
-    }
+  const onSubmit: SubmitHandler<Verify> = async () => {
+    toast.promise(
+      axios
+        .post<ApiResponse<any>>("/auth/verify-email")
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err)),
+      {
+        error: {
+          render({ data }) {
+            return getAxiosErrMessage(data);
+          },
+        },
+        pending: "Sending request to verify your email",
+        success: {
+          render({ data }) {
+            return data?.data?.message;
+          },
+        },
+      }
+    );
   };
   return (
     <>
@@ -31,7 +47,11 @@ export function VerifyForm() {
       <div className="grid gap-4">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mt-3">
-            <Button type="submit" className="w-full mb-2">
+            <Button
+              type="submit"
+              className="w-full mb-2"
+              variant="lakoePrimary"
+            >
               Verify Account
             </Button>
           </div>

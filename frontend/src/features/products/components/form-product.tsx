@@ -1,19 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-// import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-
 import { SelectValue } from "@radix-ui/react-select";
-// import { CiCirclePlus } from "react-icons/ci";
-import { InputForm } from "./input/input-form";
-// import { useAddProduct } from "../hook/use-add-product";
+import { InputForm, inputVariantProps } from "./input/input-form";
 import {
   Form,
   FormControl,
@@ -23,17 +18,50 @@ import {
 } from "@/components/ui/form";
 import { ProductFileInput } from "@/components/input/product-input";
 import { useAddProduct } from "../hooks/use-add-product";
-
 import { DescInput } from "@/components/input/desc-input";
-
+import { ShadcnControlled } from "@/components/input/shadcn-controlled";
+import { Switch } from "@/components/ui/switch";
+import { Controller } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
 import { BiTrash } from "react-icons/bi";
-import { MdAddCircleOutline } from "react-icons/md";
-import { VariantForms } from "./input/variant-form";
+import { MultipleSelector } from "@/components/ui/multi-select";
 
 export function FormProduct() {
-  const { form, onSubmit } = useAddProduct();
+  const {
+    form,
+    onSubmit,
+    skusFields: { fields },
+    attributes,
+    setAttributes,
+  } = useAddProduct();
+  console.log(attributes, "ATTR");
+  const {
+    watch,
+    formState: { errors },
+  } = form;
+  const productName = watch("name");
+  const imageError = errors?.images?.root?.message ?? "";
+  const [newVariant, setNewVariant] = useState("");
+
+  const handleVariantFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!newVariant) return;
+    setAttributes((c) => [
+      ...c,
+      { name: newVariant.toUpperCase(), values: [] },
+    ]);
+    setNewVariant("");
+  };
+
+  const handleInputVariantChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewVariant(e.target.value);
+  };
+
   return (
     <>
+      <form id="add-variant-form" onSubmit={handleVariantFormSubmit}></form>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -62,7 +90,7 @@ export function FormProduct() {
                   </div>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="url"
                 render={({ field }) => (
@@ -82,11 +110,11 @@ export function FormProduct() {
                     <FormMessage></FormMessage>
                   </div>
                 )}
-              />
+              /> */}
 
               <FormField
                 control={form.control}
-                name="category"
+                name="categories"
                 render={({ field: { onChange, value, ...field } }) => (
                   <div className="flex flex-col gap-2">
                     <Label>Kategori</Label>
@@ -136,23 +164,25 @@ export function FormProduct() {
                   </div>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="attachments"
-                render={() => (
-                  <div className="flex flex-col gap-3">
-                    <Label>Foto Produk</Label>
-                    <div className="flex gap-2 overflow-x-auto hide-sc">
-                      <ProductFileInput>Foto 1</ProductFileInput>
-                      <ProductFileInput>Foto 2</ProductFileInput>
-                      <ProductFileInput>Foto 3</ProductFileInput>
-                      <ProductFileInput>Foto 4</ProductFileInput>
-                      <ProductFileInput>Foto 5</ProductFileInput>
-                    </div>
-                    <FormMessage />
-                  </div>
-                )}
-              />
+
+              <div className="flex flex-col gap-3">
+                <Label>Foto Produk</Label>
+                <div className="flex gap-2 overflow-x-auto hide-scrollbar">
+                  {Array(5)
+                    .fill(null)
+                    .map((_, i) => (
+                      <ProductFileInput
+                        control={form.control}
+                        name={`images.${i}`}
+                      >
+                        Foto {i + 1}
+                      </ProductFileInput>
+                    ))}
+                </div>
+                <p className="text-sm font-medium text-destructive">
+                  {imageError}
+                </p>
+              </div>
             </Card>
           </div>
           <Card className="p-4 flex flex-col gap-4">
@@ -166,59 +196,132 @@ export function FormProduct() {
                   yuk!
                 </p>
               </div>
+            </div>
+            <Input
+              value={newVariant}
+              disabled={attributes.length > 2}
+              form="add-variant-form"
+              onChange={handleInputVariantChange}
+              className={cn(inputVariantProps({ focus: "lakoePrimary" }))}
+              placeholder="Ketik variant yg ingin dibuat"
+            />
+            <div className="flex flex-col gap-8 relative">
+              {attributes.map((attr) => (
+                <div className="flex flex-col gap-3">
+                  <div className="flex gap-4 items-center w-full justify-between">
+                    <h3 className="font-semibold">{attr.name}</h3>
+                    <Button
+                      tabIndex={-1}
+                      type="button"
+                      size="icon"
+                      variant="outline"
+                      onClick={() => {
+                        setAttributes((c) => {
+                          return c.filter((cc) => cc.name !== attr.name);
+                        });
+                      }}
+                    >
+                      <BiTrash size={18} />
+                    </Button>
+                  </div>
+                  <MultipleSelector
+                    placeholder={`Ketik opsi baru untuk ${attr.name}`}
+                    maxSelected={5}
+                    hidePlaceholderWhenSelected
+                    creatable
+                    value={attr.values.map((atr) => ({
+                      value: atr,
+                      label: atr,
+                    }))}
+                    onChange={(option) => {
+                      setAttributes((c) => {
+                        return c.map((cc) => {
+                          if (cc.name === attr.name) {
+                            const unique = new Set(
+                              Array.from(option).map((opt) =>
+                                opt.value.toUpperCase()
+                              )
+                            );
+                            return {
+                              ...cc,
+                              values: Array.from(unique),
+                            };
+                          }
+                          return cc;
+                        });
+                      });
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            {attributes?.length > 0 && `Found ${fields?.length} combinations`}
+            <div className="w-full flex flex-col gap-12">
+              {attributes?.length > 0 &&
+                fields.map((combination, i) => {
+                  const attributeValue = (combination?.skuAttribute ?? [])
+                    .map((comb) => `${comb.value}`)
+                    .join(", ");
 
-              <Button className="flex gap-2 rounded-full" variant="outline">
-                <BiTrash size={20} /> Hapus Variant
-              </Button>
-            </div>
-            <div className="flex gap-2">
-              <Button className="rounded-full" variant="outline">
-                Warna
-              </Button>
-              <Button className="rounded-full" variant="outline">
-                Ukuran
-              </Button>
-              <Button className="rounded-full" variant="outline">
-                Ukuran Kemasan
-              </Button>
-              <Button className="rounded-full flex gap-2" variant="outline">
-                <MdAddCircleOutline size={20} />
-                Buat Tipe Varian
-              </Button>
-            </div>
-            <div className="relative">
-              <VariantForms />
-            </div>
-          </Card>
-
-          <div className="flex justify-center">
-            <Card className="w-full flex flex-col gap-4 p-4">
-              <h1 className="font-bold text-xl">Harga</h1>
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field: { onChange, ...field } }) => (
-                  <div className="flex flex-col">
-                    <FormItem>
-                      <FormControl>
-                        <InputForm
-                          isRequired
+                  return (
+                    <div key={attributeValue} className="flex flex-col">
+                      <div className="flex flex-col gap-4">
+                        <div className="font-semibold text-xl flex gap-4 items-center text-center justify-between">
+                          <h2 className="capitalize text-base font-semibold">
+                            {productName} {productName && "-"} {attributeValue}
+                          </h2>
+                          <div className="flex gap-4 items-center text-base">
+                            <Controller
+                              name={`skus.${i}.isActive`}
+                              render={({
+                                field: { name, onChange, value },
+                              }) => (
+                                <>
+                                  {value ? "Aktif" : "Nonaktif"}
+                                  <Switch
+                                    onCheckedChange={(e) => onChange(e)}
+                                    name={name}
+                                    checked={value}
+                                    className="data-[state=checked]:bg-lakoe-primary"
+                                  />
+                                </>
+                              )}
+                            />
+                          </div>
+                        </div>
+                        <ShadcnControlled
                           type="number"
                           label="Harga"
-                          onChange={(e) => onChange(+e.target.value)}
-                          placeholder="Masukkan Harga Satuan Barang"
+                          isRequired
                           startAdornment="Rp."
-                          focus={"lakoePrimary"}
-                          {...field}
+                          control={form.control}
+                          name={`skus.${i}.price`}
                         />
-                      </FormControl>
-                    </FormItem>
-                    <FormMessage />
-                  </div>
-                )}
-              />
-            </Card>
-          </div>
+                        <div className="flex w-full gap-4">
+                          <ShadcnControlled
+                            className="w-full"
+                            type="number"
+                            isRequired
+                            label="Stok Produk"
+                            control={form.control}
+                            name={`skus.${i}.stock`}
+                          />
+                          <ShadcnControlled
+                            className="w-full"
+                            type="number"
+                            label="Berat Produk"
+                            endAdornment="gram"
+                            isRequired
+                            control={form.control}
+                            name={`skus.${i}.weightInGram`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </Card>
 
           <div className="flex justify-center">
             <Card className="w-full p-4 flex flex-col gap-4">
@@ -247,69 +350,95 @@ export function FormProduct() {
               />
             </Card>
           </div>
+          {attributes.length === 0 && (
+            <>
+              <div className="flex justify-center">
+                <Card className="w-full flex flex-col gap-4 p-4">
+                  <h1 className="font-bold text-xl">Harga</h1>
+                  <FormField
+                    control={form.control}
+                    name="skus.0.price"
+                    render={({ field: { onChange, ...field } }) => (
+                      <div className="flex flex-col">
+                        <FormItem>
+                          <FormControl>
+                            <InputForm
+                              onChange={(e) => onChange(+e.target.value)}
+                              isRequired
+                              type="number"
+                              label="Harga"
+                              placeholder="Masukkan Harga Satuan Barang"
+                              startAdornment="Rp."
+                              focus={"lakoePrimary"}
+                              {...field}
+                            />
+                          </FormControl>
+                        </FormItem>
+                        <FormMessage />
+                      </div>
+                    )}
+                  />
+                </Card>
+              </div>
 
-          <div className="flex justify-center">
-            <Card className="p-4 w-full relative flex flex-col gap-4">
-              <h1 className="font-bold text-xl">Pengelolaan Produk</h1>
-              <FormField
-                control={form.control}
-                name="stock"
-                render={({ field: { onChange, ...field } }) => (
-                  <div className="flex flex-col">
-                    <FormItem>
-                      <FormControl>
-                        <InputForm
-                          type="number"
-                          label="Stok Produk"
-                          onChange={(e) => onChange(+e.target.value)}
-                          placeholder="Masukkan jumlah stok"
-                          className="w-full"
-                          isRequired
-                          focus={"lakoePrimary"}
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                    <FormMessage />
-                  </div>
-                )}
-              />
+              <div className="flex justify-center">
+                <Card className="p-4 w-full relative flex flex-col gap-4">
+                  <h1 className="font-bold text-xl">Pengelolaan Produk</h1>
+                  <FormField
+                    control={form.control}
+                    name="skus.0.stock"
+                    render={({ field: { onChange, ...field } }) => (
+                      <div className="flex flex-col">
+                        <FormItem>
+                          <FormControl>
+                            <InputForm
+                              type="number"
+                              label="Stok Produk"
+                              onChange={(e) => onChange(+e.target.value)}
+                              placeholder="Masukkan jumlah stok"
+                              className="w-full"
+                              isRequired
+                              focus={"lakoePrimary"}
+                              {...field}
+                            />
+                          </FormControl>
+                        </FormItem>
+                        <FormMessage />
+                      </div>
+                    )}
+                  />
+                </Card>
+              </div>
 
-              {/* <InputForm
-                  label="SKU (Stock Keeping Unit)"
-                  placeholder="Masukkan Jumlah SKU"
-                /> */}
-            </Card>
-          </div>
-
-          <div className="flex justify-center w-full">
-            <Card className="w-full p-4 flex flex-col gap-4">
-              <h1 className="font-bold text-xl ">Berat dan Pengiriman</h1>
-              <FormField
-                control={form.control}
-                name="weightInGram"
-                render={({ field: { onChange, ...field } }) => (
-                  <div className="flex flex-col">
-                    <FormItem>
-                      <FormControl>
-                        <InputForm
-                          type="number"
-                          onChange={(e) => onChange(+e.target.value)}
-                          label="Berat Produk"
-                          placeholder="Masukkan berat produk"
-                          endAdornment="Gram"
-                          isRequired
-                          focus={"lakoePrimary"}
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                    <FormMessage />
-                  </div>
-                )}
-              />
-              <div className="flex flex-wrap gap-4">
-                <InputForm
+              <div className="flex justify-center w-full">
+                <Card className="w-full p-4 flex flex-col gap-4">
+                  <h1 className="font-bold text-xl ">Berat dan Pengiriman</h1>
+                  <div className="flex flex-wrap gap-4">
+                    <FormField
+                      control={form.control}
+                      name="skus.0.weightInGram"
+                      render={({ field: { onChange, ...field } }) => (
+                        <div className="flex flex-col">
+                          <FormItem>
+                            <FormControl>
+                              <InputForm
+                                type="number"
+                                label="Berat Produk"
+                                endAdornment="gram"
+                                onChange={(e) => onChange(+e.target.value)}
+                                placeholder="Masukkan berat produk"
+                                className="w-full"
+                                isRequired
+                                focus={"lakoePrimary"}
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                          <FormMessage />
+                        </div>
+                      )}
+                    />
+                    {/* <InputForm
                   label="Panjang"
                   placeholder="Masukkan panjang"
                   endAdornment="cm"
@@ -326,28 +455,28 @@ export function FormProduct() {
                   placeholder="Masukkan tinggi"
                   endAdornment="cm"
                   focus={"lakoePrimary"}
-                />
+                /> */}
+                  </div>
+                </Card>
               </div>
-            </Card>
-          </div>
+            </>
+          )}
 
           <div className="flex justify-center ">
             <Card className="w-full p-4">
               <div className="flex justify-between">
-                <Button variant={"outline"} className="rounded-full">
+                {/* <Button variant={"outline"} className="rounded-full">
                   Preview Halaman Checkout
+                </Button> */}
+                <Button variant={"outline"} className="rounded-full ">
+                  Batal
                 </Button>
-                <div className="flex gap-2">
-                  <Button variant={"outline"} className="rounded-full ">
-                    Batal
-                  </Button>
-                  <Button
-                    className="rounded-full bg-blue-500 text-white"
-                    type="submit"
-                  >
-                    Simpan
-                  </Button>
-                </div>
+                <Button
+                  className="rounded-full bg-blue-500 text-white"
+                  type="submit"
+                >
+                  Simpan
+                </Button>
               </div>
             </Card>
           </div>
@@ -355,22 +484,4 @@ export function FormProduct() {
       </Form>
     </>
   );
-}
-
-{
-  /* <div className="flex justify-center">
-        <Card className="w-2/5 my-4">
-          <div className="flex">
-            <div className="">
-              <h1 className="m-4 font-bold text-xl ">Varian Produk</h1>
-              <p className="m-4 text-slate-500 text-sm">
-                Tambah varian agar pembeli dapat memilih produk yang sesuai
-              </p>
-            </div>
-            <Button className="my-8 mx-2 px-4 bg-white text-black rounded-full hover:bg-black hover:text-white">
-              <CiCirclePlus size={25} /> Tambah Produk
-            </Button>
-          </div>
-        </Card>
-      </div> */
 }

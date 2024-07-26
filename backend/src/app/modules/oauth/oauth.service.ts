@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from 'src/common/services/prisma.service';
-import { UserPayload } from 'src/common/types';
+import { PrismaService } from '@/common/services/prisma.service';
+import { UserPayload } from '@/common/types';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -18,9 +18,9 @@ export class OauthService {
     });
 
     if (!c) throw new UnauthorizedException('Invalid code.');
-
+    console.log(c, 'CODAS');
     await this.prismaService.code.delete({
-      where: { code: code.toString() },
+      where: { code },
     });
 
     return c.token;
@@ -31,6 +31,7 @@ export class OauthService {
     const token = await this.jwtService.signAsync({
       id: user?.id,
       role: user?.role,
+      storeId: user?.storeId,
     });
 
     const accessToken = await this.prismaService.token.create({

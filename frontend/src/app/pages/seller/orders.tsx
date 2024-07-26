@@ -1,7 +1,6 @@
-import { OrderList } from "@/components/order/order-list";
-import { OrderTabs } from "@/components/order/order-tabs";
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
+import { Order } from "@/components/order/order-card";
 
 export function OrdersPage() {
   return (
@@ -9,8 +8,7 @@ export function OrdersPage() {
       <Helmet>
         <title>Order</title>
       </Helmet>
-      <OrderTabs />
-      <OrderList />
+      <Order />
     </Card>
   );
 }

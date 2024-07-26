@@ -1,19 +1,13 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { TbListSearch } from "react-icons/tb";
-import { TabItem, Tabs } from "../tabs";
+import { TabItem } from "../tabs";
 import { OrderStatus } from "@/types/order";
 import { cn } from "@/lib/utils";
 import { inputVariantProps } from "@/features/products/components/input/input-form";
 
 const orderStatusCount: Record<OrderStatus | "ALL", number> = {
-  ALL: 10,
+  ALL: 0,
   NOT_PAID: 0,
   NEW_ORDER: 1,
   READY_TO_DELIVER: 1,
@@ -45,57 +39,51 @@ const tabItems: TabItem[] = [
     leftBadge: orderStatusCount.ON_DELIVERY.toString(),
   },
   {
+    label: "Pesanan Selesai",
+    value: "SUCCESS",
+    leftBadge: orderStatusCount.SUCCESS.toString(),
+  },
+  {
     label: "Dibatalkan",
     value: "CANCELLED",
     leftBadge: orderStatusCount.CANCELLED.toString(),
   },
 ];
 
-// Asumsikan `orders` adalah array yang diimpor dari sumber data
-const orders = [
-  { id: 1, name: "Order 1", price: 5000 },
-  { id: 2, name: "Order 2", price: 3000 },
-  { id: 3, name: "Order 3", price: 7000 },
-];
+interface OrderTabsProps {
+  onTabChange: (value: OrderStatus | "ALL") => void;
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
+}
 
-export function OrderTabs() {
+export function OrderTabs({ onTabChange, searchQuery, setSearchQuery }: OrderTabsProps) {
+  const handleTabChange = (value: OrderStatus | "ALL") => {
+    onTabChange(value);
+  };
+
   return (
-    <div className="w-full">
-      <h1 className="text-xl font-bold m-4">Daftar Pesanan</h1>
-      <div className="w-full overflow-x-hidden">
-        <Tabs key="orderTabs" items={tabItems} defaultValue="ALL" />
-      </div>
-      <div className="w-full flex justify-between p-2 gap-2">
+    <div className="flex items-center mb-4">
+      <Select onValueChange={handleTabChange} defaultValue="ALL">
+        <SelectTrigger className="w-48 bg-white border border-gray-300 rounded-md shadow-sm">
+          <SelectValue placeholder="Pilih Status Pesanan" />
+        </SelectTrigger>
+        <SelectContent>
+          {tabItems.map((tabItem) => (
+            <SelectItem key={tabItem.value} value={tabItem.value}>
+              {tabItem.label} ({tabItem.leftBadge})
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <div className="ml-4 flex items-center">
         <Input
-          placeholder="Cari Pesanan"
-          type="text"
-          style={{ flex: 1 }}
-          className={cn("flex-1", inputVariantProps({ focus: "lakoePrimary" }))}
-          icon={<TbListSearch className="text-base" />}
+          placeholder="Cari pesanan"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className={cn("w-64 border border-gray-300 rounded-md")}
         />
-
-        <Select>
-          <SelectTrigger style={{ flex: 1 }}>
-            <SelectValue placeholder="Kurir" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="JNE">JNE</SelectItem>
-            <SelectItem value="JNT">JNT</SelectItem>
-            <SelectItem value="Sicepat">Sicepat</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select>
-          <SelectTrigger style={{ flex: 1 }}>
-            <SelectValue placeholder="Urutkan" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Terbaru">Terbaru</SelectItem>
-            <SelectItem value="Harga Terendah">Harga Terendah</SelectItem>
-            <SelectItem value="Harga Tertinggi">Harga Tertinggi</SelectItem>
-          </SelectContent>
-        </Select>
+        <TbListSearch className="ml-2 text-gray-500" />
       </div>
     </div>
-  )
+  );
 }

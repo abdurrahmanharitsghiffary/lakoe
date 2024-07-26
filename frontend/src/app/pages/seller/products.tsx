@@ -6,13 +6,9 @@ import { Input } from "@/components/ui/input";
 import { MultipleSelector, Option } from "@/components/ui/multi-select";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { Typography } from "@/components/ui/typography";
-import { useGetProducts } from "@/features/products/api/get-products";
+import { useGetProductsByStore } from "@/features/products/api/get-by-store";
 import { CardProduct } from "@/features/products/components/card-product";
-import {
-  ProductActiveFallback,
-  ProductNotActiveFallback,
-  ProductNotFoundFallback,
-} from "@/features/products/components/fallback";
+import { ProductNotFoundFallback } from "@/features/products/components/fallback";
 import { useConfirmDeleteProduct } from "@/features/products/hooks/use-confirm-delete-product";
 import { useConfirmNonactiveProduct } from "@/features/products/hooks/use-confirm-nonactive-product";
 import { cn } from "@/lib/utils";
@@ -36,6 +32,7 @@ import { useDebounce } from "use-debounce";
 import { inputVariantProps } from "@/features/products/components/input/input-form";
 import { TabItem, Tabs } from "@/components/tabs";
 import { useGetCategories } from "@/features/categories/api/get-categories";
+import { useGetMe } from "@/features/me/api/me-api";
 
 const getCheckedProducts = (products: Product[]) => {
   return products.map((product) => ({
@@ -59,43 +56,46 @@ const tabs: TabItem[] = [
 ];
 
 export function ProductsPage() {
+  const { data: meData } = useGetMe();
   const confirm = useConfirmDeleteProduct();
   const confirmNonactive = useConfirmNonactiveProduct();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [sortBy, setSortBy] = useState("lowest_price");
   const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
   const { data: categoryData } = useGetCategories();
 
   const categories = categoryData?.data ?? [];
 
   const categoryOptions = categories.map((category) => ({
-    value: category,
-    label: category,
+    value: category.name,
+    label: category.name,
   }));
-  console.log(selectedCategories, "CATEGORY");
+
   const searchCategories = (value: string) => {
     return new Promise<Option[]>((resolve) => {
       resolve(
         categoryOptions.filter((option) =>
-          option?.label?.toLowerCase()?.includes(value?.toLowerCase())
+          (option?.value ?? "").toLowerCase().includes(value?.toLowerCase())
         )
       );
     });
   };
 
+  const sort_by = searchParams.get("sort_by") || "lowest_price";
   const q = searchParams.get("q") || "";
+
   const [s, setS] = useState(q);
   const [dS] = useDebounce(s, 300);
   const active = searchParams.get("active") || "all";
 
-  const { data, isLoading } = useGetProducts({
+  const { data, isLoading } = useGetProductsByStore({
     options: {
+      storeId: meData?.data?.storeId || -1,
       q,
       categories: selectedCategories
         .map((category) => category.value)
         .join(","),
-      sort_by: sortBy,
+      sort_by,
       active: active === "all" ? undefined : parseStrBool(active),
     },
   });
@@ -118,14 +118,21 @@ export function ProductsPage() {
     [checkedProducts]
   );
 
-  const handleValueChange = (type: string) => {
-    searchParams.set("active", type);
+  const handleSortBy = (value: string) => {
+    searchParams.set("sort_by", value);
     navigate(
       {
         search: "?" + getAllSearchParams(searchParams),
       },
       { replace: true }
     );
+  };
+
+  const handleValueChange = (type: string) => {
+    searchParams.set("active", type);
+    navigate({
+      search: "?" + getAllSearchParams(searchParams),
+    });
   };
 
   const handleCheckedChange = (checked: boolean) => {
@@ -142,6 +149,7 @@ export function ProductsPage() {
       { search: "?" + getAllSearchParams(searchParams) },
       { replace: true }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dS]);
 
   const handleDeleteAllClick = async () => {
@@ -170,18 +178,6 @@ export function ProductsPage() {
         });
       }),
     []
-  );
-
-  const handleSelectChange = (value: string) => {
-    setSortBy(value);
-  };
-
-  const productFallback = q ? (
-    <ProductNotFoundFallback />
-  ) : parseStrBool(active) ? (
-    <ProductActiveFallback />
-  ) : (
-    <ProductNotActiveFallback />
   );
 
   return (
@@ -234,7 +230,7 @@ export function ProductsPage() {
               placeholder="Semua Kategori"
               commandProps={{ style: { flex: 1 } }}
             />
-            <Select onValueChange={handleSelectChange} value={sortBy}>
+            <Select onValueChange={handleSortBy} value={sort_by}>
               <SelectTrigger style={{ flex: 1 }}>
                 <SelectValue placeholder="Urutkan" />
               </SelectTrigger>
@@ -282,7 +278,7 @@ export function ProductsPage() {
           <CardContent className="grid grid-cols gap-3 px-3">
             <List
               data={productData}
-              noItemsContent={productFallback}
+              noItemsContent={<ProductNotFoundFallback />}
               isLoading={isLoading}
               loader={
                 <div className="mx-auto">

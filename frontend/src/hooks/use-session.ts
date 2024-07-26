@@ -5,6 +5,7 @@ type State = {
   user: {
     userId: number;
     role: "USER" | "ADMIN";
+    storeId: number | null;
   } | null;
 };
 
@@ -14,9 +15,11 @@ type Actions = {
   logout: () => void;
 };
 
+const token = localStorage.getItem("token");
+
 export const useSession = create<State & { actions: Actions }>((set) => ({
-  token: localStorage.getItem("token") ?? null,
-  user: null,
+  token: token ?? null,
+  user: token ? JSON.parse(atob(token?.split(".")?.[1])) : null,
   actions: {
     setToken: (token: string) => set((state) => ({ ...state, token })),
     logout: () => {
@@ -26,7 +29,9 @@ export const useSession = create<State & { actions: Actions }>((set) => ({
     login: (token: string) => {
       const payload = token?.split(".")?.[1];
       localStorage.setItem("token", token);
-      set((state) => ({ ...state, token, user: JSON.parse(atob(payload)) }));
+      const user = JSON.parse(atob(payload));
+      console.log(user, "USER");
+      set((state) => ({ ...state, token, user }));
     },
   },
 }));

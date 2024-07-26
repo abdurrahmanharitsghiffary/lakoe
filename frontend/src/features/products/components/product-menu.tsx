@@ -7,13 +7,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useConfirm } from "@/providers/alert-dialog-provider";
 import { Product } from "@/types/product";
-import { BiDuplicate, BiEdit, BiTrash } from "react-icons/bi";
+import { BiTrash } from "react-icons/bi";
+import { useDeleteProduct } from "@/features/products/api/delete-product";
 
 type Props = {
   product: Product | undefined;
 };
 
 export function ProductMenu({ product }: Props) {
+  const { deleteProductAsync } = useDeleteProduct();
   const confirm = useConfirm();
   return (
     <>
@@ -24,17 +26,15 @@ export function ProductMenu({ product }: Props) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <BiEdit className="mr-2" /> <span>Edit Produk</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <BiDuplicate className="mr-2" /> <span>Duplikat Produk</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem
             onClick={async () => {
-              await confirm({
+              if (!product?.id) return;
+              const isConfirmed = await confirm({
                 title: `Hapus Produk ${product?.name}?`,
-                body: `Produk ${product?.name} - ${product?.variants?.[0]?.name} akan dihapus. \n
+                body: `Produk ${product?.name} akan dihapus. \n
 Produk yang dihapus tidak akan dibatalkan. Pastikan produk yang kamu pilih itu adalah benar.`,
                 actionButton: "Ya, Hapus",
                 cancelButton: "Batalkan",
@@ -44,6 +44,7 @@ Produk yang dihapus tidak akan dibatalkan. Pastikan produk yang kamu pilih itu a
                 },
                 cancelProps: { variant: "outline", className: "rounded-full" },
               });
+              if (isConfirmed) await deleteProductAsync(product?.id);
             }}
           >
             <BiTrash className="mr-2" /> <span>Hapus Produk</span>

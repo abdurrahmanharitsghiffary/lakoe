@@ -7,14 +7,15 @@ import {
   Param,
   UseGuards,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto, createOrderSchema } from './dto/create-order.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { SkipAuth } from 'src/common/decorators/skip-auth/skip-auth.decorator';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation/zod-validation.pipe';
+import { SkipAuth } from '@/common/decorators/skip-auth/skip-auth.decorator';
+import { ZodValidationPipe } from '@/common/pipes/zod-validation/zod-validation.pipe';
 import { OrderGuard } from './guards/order.guard';
-import { ApiJwtBearerAuth } from 'src/common/decorators/jwt-bearer.decorator';
+import { ApiJwtBearerAuth } from '@/common/decorators/jwt-bearer.decorator';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -72,5 +73,11 @@ export class OrderController {
     const response = await this.orderService.getOrderPublicTracking(id);
     console.log(response, 'TRACKING RESPONSE');
     return response?.history ?? [];
+  }
+
+  @Get('status-count/:storeId')
+  @SkipAuth()
+  async findStatusByStoreId(@Param('storeId', ParseIntPipe) storeId: number) {
+    return await this.orderService.getAllStatusCount(storeId);
   }
 }
