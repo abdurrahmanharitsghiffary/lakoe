@@ -42,9 +42,11 @@ export function Header() {
           <Link to="/cart">
             <SlBasket className="text-gray-500 w-6 h-6" />
           </Link>
-          <Link to="/seller">
-            <IoStorefrontOutline className="text-gray-500 w-6 h-6" />
-          </Link>
+          {user && (
+            <Link to="/seller/dashboard">
+              <IoStorefrontOutline className="text-gray-500 w-6 h-6" />
+            </Link>
+          )}
 
           {user ? (
             <LogoutButton />
