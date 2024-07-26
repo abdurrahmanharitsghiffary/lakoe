@@ -26,7 +26,7 @@ export function OAuthCallback() {
             console.log(data, "DATA");
             login(data?.data?.token);
             if (data?.data?.token) {
-              navigate("/seller/dashboard", { replace: true });
+              navigate("/", { replace: true });
             } else {
               navigate("/auth/login", { replace: true });
             }
