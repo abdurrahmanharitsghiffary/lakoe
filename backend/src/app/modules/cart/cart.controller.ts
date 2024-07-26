@@ -107,4 +107,12 @@ export class CartController {
   removeCart(@Param('id') cartId: string) {
     return this.cartService.removeCart(cartId);
   }
+
+  @Delete('carts/:id/skus/:skuId')
+  async deleteSku(
+    @Param('id') id: string,
+    @Param('skuId') skuId: string,
+  ): Promise<void> {
+    await this.cartService.deleteSku(id, +skuId);
+  }
 }
