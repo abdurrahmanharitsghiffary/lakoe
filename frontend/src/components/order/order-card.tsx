@@ -14,6 +14,7 @@ import { useSession } from "@/hooks/use-session";
 import { ApiResponse } from "@/types/api-response";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useGetMe } from "@/features/me/api/me-api";
 
 export const status = {
   NOT_PAID: {
@@ -119,8 +120,9 @@ const fetchOrder = async ({
 };
 
 export function Order() {
-  const { user } = useSession();
-  const storeId = user?.storeId;
+  const { data: store } = useGetMe();
+  const storeId = store?.data?.storeId;
+  console.log("storeId: ", storeId);
   const [selectedStatus, setSelectedStatus] = useState<
     keyof typeof status | "ALL"
   >("ALL");

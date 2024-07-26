@@ -24,7 +24,6 @@ export class PaymentService {
               payment: { select: { id: true } },
               id: true,
               amount: true,
-              status: true,
             },
           },
           orderDetails: {
@@ -210,7 +209,6 @@ export class PaymentService {
       },
       data: {
         amount: statusResponse.gross_amount,
-        status: statusResponse.transaction_status,
       },
     });
 
