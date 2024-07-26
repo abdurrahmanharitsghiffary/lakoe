@@ -1,5 +1,5 @@
 import { FaLocationDot } from "react-icons/fa6";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, Popup } from "react-leaflet";
 import { LocationMarker } from "./location-marker";
 import { RefObject } from "react";
 
@@ -57,12 +57,14 @@ export function MapLeafleet({
           </>
         )} */}
           {/* <SearchField setPosition={onUpdatePosition} /> */}
+          <Popup></Popup>
           <LocationMarker
             position={position}
             onUpdatePosition={onUpdatePosition}
             onUpdateAddress={onUpdateAddress}
             markerRef={markerRef}
           />
+
           {/* <ClickMap onClick={onMapClick}/> */}
         </MapContainer>
         <div className="mt-6 py-4 flex flex-row gap-2">

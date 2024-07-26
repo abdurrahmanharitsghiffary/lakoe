@@ -7,6 +7,7 @@ import {
   Param,
   UseGuards,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto, createOrderSchema } from './dto/create-order.dto';
@@ -72,5 +73,11 @@ export class OrderController {
     const response = await this.orderService.getOrderPublicTracking(id);
     console.log(response, 'TRACKING RESPONSE');
     return response?.history ?? [];
+  }
+
+  @Get('status-count/:storeId')
+  @SkipAuth()
+  async findStatusByStoreId(@Param('storeId', ParseIntPipe) storeId: number) {
+    return await this.orderService.getAllStatusCount(storeId);
   }
 }

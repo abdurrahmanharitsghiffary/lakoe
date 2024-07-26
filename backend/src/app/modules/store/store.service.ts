@@ -219,4 +219,23 @@ export class StoreService {
     if (!store) throw new NotFoundException('Store is not found.');
     return store;
   }
+
+  async removeCourierServiceByCode(
+    storeId: number,
+    {
+      courierCode,
+      courierServiceCode,
+    }: { courierCode: string; courierServiceCode: string },
+  ) {
+    await this.checkStoreMustExists(storeId);
+    return await this.prismaService.courierService.delete({
+      where: {
+        courierCode_courierServiceCode_storeId: {
+          courierCode,
+          courierServiceCode,
+          storeId,
+        },
+      },
+    });
+  }
 }

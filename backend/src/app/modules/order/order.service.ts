@@ -186,7 +186,7 @@ export class OrderService {
       await tx.invoice.create({
         data: {
           amount: totalPrice,
-          serviceCharge: 0,
+          serviceCharge: 500,
           receiverContactName: invoiceData.receiverContactName,
           receiverContactPhone: invoiceData.receiverContactPhone,
           receiverName: invoiceData.receiverName,
@@ -474,15 +474,11 @@ export class OrderService {
     const orders = await this.prismaService.order.findMany({
       where: {
         storeId,
-        description: { contains: options?.q || undefined },
+        description: { contains: options?.q ?? '' },
         courier: {
-          courierCode: {
-            in: emptyArrayAndUndefined(options?.couriers?.split(',')),
-          },
+          courierCode: { in: options?.couriers?.split(',') },
         },
-        status: {
-          in: emptyArrayAndUndefined(options?.status?.split(',')) as any,
-        },
+        status: { in: options?.status?.split(',') as any },
       },
       orderBy: [{ createdAt: createdDateSortOption }, { id: 'asc' }],
       select: selectOrderSimplified,

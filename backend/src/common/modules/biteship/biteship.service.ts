@@ -25,6 +25,7 @@ export class BiteshipService {
           couriers: options.couriers.join(','),
         },
       );
+    console.log(response.data);
     return response.data;
   }
 

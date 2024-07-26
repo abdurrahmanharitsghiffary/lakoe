@@ -17,6 +17,11 @@ export const axios = xios.create({
   },
 });
 
+export const api = xios.create({
+  baseURL: "https://www.emsifa.com/api-wilayah-indonesia/api",
+  headers: { "Content-Type": "application/json" },
+});
+
 axios.interceptors.request.use((config) => {
   const authToken = useSession.getState().token;
   if (authToken) {

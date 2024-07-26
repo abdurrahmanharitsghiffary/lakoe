@@ -220,4 +220,22 @@ export class StoreController {
   async findAllCourierServices(@Param('id') id: string) {
     return this.storeService.findAllCourierServices(+id);
   }
+
+  @ApiJwtBearerAuth()
+  @Delete(':id/couriers/:code')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(StoreGuard)
+  async removeCourierByCode(
+    @Param('id') id: string,
+    @Param('code') code: string,
+  ) {
+    const storeId = +id;
+
+    const store = await this.storeService.removeCourierServiceByCode(storeId, {
+      courierCode: code,
+      courierServiceCode: 'reg',
+    });
+
+    return store;
+  }
 }

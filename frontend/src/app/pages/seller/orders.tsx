@@ -8,7 +8,7 @@ export function OrdersPage() {
       <Helmet>
         <title>Order</title>
       </Helmet>
-      <Order/>
+      <Order />
     </Card>
   );
 }

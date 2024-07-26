@@ -4,10 +4,11 @@ import { Home } from "@/features/landing/home";
 import { AboutUs } from "@/features/landing/about-us";
 import { Shop } from "@/features/landing/shop";
 import { Faq } from "@/features/landing/FAQ";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { axios } from "@/lib/axios";
 
 export function Landing() {
   const faqRef = useRef<HTMLElement>(null);
@@ -18,6 +19,27 @@ export function Landing() {
   // const scrollToRef = (ref: React.RefObject<HTMLElement>) => {
   //   ref.current?.scrollIntoView({ behavior: "smooth" });
   // };
+
+  useEffect(() => {
+    const setData = async (data: any) => {
+      if (localStorage.getItem("x.ccl.ids")) {
+        return;
+      }
+      const response = await axios.post("/cart-collections", data);
+      console.log("set data: ", response.data);
+
+      const cartCollectionId = response.data?.data?.cartCollectionId;
+
+      if (cartCollectionId) {
+        localStorage.setItem("x.ccl.ids", cartCollectionId);
+        console.log("Data succesfully set in local storage");
+      } else {
+        console.log("Data not set in local storage");
+      }
+    };
+
+    setData({});
+  }, []);
 
   return (
     <div>

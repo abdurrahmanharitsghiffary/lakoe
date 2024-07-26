@@ -14,6 +14,7 @@ import { useSession } from "@/hooks/use-session";
 import { ApiResponse } from "@/types/api-response";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useGetMe } from "@/features/me/api/me-api";
 
 export const status = {
   NOT_PAID: {
@@ -89,7 +90,12 @@ interface Order {
   description: string;
   id: string;
   invoice: Invoice | null;
-  skus: { sku: Sku; qty: number; pricePerProduct: string; weightPerProductInGram: number }[];
+  skus: {
+    sku: Sku;
+    qty: number;
+    pricePerProduct: string;
+    weightPerProductInGram: number;
+  }[];
   status: keyof typeof status;
   updatedAt: string;
   _count: {
@@ -97,7 +103,15 @@ interface Order {
   };
 }
 
-const fetchOrder = async ({ searchQuery, storeId, status }: { storeId: number; searchQuery?: string; status: keyof typeof status | "ALL" }) => {
+const fetchOrder = async ({
+  searchQuery,
+  storeId,
+  status,
+}: {
+  storeId: number;
+  searchQuery?: string;
+  status: keyof typeof status | "ALL";
+}) => {
   const response = await axios.get(`/stores/${storeId}/orders`, {
     params: { q: searchQuery, status: status === "ALL" ? undefined : status },
   });
@@ -106,16 +120,24 @@ const fetchOrder = async ({ searchQuery, storeId, status }: { storeId: number; s
 };
 
 export function Order() {
-  const { user } = useSession();
-  const storeId = user?.storeId;
-  const [selectedStatus, setSelectedStatus] = useState<keyof typeof status | "ALL">("ALL");
+  const { data: store } = useGetMe();
+  const storeId = store?.data?.storeId;
+  console.log("storeId: ", storeId);
+  const [selectedStatus, setSelectedStatus] = useState<
+    keyof typeof status | "ALL"
+  >("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   if (!storeId) return <div>No storeId available</div>;
 
   const { data, isLoading, error } = useQuery<ApiResponse<Order[]>, Error>({
     queryKey: ["stores", storeId, "orders", searchQuery, selectedStatus],
-    queryFn: () => fetchOrder({ storeId: storeId as number, searchQuery, status: selectedStatus }),
+    queryFn: () =>
+      fetchOrder({
+        storeId: storeId as number,
+        searchQuery,
+        status: selectedStatus,
+      }),
     enabled: !!storeId,
   });
 
@@ -128,18 +150,31 @@ export function Order() {
 
   // Filter orders based on selected status and search query
   const filteredOrders = data.data
-    .filter(order => selectedStatus === "ALL" || order.status === selectedStatus)
-    .filter(order =>
-      order.invoice?.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.skus.some(sku => sku.sku.product.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .filter(
+      (order) => selectedStatus === "ALL" || order.status === selectedStatus
+    )
+    .filter(
+      (order) =>
+        order.invoice?.invoiceNumber
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        order.skus.some((sku) =>
+          sku.sku.product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
     );
 
   // Filter orders to include only those with SKUs
-  const ordersWithSkus = filteredOrders.filter(order => order.skus.length > 0);
+  const ordersWithSkus = filteredOrders.filter(
+    (order) => order.skus.length > 0
+  );
 
   return (
     <div>
-      <OrderTabs onTabChange={setSelectedStatus} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <OrderTabs
+        onTabChange={setSelectedStatus}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
       {ordersWithSkus.map((order) => {
         const statusInfo = status[order.status];
         if (!statusInfo) {
@@ -148,9 +183,15 @@ export function Order() {
         }
         const { label, cn, buttonLabel } = statusInfo;
 
-        const totalItems = order.skus.reduce((total, sku) => total + sku.qty, 0);
+        const totalItems = order.skus.reduce(
+          (total, sku) => total + sku.qty,
+          0
+        );
         const totalPrice = order.skus
-          .reduce((total, sku) => total + parseFloat(sku.pricePerProduct) * sku.qty, 0)
+          .reduce(
+            (total, sku) => total + parseFloat(sku.pricePerProduct) * sku.qty,
+            0
+          )
           .toFixed(2);
 
         const imageUrl = order.skus[0].sku.image;
@@ -170,7 +211,9 @@ export function Order() {
                         {label}
                       </p>
                       <p className="text-gray-500 mt-2 text-sm pb-1">
-                        {order.invoice ? order.invoice.invoiceNumber : "No Invoice Number"}
+                        {order.invoice
+                          ? order.invoice.invoiceNumber
+                          : "No Invoice Number"}
                       </p>
                     </div>
                     {buttonLabel && (
