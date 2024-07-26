@@ -218,7 +218,7 @@ export function CartList() {
   };
 
   return (
-    <div className="flex flex-col w-full px-6">
+    <div className="flex flex-col w-full px-6 pt-24">
       <h1 className="text-[30px] mt-4 ml-4 font-bold">Keranjang</h1>
       <div className="flex flex-row w-full">
         <div className="flex flex-col w-[70%]">
