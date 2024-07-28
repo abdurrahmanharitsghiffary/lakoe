@@ -68,7 +68,7 @@ export function CardFooterCheckout({
 
   const handleGetCourierMethod = async () => {
     setIsSendOpen(true);
-    console.log(formData, "FormData");
+
     const response = await axios.post<ApiResponse<Pricing[]>>(
       `/stores/${storeId}/shipping-rates`,
       {

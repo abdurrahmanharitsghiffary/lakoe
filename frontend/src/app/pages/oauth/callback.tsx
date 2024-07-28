@@ -12,7 +12,7 @@ export function OAuthCallback() {
   const { login } = useSessionActions();
 
   const code = searchParams.get("code");
-  console.log(code, "CODE");
+
   const verifyCode = useCallback(() => {
     toast.promise(
       axios
@@ -23,7 +23,6 @@ export function OAuthCallback() {
         pending: "Verifying login",
         success: {
           render({ data }) {
-            console.log(data, "DATA");
             login(data?.data?.token);
             if (data?.data?.token) {
               navigate("/", { replace: true });
@@ -45,7 +44,6 @@ export function OAuthCallback() {
 
   useEffect(() => {
     let isIgnore = false;
-    console.log("Running useEffect");
     if (!isIgnore) verifyCode();
 
     return () => {

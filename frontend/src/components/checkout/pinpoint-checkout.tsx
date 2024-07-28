@@ -30,6 +30,7 @@ export function PinpointCheckout({ onInputChange }: Props) {
   console.log(Position, "POSITION");
   const updatePosition = async (latlng: L.LatLng) => {
     setPosition(latlng);
+    console.log(latlng, "LAT LNGOS");
     const address = await getAddressFromLatLng(latlng.lat, latlng.lng);
 
     onInputChange("receiverAddress", address);

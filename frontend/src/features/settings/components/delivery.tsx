@@ -2,42 +2,13 @@ import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
-// import { IoIosArrowDown } from "react-icons/io";
-// import { motion } from "framer-motion";
 import couriersData from "@/data/courier.json";
 import { useGetMe } from "@/features/me/api/me-api";
 import { axios } from "@/lib/axios";
-// import { useQuery } from "@tanstack/react-query";
 
-// interface Courier {
-//   courierCode: string;
-//   courierServiceName: string;
-//   description: string;
-//   courierServiceCode: string;
-// }
-
-// const courier: Courier[] = couriers;
 type Courier = "jnt" | "jne" | "sicepat" | "tiki" | "grab" | "gosend";
 
 export function Delivery() {
-  // const [isOpen, setIsOpen] = useState<{
-  //   [key in Courier]: boolean;
-  // }>({
-  //   jnt: false,
-  //   jne: false,
-  //   sicepat: false,
-  //   tiki: false,
-  //   grab: false,
-  //   gosend: false,
-  // });
-
-  // const toggle = (courier: Courier) => () => {
-  //   setIsOpen((prev) => ({
-  //     ...prev,
-  //     [courier]: !prev[courier],
-  //   }));
-  // };
-
   const [selectedCouriers, setSelectedCouriers] = useState<{
     [key in Courier]: boolean;
   }>({
@@ -150,15 +121,3 @@ export function Delivery() {
     </div>
   );
 }
-
-// const { data } = useGetMe();
-// const storeId = data?.data?.storeId;
-
-// const url = checked
-//   ? `/stores/${storeId}/couriers`
-//   : `/stores/${storeId}/couriers/${code}`;
-// const options = {
-//   method: checked ? "POST" : "DELETE",
-//   url: url,
-//   data: checked ? { code: courier } : undefined,
-// };

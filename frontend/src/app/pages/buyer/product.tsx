@@ -40,7 +40,7 @@ export function ProductPage() {
   const { data, isSuccess } = useGetProduct({ productId });
   const product = data?.data;
   const images = product?.images ?? [];
-  console.log(images, "IMAGES");
+
   const { data: storeAddress } = useGetStoreAddress({
     storeId: product?.store?.id || -1,
   });
@@ -69,7 +69,6 @@ export function ProductPage() {
       )
     ) ?? skus?.[0];
   const selectedProductImage = selectedSku?.image ?? product?.images?.[0];
-  console.log(selectedProductImage, "SKUSELECTEDD");
 
   const [qty, setQty] = useState(0);
   const handleQtyChange = (e: React.ChangeEvent<HTMLInputElement>) => {

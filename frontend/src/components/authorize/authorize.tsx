@@ -11,8 +11,6 @@ export function Authorize({ roles, children }: AuthorizeProps) {
   const { error, isError, data, isSuccess } = useGetMe({
     queryConfig: { retry: false },
   });
-  console.log("data: ", data);
-  console.log("isError: ", isError);
 
   const isNotAuthored =
     isError && (error as any)?.response?.data?.statusCode === 403;
@@ -35,11 +33,9 @@ export function Authorize({ roles, children }: AuthorizeProps) {
 }
 
 export function Authored() {
-  const { error, isError, data, isSuccess } = useGetMe({
+  const { error, isError, isSuccess } = useGetMe({
     queryConfig: { retry: false },
   });
-  console.log("data: ", data);
-  console.log("isError: ", isError);
 
   const isNotAuthored =
     isError && (error as any)?.response?.data?.statusCode === 403;

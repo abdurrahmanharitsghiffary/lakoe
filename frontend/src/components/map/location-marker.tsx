@@ -10,7 +10,7 @@ export function LocationMarker({
   markerRef,
 }: {
   position: L.LatLng | null;
-  onUpdatePosition: React.Dispatch<React.SetStateAction<L.LatLng | null>>;
+  onUpdatePosition: (latlng: L.LatLng) => void;
   onUpdateAddress: React.Dispatch<React.SetStateAction<string | undefined>>;
   markerRef: RefObject<L.Marker<any>>;
 }) {
@@ -26,7 +26,8 @@ export function LocationMarker({
 
   const updatePosition = async (latlng: L.LatLng) => {
     onUpdatePosition(latlng);
-    const address = await getAddressFromLatLng(latlng.lat, latlng.lng);
+    console.log(latlng, "LAT LNG");
+    const address = await getAddressFromLatLng(latlng?.lat, latlng?.lng);
 
     onUpdateAddress(address);
   };
@@ -52,12 +53,10 @@ export function LocationMarker({
       >
         <Popup>
           <span>
-            Latitude: {position.lat.toFixed(5)}, Longitude:{" "}
-            {position.lng.toFixed(5)}
+            Latitude: {position?.lat}, Longitude: {position?.lng}
           </span>
         </Popup>
       </Marker>
-      {/* <FlyToButton position={position} /> */}
     </>
   );
 }

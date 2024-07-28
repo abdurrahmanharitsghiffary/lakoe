@@ -1,9 +1,10 @@
 import { axios } from "@/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useSession } from "./use-session";
+import { useEffect } from "react";
 
 const addressSchema = z.object({
   name: z.string().min(1, "Name cannot be empty"),
@@ -25,7 +26,7 @@ export const useLocation = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
     control,
     setValue,
   } = useForm<AddressInput>({
@@ -35,14 +36,12 @@ export const useLocation = () => {
 
   console.log("form:", errors);
 
+  const queryClient = useQueryClient();
+
   const mutation = useMutation({
-    mutationFn: (data: AddressInput) => createLocation(storeId!),
+    mutationFn: (data: AddressInput) => createLocation(storeId!, data),
     onSuccess: (data) => {
-      console.log("address:", data);
-      reset();
-    },
-    onError: (error) => {
-      console.log("error:", error);
+      queryClient.invalidateQueries({ queryKey: ["address"] });
     },
   });
 
@@ -53,14 +52,18 @@ export const useLocation = () => {
       longitude: data.longitude.toString(),
     };
     mutation.mutate(transformedData);
-    console.log("dataAddress:", data);
   };
 
-  const createLocation = async (id: number) => {
-    const response = await axios.post(`/stores/${id}/address`);
-    console.log("post:", response.data);
+  const createLocation = async (id: number, data: AddressInput) => {
+    const response = await axios.post(`/stores/${id}/address`, data);
     return response.data;
   };
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful]);
 
   // const [coordinate, setCoordinate] = React.useState<L.LatLng | null>(null);
 

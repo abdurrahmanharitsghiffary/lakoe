@@ -1,6 +1,6 @@
 import { axios } from "@/lib/axios";
 import { ApiResponse } from "@/types/api-response";
-import { AllOrder } from "@/types/order";
+import { Order } from "@/types/order";
 import { useQuery } from "@tanstack/react-query";
 
 export const useOrders = (storeId: string) => {
@@ -15,10 +15,9 @@ export const useOrders = (storeId: string) => {
 
   const getOrders = async (id: string) => {
     try {
-      const response = await axios.get<ApiResponse<AllOrder[]>>(
+      const response = await axios.get<ApiResponse<Order[]>>(
         `/stores/${id}/orders`
       );
-      console.log("getOrders: ", response.data);
       return response.data;
     } catch (error) {
       console.error(error);

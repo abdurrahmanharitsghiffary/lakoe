@@ -1,4 +1,3 @@
-import { InputForm } from "@/features/products/components/input/input-form";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -7,20 +6,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-// import { TiArrowSortedDown } from "react-icons/ti";
-// import { FaCheck } from "react-icons/fa6";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { SelectInput } from "../input/select-input";
-// import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-// import {
-//   Command,
-//   CommandEmpty,
-//   CommandGroup,
-//   CommandInput,
-//   CommandItem,
-// } from "../ui/command";
-// import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { MapLeafleet } from "../map/leafleet";
 import { getAddressFromLatLng } from "@/hooks/use-geocoding";
@@ -35,7 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import region from "@/data/dataDaerah.json";
+import regionJson from "@/data/dataDaerah.json";
+const region = regionJson as any[];
 import { useLocation } from "@/hooks/use-location";
 import { Controller } from "react-hook-form";
 import { Input } from "../ui/input";
@@ -50,36 +39,29 @@ export function AddLocationDialog({ isOpen, onOpen }: Props) {
   const [Position, setPosition] = useState<L.LatLng | null>(null);
   const [address, setAddress] = useState<string | undefined>(undefined);
   const markerRef = useRef<L.Marker<any>>(null);
-  console.log(Position, "POSITION");
   const updatePosition = async (latlng: L.LatLng) => {
     setPosition(latlng);
     const address = await getAddressFromLatLng(latlng.lat, latlng.lng);
-
     setAddress(address);
   };
 
   useEffect(() => {
-    // const handleSuccess = async (pos: GeolocationPosition) => {
-    //   const { latitude, longitude } = pos.coords;
-    //   const latLng = new L.LatLng(latitude, longitude);
-    //   await updatePosition(latLng);
-    // };
+    const handleSuccess = async (pos: GeolocationPosition) => {
+      const { latitude, longitude } = pos.coords;
+      const latLng = new L.LatLng(latitude, longitude);
+      await updatePosition(latLng);
+    };
 
-    // const handleError = (error: GeolocationPositionError) => {
-    //   console.error(error);
-    // };
+    const handleError = (error: GeolocationPositionError) => {
+      console.error(error);
+    };
 
     if (navigator.geolocation) {
-      // navigator.geolocation.watchPosition(handleSuccess, handleError);
+      navigator.geolocation.watchPosition(handleSuccess, handleError);
     } else {
       console.error("Geolocation is not supported by this browser.");
     }
   }, []);
-
-  // const onMapClick = async (e: L.LeafletMouseEvent) => {
-  //   const latlng = e.latlng;
-  //   await updatePosition(latlng)
-  // };
 
   const coordinate = {
     lat: -6.3818,
@@ -117,7 +99,12 @@ export function AddLocationDialog({ isOpen, onOpen }: Props) {
     ? regencies.find((r) => r.id === selectedRegency)?.districts || []
     : [];
 
-  const { register, handleSubmit, onSubmit, control } = useLocation();
+  const { register, handleSubmit, onSubmit, control, setValue } = useLocation();
+
+  const handlePositionChange = (latlng: L.LatLng) => {
+    setValue("latitude", latlng?.lat?.toString());
+    setValue("longitude", latlng?.lng?.toString());
+  };
 
   return (
     <>
@@ -127,12 +114,17 @@ export function AddLocationDialog({ isOpen, onOpen }: Props) {
             <DialogTitle>Tambah Lokasi</DialogTitle>
           </DialogHeader>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
             <Input
               label="Nama Lokasi"
               placeholder="Cth. Toko Amanda"
               {...register("name")}
             />
+
+            <Input label="Address Phone" placeholder="" {...register("name")} />
 
             <Controller
               name="province"
@@ -257,7 +249,7 @@ export function AddLocationDialog({ isOpen, onOpen }: Props) {
                 coordinate={coordinate}
                 markerRef={markerRef}
                 onUpdateAddress={setAddress}
-                onUpdatePosition={setPosition}
+                onUpdatePosition={handlePositionChange}
                 position={Position}
                 address={address}
               />
