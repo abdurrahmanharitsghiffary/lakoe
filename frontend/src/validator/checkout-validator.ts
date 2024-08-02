@@ -6,10 +6,7 @@ export const addCheckoutSchema = z.object({
   receiverContactName: z
     .string()
     .min(1, { message: "Recipient name is required" }),
-  receiverContactPhone: z
-    .string()
-    .regex(/^\d+$/, "Telephone must contain only numbers")
-    .min(1, "Telephone is required"),
+  receiverContactPhone: z.string(),
   orderNote: z.string().min(1, { message: "note are required" }),
   receiverDistrict: z.string().min(1, { message: "Sub-district is required" }),
   receiverCity: z.string().min(1, { message: "cities is required" }),

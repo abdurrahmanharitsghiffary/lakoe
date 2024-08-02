@@ -11,6 +11,7 @@ type Product = {
   name: string;
   isActive: boolean;
   id: number;
+  images: string[];
 };
 
 type SKU = {

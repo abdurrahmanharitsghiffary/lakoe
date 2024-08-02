@@ -20,8 +20,10 @@ export class PaymentController {
   @Post()
   @HttpCode(HttpStatus.OK)
   async pay(@Body() payment: PaymentDto) {
+    console.log(payment, 'PAYMENT');
     const paymentUrl = await this.paymentService.createPayment(payment.orderId);
-    return { paymentUrl };
+
+    return paymentUrl;
   }
 
   @SkipAuth()

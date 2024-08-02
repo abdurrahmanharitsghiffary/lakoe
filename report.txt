@@ -13,3 +13,8 @@ dan melengkapi crud products
 Finishing Setting
 Mengerjakan Order Detail Page
 Dashboard Seller
+
+
+
+TODO FIX DISPLAYED COURIER RATE PRICE ON CHECKOUT FORM
+FETCH BITESHIP DATA STILL ERROR

@@ -476,9 +476,13 @@ export class OrderService {
         storeId,
         description: { contains: options?.q ?? '' },
         courier: {
-          courierCode: { in: options?.couriers?.split(',') },
+          courierCode: {
+            in: emptyArrayAndUndefined(options?.couriers?.split(',')),
+          },
         },
-        status: { in: options?.status?.split(',') as any },
+        status: {
+          in: emptyArrayAndUndefined(options?.status?.split(',')) as any,
+        },
       },
       orderBy: [{ createdAt: createdDateSortOption }, { id: 'asc' }],
       select: selectOrderSimplified,
@@ -628,6 +632,11 @@ export class OrderService {
           });
         }),
       );
+
+      const transaction = await coreMidtrans.transaction.status(
+        updatedOrder.invoice.payment.midtransOrderId,
+      );
+      console.log(transaction, 'STATUS');
 
       const refunded = await coreMidtrans.transaction.refund(
         updatedOrder.invoice.payment.midtransOrderId,

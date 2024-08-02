@@ -42,6 +42,14 @@ export class CartController {
     return this.cartService.findOneCartCollection(collectionId);
   }
 
+  @Get('cart-collections/:id/counts')
+  async getCartItemsCountByCollectionId(@Param('id') collectionId: string) {
+    return {
+      count:
+        await this.cartService.getCartItemsCountByCollectionId(collectionId),
+    };
+  }
+
   @Get('carts/:id')
   findOneCart(@Param('id') cartId: string) {
     return this.cartService.findOneCart(cartId);

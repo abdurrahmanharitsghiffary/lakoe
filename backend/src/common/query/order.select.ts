@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { selectSKU } from './sku.select';
+import { omitProperties } from '../utils/omit-properties';
 
 export const selectOrderSimplified = {
   createdAt: true,
@@ -27,7 +28,14 @@ export const selectOrderSimplified = {
   },
   orderDetails: {
     select: {
-      sku: { select: selectSKU },
+      sku: {
+        select: omitProperties(selectSKU, [
+          'price',
+          'stock',
+          'skuAttributes',
+          'weightInGram',
+        ]),
+      },
       qty: true,
       pricePerProduct: true,
       weightPerProductInGram: true,

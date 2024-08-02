@@ -41,7 +41,7 @@ export function CheckoutDialogLogin({
             </div>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-3">
               <>
                 <Label className="text-lg px-3">Nomor HP atau Email</Label>
                 <Input

@@ -88,7 +88,7 @@ export class ProductController {
     @Query(new ZodValidationPipe(getProductsSchema))
     options: GetProductOption,
   ) {
-    return this.productService.search(options);
+    return this.productService.search(options, true);
   }
 
   @Get(':id')

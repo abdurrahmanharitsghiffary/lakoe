@@ -49,6 +49,12 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                     {...register("receiverContactName")}
                     value={formData.receiverContactName}
                     className="text-lg h-12 mb-4 mx-3 w-100"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 50) {
+                        onInputChange("receiverContactName", value);
+                      }
+                    }}
                   />
                   {errors.receiverContactName && (
                     <p className="ml-4 text-red-500 mt-[-10px] mb-3">
@@ -67,6 +73,9 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                     type="text"
                     {...register("receiverContactPhone")}
                     value={formData.receiverContactPhone}
+                    onChange={(e) =>
+                      onInputChange("receiverContactPhone", e.target.value)
+                    }
                   />
                   {errors.receiverContactPhone && (
                     <p className="ml-4 text-red-500 mt-[-15px] mb-3">
@@ -242,6 +251,10 @@ export function CardBodyCheckout({ onInputChange, formData }: CardBodyProps) {
                       placeholder="Masukkan Kode Pos Anda"
                       type="text"
                       {...register("receiverPostalCode")}
+                      value={formData.receiverPostalCode}
+                      onChange={(e) =>
+                        onInputChange("receiverPostalCode", e.target.value)
+                      }
                       className="text-lg h-12 mb-4 mx-3 w-100"
                     />
                     {errors.receiverPostalCode && (

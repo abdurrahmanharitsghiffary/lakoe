@@ -27,8 +27,15 @@ interface CartsProps {
   onDecrement: () => void;
 }
 
-export function CartLeft({name,image,price,count,variant,onDecrement,onIncrement}:CartsProps) {
-  
+export function CartLeft({
+  name,
+  image,
+  price,
+  count,
+  variant,
+  onDecrement,
+  onIncrement,
+}: CartsProps) {
   return (
     <div className="flex flex-col w-full px-6">
       <h1 className="text-[30px] mt-10 my-6 ml-4">Keranjang</h1>
@@ -46,55 +53,51 @@ export function CartLeft({name,image,price,count,variant,onDecrement,onIncrement
                 </TableRow>
               </TableHeader>
               <TableBody>
-                  <TableRow className="text-2xl">
-                    <TableCell>
-                      <div className="flex flex-row gap-2 px-1 py-1">
-                        <img
-                          src={image}
-                          alt=""
-                          className="h-[110px] w-[110px]"
-                        />
-                        <div className="flex flex-col px-3 my-[-6px]">
-                          {name}
-                          <span className="text-lg">{variant}</span>
-                        </div>
+                <TableRow className="text-2xl">
+                  <TableCell>
+                    <div className="flex flex-row gap-2 px-1 py-1">
+                      <img src={image} alt="" className="h-[110px] w-[110px]" />
+                      <div className="flex flex-col px-3 my-[-6px]">
+                        {name}
+                        <span className="text-lg">{variant}</span>
                       </div>
-                    </TableCell>
-                    <TableCell className="font-medium align-top ml-[30px]">
-                      {formatRupiah(price)}
-                    </TableCell>
-                    <TableCell className="align-top flex">
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-medium align-top ml-[30px]">
+                    {formatRupiah(price)}
+                  </TableCell>
+                  <TableCell className="align-top flex">
+                    <Button
+                      variant={"outline"}
+                      className="px-2 border-blue-500"
+                    >
+                      <FaTrash className="h-5 w-5" color="blue" />
+                    </Button>
+                    <div className="flex flex-row gap-2 ml-3 w-[60px]">
                       <Button
                         variant={"outline"}
                         className="px-2 border-blue-500"
+                        onClick={onDecrement}
+                        disabled={count <= 1}
                       >
-                        <FaTrash className="h-5 w-5" color="blue" />
+                        <FaMinus className="h-5 w-5" color="blue" />
                       </Button>
-                      <div className="flex flex-row gap-2 ml-3 w-[60px]">
-                        <Button
-                          variant={"outline"}
-                          className="px-2 border-blue-500"
-                          onClick={onDecrement}
-                          disabled={count <= 1}
-                        >
-                          <FaMinus className="h-5 w-5" color="blue" />
-                        </Button>
-                        <Input
-                          name="jumlah"
-                          className="w-10 text-lg text-right hover:border-black"
-                          value={count}
-                          readOnly
-                        />
-                        <Button
-                          variant={"outline"}
-                          className="px-2 border-blue-500"
-                          onClick={onIncrement}
-                        >
-                          <FaPlus className="h-5 w-5" color="blue" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                      <Input
+                        name="jumlah"
+                        className="w-10 text-lg text-right hover:border-black"
+                        value={count}
+                        readOnly
+                      />
+                      <Button
+                        variant={"outline"}
+                        className="px-2 border-blue-500"
+                        onClick={onIncrement}
+                      >
+                        <FaPlus className="h-5 w-5" color="blue" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
             <div className="flex flex-row px-4 border-t-2 text-lg py-4 gap-4">
@@ -124,22 +127,23 @@ export function CartLeft({name,image,price,count,variant,onDecrement,onIncrement
               </div>
             </Button>
             <div className="flex flex-col px-4 py-4">
-                <span className="text-[22px] font-bold">Ringkasan Pesanan</span>
-                <div className="flex flex-row justify-between text-lg py-3">
-                    <span>Subtotal</span>
-                    <span>Rp.510000</span>
-                </div>
-                <div className="border-[1px]"></div>
-                <div className="flex flex-row justify-between text-[22px] font-bold py-3">
-                    <span>Total</span>
-                    <span>Rp.510000</span>
-                </div>
+              <span className="text-[22px] font-bold">Ringkasan Pesanan</span>
+              <div className="flex flex-row justify-between text-lg py-3">
+                <span>Subtotal</span>
+                <span>Rp.510000</span>
+              </div>
+              <div className="border-[1px]"></div>
+              <div className="flex flex-row justify-between text-[22px] font-bold py-3">
+                <span>Total</span>
+                <span>Rp.510000</span>
+              </div>
             </div>
           </Card>
           <Button className="bg-blue-500 w-[370px] text-xl py-6 my-4 drop-shadow-lg hover:bg-blue-400 space-x-3 ">
-                <span><FaRegCircleCheck className="h-6 w-6"/></span>
-                <span>Checkout</span>
-                
+            <span>
+              <FaRegCircleCheck className="h-6 w-6" />
+            </span>
+            <span>Checkout</span>
           </Button>
         </div>
       </div>

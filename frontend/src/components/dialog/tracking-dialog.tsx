@@ -3,13 +3,30 @@ import { DialogHeader } from "../ui/dialog";
 import { ButtonCopy } from "../button/copy";
 import { BsCopy } from "react-icons/bs";
 import { Card } from "../ui/card";
+import { useGetOrderTracking } from "@/features/orders/api/get-order-tracking";
+import { useGetOrder } from "@/features/orders/api/get-order";
+import { ORDER_STATUS_LABEL } from "@/constants";
+import moment from "moment";
 
 type TrackingDialogProps = {
   isOpen: boolean;
+  orderId: string;
   onOpen: (isOpen: boolean) => void;
 };
 
-export function TrackingDialog({ isOpen, onOpen }: TrackingDialogProps) {
+export function TrackingDialog({
+  isOpen,
+  onOpen,
+  orderId,
+}: TrackingDialogProps) {
+  const { data } = useGetOrder({ id: orderId });
+
+  const order = data?.data;
+
+  const { data: trackingData } = useGetOrderTracking({ id: orderId });
+
+  const trackings = trackingData?.data ?? [];
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpen}>
       <DialogContent className="text-sm">
@@ -20,13 +37,16 @@ export function TrackingDialog({ isOpen, onOpen }: TrackingDialogProps) {
           <div className="flex flex-col gap-2 basis-1/2">
             <div className="flex flex-col gap-1">
               <p>Kurir</p>
-              <p className="font-semibold">J&T Regular</p>
+              <p className="font-semibold capitalize">
+                {order?.courier?.courierCode}{" "}
+                {order?.courier?.courierServiceCode}
+              </p>
             </div>
             <div className="flex flex-col gap-1">
               <p>
                 No Resi{" "}
                 <ButtonCopy
-                  text="COPIED INVOICE..."
+                  text={order?.courier?.biteshipWaybillId ?? "-"}
                   className="w-6 h-6"
                   size="icon"
                   variant="ghost"
@@ -34,47 +54,50 @@ export function TrackingDialog({ isOpen, onOpen }: TrackingDialogProps) {
                   <BsCopy />
                 </ButtonCopy>
               </p>
-              <p className="font-semibold">J&T Regular</p>
+              <p className="font-semibold">
+                {order?.courier?.biteshipWaybillId ?? "-"}
+              </p>
             </div>
-            <div className="flex flex-col gap-1">
+            {/* <div className="flex flex-col gap-1">
               <p>Pengirim</p>
-              <p className="font-semibold">Jamal Integer</p>
-            </div>
+              <p className="font-semibold">{order?.invoice}</p>
+            </div> */}
           </div>
           <div className="flex flex-col gap-2 basis-1/2">
             <div className="flex flex-col gap-1">
               <p>Penerima</p>
-              <p className="font-semibold">Jamal Boolean</p>
-              <p>
-                RT.08 / RW.07, No. 174, Jln. Haji Mawi, Desa Waru Jaya, Parung,
-                Bogor
+              <p className="font-semibold">
+                {order?.invoice?.receiverContactName}
               </p>
+              <p>{order?.invoice?.receiverAddress}</p>
             </div>
           </div>
         </div>
         <p>
-          Status: <span className="font-semibold">Dalam Proses Pengiriman</span>
+          Status:{" "}
+          <span className="font-semibold">
+            {ORDER_STATUS_LABEL[order?.status ?? "NEW_ORDER"]}
+          </span>
         </p>
-        <Card>
-          <section className="p-4">
-            <ol className="relative text-gray-500 border-s border-gray-200 dark:border-gray-700 dark:text-gray-400">
-              <li className="mb-4 ms-6">
-                <span className="absolute flex items-center justify-center w-4 h-4 bg-lakoe-primary rounded-full -start-2 border-[var(--lakoe-primary-100)] border-2 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900"></span>
-                <h3 className="font-medium leading-tight text-black">
-                  Pesanan dibuat
-                </h3>
-                <p className="text-sm">Sab, 10 Agu 2023 - 14:00 WIB</p>
-              </li>
-              <li className="ms-6">
-                <span className="absolute flex items-center justify-center w-4 h-4 bg-gray-200 rounded-full -start-2 ring-4 ring-white dark:ring-gray-900 border-gray-100 border-2 dark:bg-gray-700"></span>
-                <h3 className="font-medium leading-tight text-black">
-                  Pesanan dibuat
-                </h3>
-                <p className="text-sm">Sab, 10 Agu 2023 - 14:00 WIB</p>
-              </li>
-            </ol>
-          </section>
-        </Card>
+        {trackings?.length > 0 ? (
+          <Card>
+            <section className="p-4">
+              <ol className="relative text-gray-500 border-s border-gray-200 dark:border-gray-700 dark:text-gray-400">
+                {trackings.map((tracking) => (
+                  <li className="mb-4 ms-6">
+                    <span className="absolute flex items-center justify-center w-4 h-4 bg-lakoe-primary rounded-full -start-2 border-[var(--lakoe-primary-100)] border-2 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900"></span>
+                    <h3 className="font-medium leading-tight text-black">
+                      {tracking?.note}
+                    </h3>
+                    <p className="text-sm">
+                      {moment(tracking?.updated_at).format("LLLL")}
+                    </p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          </Card>
+        ) : null}
       </DialogContent>
     </Dialog>
   );

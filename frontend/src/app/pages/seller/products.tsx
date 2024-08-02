@@ -1,4 +1,3 @@
-import { LakoeCheckbox } from "@/components/checkbox/lakoe";
 import { List } from "@/components/list";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,6 +32,7 @@ import { inputVariantProps } from "@/features/products/components/input/input-fo
 import { TabItem, Tabs } from "@/components/tabs";
 import { useGetCategories } from "@/features/categories/api/get-categories";
 import { useGetMe } from "@/features/me/api/me-api";
+import { Checkbox } from "@/components/checkbox/checkbox";
 
 const getCheckedProducts = (products: Product[]) => {
   return products.map((product) => ({
@@ -267,7 +267,7 @@ export function ProductsPage() {
                   </Button>
                 </>
               )}
-              <LakoeCheckbox
+              <Checkbox
                 id="select-all"
                 checked={isCheckedSome}
                 label="Pilih semua"

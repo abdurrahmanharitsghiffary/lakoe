@@ -53,8 +53,8 @@ export function RightCard({ onInputChange, formData }: RightCardProps) {
             {skus.map((sku) => (
               <div className="flex flex-row mt-[30px]">
                 <img
-                  src="assets/sepatuputih.jpeg"
-                  alt="sepatu putih"
+                  src={sku?.sku?.image ?? ""}
+                  alt={sku?.sku?.sku}
                   className="h-[60px] w-[60px] rounded-[8px]"
                 />
                 <div className="flex flex-col px-4 mt-[-10px]">
@@ -71,21 +71,19 @@ export function RightCard({ onInputChange, formData }: RightCardProps) {
             ))}
           </div>
 
-          <div className="flex flex-row w-full justify-between mt-8">
+          <div className="font-bold flex flex-row w-full justify-between mt-8">
             <p className="text-xl font-bold text-gray-400">Total Harga</p>
             <p className="text-xl ">Rp. {totalProductsPrice}</p>
           </div>
-          <div className="flex flex-row justify-between mt-2 ">
+          {/* <div className="flex flex-row justify-between mt-2 ">
             <div className="text-xl font-bold text-gray-400">
               Biaya Pengiriman
             </div>
             <div className="text-xl ">Rp. 9000</div>
-          </div>
+          </div> */}
           <span className="border-solid border-t-2 border-gray-400 mt-5"></span>
-          <div className="flex flex-row justify-between mt-2">
-            <div className="text-xl font-bold text-gray-400">
-              Total Pembayaran
-            </div>
+          <div className="flex flex-row justify-between mt-2 font-bold">
+            <div className="text-xl text-gray-400">Total Pembayaran</div>
             <div className="text-xl">Rp.{totalProductsPrice}</div>
           </div>
         </div>

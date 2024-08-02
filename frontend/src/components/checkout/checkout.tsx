@@ -12,6 +12,10 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { axios } from "@/lib/axios";
+import { useGetSkus } from "@/hooks/use-checkout";
+import { toast } from "react-toastify";
+import { getAxiosErrMessage } from "@/utils/get-axios-err-message";
 
 export function NewCheckout() {
   const checkout = useForm<FormCheckout>({
@@ -34,6 +38,8 @@ export function NewCheckout() {
   };
 
   const [formCheckout, setFormCheckout] = useState<FormCheckout>({
+    courierCode: "",
+    courierServiceCode: "",
     receiverPostalCode: "",
     receiverContactName: "",
     addressDetails: "",
@@ -47,13 +53,42 @@ export function NewCheckout() {
     receiverLongitude: "",
   });
 
+  const skus = useGetSkus();
+
   const handleInputChange = (name: keyof FormCheckout, value: string) => {
     setFormCheckout((prev) => ({ ...prev, [name]: value }));
     checkout.setValue(name, value);
   };
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     console.log("App Data:", formCheckout);
+    try {
+      const response = await axios.post("/orders", {
+        ...formCheckout,
+        receiverName: formCheckout?.receiverContactName,
+        receiverAddressPhone: formCheckout?.receiverContactPhone,
+        skus: skus.map((sku) => ({ id: sku?.sku?.id, qty: sku?.qty })),
+        courier: {
+          courierCode: formCheckout?.courierCode,
+          courierServiceCode: formCheckout?.courierServiceCode,
+        },
+      });
+
+      const data = response.data;
+      console.log(data, "ORDER DAAT");
+      const payment = await axios.post("/payments", {
+        orderId: data?.data?.id,
+      });
+
+      const paymentData = payment?.data;
+
+      const snapToken = paymentData?.data?.token;
+
+      window.snap.pay(snapToken);
+      console.log(snapToken, "SNAP TOKEN");
+    } catch (err) {
+      toast.error(getAxiosErrMessage(err));
+    }
   };
 
   return (

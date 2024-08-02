@@ -11,10 +11,17 @@ import { genSku } from '@/common/utils/gen-sku';
 import { omitProperties } from '@/common/utils/omit-properties';
 import { CreateProductDto } from './dto/create-product.dto';
 import { emptyArrayAndUndefined } from '@/common/utils/empty-array-and-undefined';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ProductService {
   constructor(private readonly prismaService: PrismaService) {}
+
+  baseQueryOptions = {
+    AND: [
+      { store: { courierServices: { some: {} }, addresses: { some: {} } } },
+    ],
+  } satisfies Prisma.ProductWhereInput;
 
   async create(
     storeId: number,
@@ -78,21 +85,36 @@ export class ProductService {
     });
   }
 
-  findAllByStoreId(storeId: number = -1, active: boolean = undefined) {
+  findAllByStoreId(
+    storeId: number = -1,
+    active: boolean = undefined,
+    enableBaseOptions?: boolean,
+  ) {
+    let productWhereInput = {
+      isActive: active,
+      storeId,
+    } satisfies Prisma.ProductWhereInput;
+
+    if (enableBaseOptions)
+      productWhereInput = { ...productWhereInput, ...this.baseQueryOptions };
+
     return this.prismaService.product.findMany({
-      where: { isActive: active, storeId },
+      where: productWhereInput,
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       select: selectProductSimplified,
     });
   }
 
-  async search({
-    q,
-    active,
-    categories,
-    sort_by,
-    storeId,
-  }: GetProductOption & { storeId?: number }) {
+  async search(
+    {
+      q,
+      active,
+      categories,
+      sort_by,
+      storeId,
+    }: GetProductOption & { storeId?: number },
+    enableBaseOptions?: boolean,
+  ) {
     let priceSortOptions;
     let stockSortOptions;
     switch (sort_by) {
@@ -114,30 +136,35 @@ export class ProductService {
       }
     }
 
-    const results = await this.prismaService.product.findMany({
-      where: {
-        storeId: storeId || undefined,
-        isActive: parseStringBool(active),
-        categories: {
-          some: {
-            name: {
-              in: emptyArrayAndUndefined(categories?.split(',')),
-              mode: 'insensitive',
-            },
+    let productWhereInput = {
+      storeId: storeId || undefined,
+      isActive: parseStringBool(active),
+      categories: {
+        some: {
+          name: {
+            in: emptyArrayAndUndefined(categories?.split(',')),
+            mode: 'insensitive',
           },
         },
-        OR: [
-          {
-            name: { contains: q || undefined, mode: 'insensitive' },
-          },
-          {
-            skus: {
-              some: { sku: { contains: q || undefined, mode: 'insensitive' } },
-            },
-          },
-          { description: { contains: q || undefined } },
-        ],
       },
+      OR: [
+        {
+          name: { contains: q || undefined, mode: 'insensitive' },
+        },
+        {
+          skus: {
+            some: { sku: { contains: q || undefined, mode: 'insensitive' } },
+          },
+        },
+        { description: { contains: q || undefined } },
+      ],
+    } satisfies Prisma.ProductWhereInput;
+
+    if (enableBaseOptions)
+      productWhereInput = { ...productWhereInput, ...this.baseQueryOptions };
+
+    const results = await this.prismaService.product.findMany({
+      where: productWhereInput,
       select: {
         ...selectProductSimplified,
         skus: {

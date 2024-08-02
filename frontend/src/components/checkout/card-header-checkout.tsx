@@ -25,13 +25,10 @@ export function CardHeaderCheckout({
       <Card className="flex w-full h-auto py-4">
         <div className="flex flex-col px-4">
           <h1 className="text-2xl font-bold mx-3"> Informasi kontak</h1>
-          <div className="flex w-full ">
+          <div className="flex w-full px-4">
             <div className="flex flex-col w-full mt-5">
               <>
-                <Label
-                  htmlFor="receiverContactName"
-                  className="text-lg px-4 mt-5"
-                >
+                <Label htmlFor="receiverContactName" className="text-lg mt-5">
                   Nama kontak
                 </Label>
                 <Input
@@ -40,7 +37,7 @@ export function CardHeaderCheckout({
                   {...register("receiverContactName")}
                   type="text"
                   value={formData.receiverContactName}
-                  className="text-lg h-12 mb-[-10px] mx-3 w-[600px]"
+                  className="text-lg h-12 mb-[-10px]"
                   onChange={(e) => {
                     const value = e.target.value;
                     if (value.length <= 50) {
@@ -48,24 +45,25 @@ export function CardHeaderCheckout({
                     }
                   }}
                 />
-                <Label className="text-lg text-right mr-[90px] mt-[10px] font-light">
-                  {formData.receiverContactName.length}/50
-                </Label>
-
-                {errors.receiverContactName && (
-                  <p className="ml-4 text-red-500 mt-[-10px]">
-                    {errors.receiverContactName.message}
-                  </p>
-                )}
+                <div className="mt-2 flex justify-between">
+                  {errors.receiverContactName && (
+                    <p className="text-red-500">
+                      {errors.receiverContactName.message}
+                    </p>
+                  )}
+                  <Label className="text-lg text-right font-light">
+                    {formData.receiverContactName.length}/50
+                  </Label>
+                </div>
               </>
               <>
                 <Label
                   htmlFor="receiverContactPhone"
-                  className="flex flex-row text-lg px-3 mt-[30px] mb-[-10px] justify-between"
+                  className="flex flex-row text-lg mt-[30px] mb-[-10px] justify-between"
                 >
                   <p>Nomor Whatsapp</p>
-                  {/* <a
-                    className="text-blue-500 cursor-pointer mr-[80px]"
+                  <a
+                    className="text-blue-500 cursor-pointer"
                     onClick={() => setIsLoginOpen(true)}
                   >
                     Login
@@ -73,12 +71,12 @@ export function CardHeaderCheckout({
                   <CheckoutDialogLogin
                     onOpen={setIsLoginOpen}
                     isOpen={isLoginOpen}
-                  /> */}
+                  />
                 </Label>
 
                 <Input
                   id="receiverContactPhone"
-                  className="text-lg h-12 mx-3 w-[600px] mt-3"
+                  className="text-lg h-12 mt-3"
                   placeholder="Masukkan No Telp yang Valid"
                   startAdornment="+62"
                   {...register("receiverContactPhone")}
@@ -88,15 +86,15 @@ export function CardHeaderCheckout({
                     onInputChange("receiverContactPhone", e.target.value)
                   }
                 />
-                <span className="flex mx-3">
-                  <p className="mb-[20px]">
+                <span className="flex mt-2">
+                  <p>
                     Kami akan mengirimkan konfirmasi dan informasi perubahan
                     status pesanan ke WhatsApp kamu
                   </p>
                 </span>
 
                 {errors.receiverContactPhone && (
-                  <p className="ml-4 text-red-500 mt-[-10px] mb-3">
+                  <p className="text-red-500 mt-[5px] mb-3">
                     {errors.receiverContactPhone.message}
                   </p>
                 )}

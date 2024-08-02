@@ -1,12 +1,12 @@
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import { LakoeTitle } from "@/components/lakoe-title";
 import { FaSearch } from "react-icons/fa";
-import { SlBasket } from "react-icons/sl";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { IoStorefrontOutline } from "react-icons/io5";
 import { useSession } from "@/hooks/use-session";
 import { LogoutButton } from "@/components/button/logout";
+import CartButton from "@/components/button/cart";
 
 export function Header() {
   const { user } = useSession();
@@ -39,9 +39,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4 ml-auto">
-          <Link to="/cart">
-            <SlBasket className="text-gray-500 w-6 h-6" />
-          </Link>
+          <CartButton />
           {user && (
             <Link to="/seller/dashboard">
               <IoStorefrontOutline className="text-gray-500 w-6 h-6" />

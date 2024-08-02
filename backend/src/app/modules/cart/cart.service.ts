@@ -19,6 +19,20 @@ import { ApiErrorResponse } from '@/common/class/api-response';
 export class CartService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  async getCartItemsCountByCollectionId(collectionId: string) {
+    const counts = await this.prismaService.cartCollection.findUnique({
+      where: { id: collectionId },
+      select: {
+        carts: { select: { _count: { select: { cartItems: true } } } },
+      },
+    });
+
+    return counts.carts.reduce(
+      (a, { _count: { cartItems } }) => a + cartItems,
+      0,
+    );
+  }
+
   async checkCartMustExist(cartId: string) {
     const cart = await this.prismaService.cart.findUnique({
       where: {

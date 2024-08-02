@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Post,
   Query,
+  Get,
 } from '@nestjs/common';
 import { ActivationDto, activationSchema } from './app.dto';
 import { ZodValidationPipe } from '@/common/pipes/zod-validation/zod-validation.pipe';
