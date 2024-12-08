@@ -1,0 +1,424 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id       Int    @id @default(autoincrement())
+    email    String @unique @db.VarChar(255)
+    password String @db.VarChar(255)
+    role     Role   @default(USER)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    carts   Cart[]
+    store   Store?
+    profile Profile?
+
+    // invoices Invoice[]
+    // addresses Address[]
+    // payments Payment[]
+
+    @@map("users")
+}
+
+model Profile {
+    id             Int       @id @default(autoincrement())
+    fullName       String    @db.VarChar(255)
+    username       String    @unique @db.VarChar(125)
+    profilePicture String?
+    bio            String?
+    phone          String    @db.VarChar(30)
+    gender         Gender?
+    birthDate      DateTime?
+
+    userId Int  @unique
+    user   User @relation(fields: [userId], references: [id])
+}
+
+enum Gender {
+    MALE
+    FEMALE
+}
+
+enum Role {
+    ADMIN
+    USER
+}
+
+model Cart {
+    id       Int     @id @default(autoincrement())
+    prices   Decimal @db.Decimal(10, 2)
+    discount Decimal @db.Decimal(10, 2)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    userId    Int
+    user      User       @relation(fields: [userId], references: [id])
+    storeId   Int
+    store     Store      @relation(fields: [storeId], references: [id])
+    cartItems CartItem[]
+
+    // Invoice   Invoice?
+
+    @@map("carts")
+}
+
+model Invoice {
+    id                   Int      @id @default(autoincrement())
+    prices               Decimal  @db.Decimal(10, 2)
+    serviceChange        String
+    status               String
+    discount             Decimal? @db.Decimal(2, 1)
+    receiverContactName  String
+    receiverContactPhone String
+    receiverName         String
+    receiverAddressPhone String
+    receiverAddress      String
+    receiverPostalCode   String
+    receiverCityDistrict String
+    receiverProvince     String
+    receiverLatitude     String   @db.VarChar(20)
+    receiverLongitude    String   @db.VarChar(20)
+    invoiceNumber        Int
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    paymentId Int     @unique
+    payment   Payment @relation(fields: [paymentId], references: [id])
+    courierId Int     @unique
+    courier   Courier @relation(fields: [courierId], references: [id])
+    orderId   Int     @unique
+    order     Order   @relation(fields: [orderId], references: [id])
+
+    invoiceHistories     InvoiceHistory[]
+    confirmationPayments ConfirmationPayment[]
+
+    // userId    Int
+    // user      User    @relation(fields: [userId], references: [id])
+    // cart                 Cart                  @relation(fields: [cartId], references: [id])
+    // cartId               Int                   @unique
+
+    @@map("invoices")
+}
+
+model Payment {
+    id                    Int      @id @default(autoincrement())
+    midtransTransactionId Int
+    paymentType           String
+    status                String
+    amount                Int
+    currency              String
+    createdAt             DateTime @default(now())
+    updatedAt             DateTime @updatedAt
+
+    Invoice Invoice?
+
+    @@map("payments")
+}
+
+// model Payment {
+//   id     Int     @id @default(autoincrement())
+//   bank   String
+//   amount Decimal @db.Decimal(10, 2)
+//   status String
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   // user    User     @relation(fields: [userId], references: [id])
+//   // userId  Int
+//   invoice Invoice?
+//   Order   Order[]
+
+//   @@map("payments")
+// }
+
+// d
+
+model InvoiceHistory {
+    id     Int    @id @default(autoincrement())
+    status String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    invoiceId Int
+    invoice   Invoice @relation(fields: [invoiceId], references: [id])
+
+    @@map("invoice_histories")
+}
+
+model ConfirmationPayment {
+    id     Int    @id @default(autoincrement())
+    amount Int
+    bank   String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    invoiceId Int
+    invoice   Invoice @relation(fields: [invoiceId], references: [id])
+
+    @@map("confirmation_payments")
+}
+
+model Courier {
+    id                 Int     @id @default(autoincrement())
+    courierCode        String  @db.VarChar(30)
+    courierServiceCode String  @db.VarChar(30)
+    courierServiceName String  @db.VarChar(50)
+    price              Decimal @db.Decimal(10, 2)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    invoice Invoice?
+
+    @@map("couriers")
+}
+
+model Store {
+    id               Int    @id @default(autoincrement())
+    name             String @db.VarChar(125)
+    slogan           String @db.VarChar(125)
+    description      String @db.Text
+    domain           String @db.VarChar(125)
+    logoAttachment   String
+    bannerAttachment String
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+
+    user             User              @relation(fields: [userId], references: [id])
+    userId           Int               @unique
+    bankAccounts     BankAccount[]
+    carts            Cart[]
+    messageTemplates MessageTemplate[]
+    products         Product[]
+    addresses        Address[]
+    // storeOnDecorations StoreOnDecoration[]
+    // cartItems          CartItem[]
+
+    @@map("stores")
+}
+
+// model StoreOnDecoration {
+//   id Int @id @default(autoincrement())
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   decorationId Int
+//   decoration   Decoration @relation(fields: [decorationId], references: [id])
+//   storeId      Int
+//   store        Store      @relation(fields: [storeId], references: [id])
+
+//   @@map("store_on_decorations")
+// }
+
+model MessageTemplate {
+    id      Int    @id @default(autoincrement())
+    name    String @db.VarChar(125)
+    content String @db.Text
+    storeId Int
+    store   Store  @relation(fields: [storeId], references: [id])
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+
+    @@map("message_templates")
+}
+
+// model Decoration {
+//   id   Int    @id @default(autoincrement())
+//   type String
+
+//   updatedAt DateTime @updatedAt
+//   createdAt DateTime @default(now())
+
+//   storeOnDecorations StoreOnDecoration[]
+
+//   @@map("decorations")
+// }
+
+model BankAccount {
+    id        Int    @id @default(autoincrement())
+    bank      String
+    accNumber String
+    accName   String
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+
+    storeId Int
+    store   Store @relation(fields: [storeId], references: [id])
+
+    @@map("bank_accounts")
+}
+
+model Product {
+    id           Int      @id @default(autoincrement())
+    name         String   @db.VarChar(125)
+    description  String   @db.Text
+    attachments  String[]
+    isActive     Boolean  @default(false)
+    minimumOrder Int
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+
+    storeId    Int
+    store      Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+    categories Category[]
+    variants   Variant[]
+
+    @@map("products")
+}
+
+model Category {
+    id   Int    @id @default(autoincrement())
+    name String @unique @db.VarChar(125)
+
+    products Product[]
+
+    @@map("categories")
+}
+
+// VARIANT THAT ARE AVAILABLE FOR SALE ARE VARIANT THAT DOES NOT HAVE SUBS-VARIANTS 
+// Variant that have parentId null is a root variant  
+model Variant {
+    id           Int      @id @default(autoincrement())
+    name         String   @db.VarChar(125)
+    isActive     Boolean  @default(false)
+    sku          String?
+    weightInGram Int?
+    stock        Int?
+    price        Decimal? @db.Decimal(10, 2)
+    parentId     Int?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    productId     Int
+    product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+    parentVariant Variant?      @relation("Variant", fields: [parentId], references: [id], onDelete: Cascade)
+    subVariants   Variant[]     @relation("Variant")
+    cartItems     CartItem[]
+    orderDetails  OrderDetail[]
+
+    @@map("product_variants")
+}
+
+model CartItem {
+    qty   Int
+    price Decimal @db.Decimal(10, 2)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    cartId         Int
+    cart           Cart    @relation(fields: [cartId], references: [id])
+    variantId      Int
+    productVariant Variant @relation(fields: [variantId], references: [id])
+    // user           User    @relation(fields: [userId], references: [id])
+    // userId         Int
+    // storeId Int
+    // store   Store @relation(fields: [storeId], references: [id])
+
+    @@id([cartId, variantId])
+    @@map("cart_items")
+}
+
+model Address {
+    id             Int     @id @default(autoincrement())
+    name           String
+    address        String
+    postalCode     String  @db.VarChar(50)
+    cityDistrict   String
+    province       String
+    latitude       String  @db.VarChar(20)
+    longitude      String  @db.VarChar(20)
+    isMainLocation Boolean
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    storeId Int
+    store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+    // userId  Int?
+    // user    User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// d
+
+model OrderHistory {
+    id      Int    @id @default(autoincrement())
+    content String @db.Text
+    order   Order  @relation(fields: [orderId], references: [id])
+    orderId Int
+}
+
+model OrderDetail {
+    qty              Int
+    pricePerProduct  Decimal @db.Decimal(10, 2)
+    orderId          Int
+    order            Order   @relation(fields: [orderId], references: [id])
+    productVariantId Int
+    productVariant   Variant @relation(fields: [productVariantId], references: [id])
+
+    @@id([productVariantId])
+}
+
+model Transaction {
+    id                    Int      @id @default(autoincrement())
+    midtransTransactionId Int
+    paymenType            String
+    status                String
+    amount                Int
+    currency              String
+    createdAt             DateTime @default(now())
+    updatedAt             DateTime @updatedAt
+    // Timestamp of the transaction
+}
+
+model Order {
+    id          Int         @id @default(autoincrement())
+    status      OrderStatus @default(NOT_PAID)
+    description String?     @db.Text
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    histories    OrderHistory[]
+    orderDetails OrderDetail[]
+    invoice      Invoice?
+    // paymentId    Int            @unique
+    // payment      Payment        @relation(fields: [paymentId], references: [id])
+    // courier      Courier        @relation(fields: [courierId], references: [id])
+    // courierId    Int            @unique
+
+    @@map("orders")
+}
+
+enum OrderStatus {
+    NOT_PAID
+    NEW_ORDER
+    READY_TO_DELIVER
+    ON_DELIVERY
+    SUCCESS
+    CANCELLED
+}

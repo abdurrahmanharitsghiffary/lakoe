@@ -1,0 +1,20 @@
+Layouting FrontEnd
+Orders lists page ongoing
+CRUD Products dan menampilkan data dari backend ke frontend
+Integrasi frontend ke backend
+Slicing Add product form beserta validasi
+Slicing desain setting untuk seller
+Product lists page
+
+
+Hari ini ingin lanjut slicing frontend
+dan melengkapi crud products
+
+Finishing Setting
+Mengerjakan Order Detail Page
+Dashboard Seller
+
+
+
+TODO FIX DISPLAYED COURIER RATE PRICE ON CHECKOUT FORM
+FETCH BITESHIP DATA STILL ERROR

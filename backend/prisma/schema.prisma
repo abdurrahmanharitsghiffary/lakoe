@@ -1,0 +1,520 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique @db.VarChar(255)
+  password     String        @db.VarChar(255)
+  isVerified   Boolean       @default(false)
+  hasStore     Boolean       @default(false)
+  role         Role?         @default(USER)
+  providerId   String?
+  providerType ProviderType?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store              Store?
+  profile            Profile?
+  wishlistCollection ProductWishlistCollection?
+  cartCollection     CartCollection?
+
+  addresses Address[]
+  tokens    Token[]
+
+  @@map("users")
+}
+
+enum ProviderType {
+  GOOGLE
+  GITHUB
+  FACEBOOK
+  TWITTER
+}
+
+model Profile {
+  id             Int       @id @default(autoincrement())
+  fullName       String    @db.VarChar(255)
+  username       String    @unique @db.VarChar(125)
+  profilePicture String?
+  bio            String?
+  phone          String?   @db.VarChar(30)
+  gender         Gender?
+  birthDate      DateTime?
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Token {
+  id    Int       @id @default(autoincrement())
+  token String    @unique
+  type  TokenType
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expiresAt DateTime?
+
+  codes Code[]
+
+  @@map("tokens")
+}
+
+model Code {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique @db.VarChar(50)
+  token     Token    @relation(fields: [tokenId], references: [id], onDelete: Cascade)
+  tokenId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("codes")
+}
+
+enum TokenType {
+  ACCESS_TOKEN
+  VERIFY_TOKEN
+  RESET_TOKEN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model ProductWishlistCollection {
+  id String @id @default(uuid())
+
+  products Product[]
+
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?  @unique
+
+  @@map("product_wishlists")
+}
+
+model CartCollection {
+  id    String @id @default(uuid())
+  carts Cart[]
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int?     @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cart_collections")
+}
+
+model Cart {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cartItems        CartItem[]
+  store            Store          @relation(fields: [storeId], references: [id])
+  storeId          Int
+  cartCollection   CartCollection @relation(fields: [cartCollectionId], references: [id], onDelete: Cascade)
+  cartCollectionId String
+
+  @@unique([storeId, cartCollectionId])
+  @@map("carts")
+}
+
+model CartItem {
+  qty Int
+
+  cartId String
+  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  skuId  Int
+  sku    SKU    @relation(fields: [skuId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([cartId, skuId])
+  @@map("cart_items")
+}
+
+model Invoice {
+  id                   String   @id @default(uuid())
+  amount               Decimal  @db.Decimal(10, 2)
+  serviceCharge        Decimal? @db.Decimal(10, 2)
+  receiverContactName  String
+  receiverContactPhone String   @db.VarChar(30)
+  receiverName         String
+  receiverAddressPhone String   @db.VarChar(30)
+  receiverAddress      String
+  receiverPostalCode   String
+  receiverCity         String
+  receiverDistrict     String
+  receiverProvince     String
+  receiverLatitude     String   @db.VarChar(20)
+  receiverLongitude    String   @db.VarChar(20)
+  invoiceNumber        String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  payment              Payment?
+  invoiceHistories     InvoiceHistory[]
+  confirmationPayments ConfirmationPayment[]
+
+  @@map("invoices")
+}
+
+model Payment {
+  id              Int     @id @default(autoincrement())
+  midtransOrderId String  @unique
+  bank            String
+  paymentType     String
+  status          String
+  amount          Decimal @db.Decimal(10, 2)
+  currency        String
+  cardType        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId String  @unique
+
+  @@map("payments")
+}
+
+model InvoiceHistory {
+  id     Int    @id @default(autoincrement())
+  status String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+
+  @@map("invoice_histories")
+}
+
+model ConfirmationPayment {
+  id     Int     @id @default(autoincrement())
+  amount Decimal @db.Decimal(10, 2)
+  bank   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+
+  @@map("confirmation_payments")
+}
+
+model Courier {
+  id                 Int     @id @default(autoincrement())
+  courierCode        String  @db.VarChar(30)
+  courierServiceCode String  @db.VarChar(30)
+  biteshipOrderId    String  @db.VarChar(150)
+  biteshipTrackingId String  @db.VarChar(150)
+  biteshipWaybillId  String? @db.VarChar(150)
+  price              Decimal @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String @unique
+
+  @@map("couriers")
+}
+
+model Store {
+  id               Int     @id @default(autoincrement())
+  name             String  @db.VarChar(125)
+  slogan           String  @db.VarChar(125)
+  description      String  @db.Text
+  domain           String  @db.VarChar(125)
+  logoAttachment   String?
+  bannerAttachment String?
+
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  user             User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId           Int?              @unique
+  bankAccounts     BankAccount[]
+  messageTemplates MessageTemplate[]
+  products         Product[]
+  addresses        Address[]
+  courierServices  CourierService[]
+  orders           Order[]
+  carts            Cart[]
+
+  @@map("stores")
+}
+
+model CourierService {
+  id                 Int    @id @default(autoincrement())
+  courierCode        String @db.VarChar(30)
+  courierServiceCode String @db.VarChar(30)
+  courierServiceName String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store   Store @relation(fields: [storeId], references: [id])
+  storeId Int
+
+  @@unique([courierCode, courierServiceCode, storeId])
+}
+
+model MessageTemplate {
+  id      Int    @id @default(autoincrement())
+  name    String @db.VarChar(125)
+  content String @db.Text
+  storeId Int
+  store   Store  @relation(fields: [storeId], references: [id])
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@map("message_templates")
+}
+
+model BankAccount {
+  id        Int    @id @default(autoincrement())
+  bank      String
+  accNumber String
+  accName   String
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  storeId Int
+  store   Store @relation(fields: [storeId], references: [id])
+
+  @@map("bank_accounts")
+}
+
+model Product {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(125)
+  description  String?  @db.Text
+  images       String[]
+  isActive     Boolean  @default(false)
+  minimumOrder Int
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  storeId             Int
+  store               Store                       @relation(fields: [storeId], references: [id])
+  categories          Category[]
+  wishlistCollections ProductWishlistCollection[]
+  attributtes         Attribute[]
+  skus                SKU[]
+  reviews             Review[]
+
+  @@map("products")
+}
+
+enum DiscountType {
+  FIXED
+  PERCENTAGE
+}
+
+// Size, Colour
+model Attribute {
+  id            Int            @id @default(autoincrement())
+  name          String
+  productId     Int
+  product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  skuAttributes AttributeSKU[]
+
+  @@unique([productId, name])
+}
+
+model SKU {
+  id           Int           @id @default(autoincrement())
+  sku          String        @unique
+  image        String?
+  stock        Int
+  isActive     Boolean       @default(false)
+  discount     Decimal?      @db.Decimal(2, 1)
+  discountType DiscountType?
+  weightInGram Int
+  price        Decimal       @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  productId     Int
+  product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  skuAttributes AttributeSKU[]
+
+  cartItems    CartItem[]
+  orderDetails OrderDetail[]
+}
+
+// SM, XL, Black, White
+model AttributeSKU {
+  value String
+
+  attributeId Int
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+
+  skuId Int
+  sku   SKU @relation(fields: [skuId], references: [id], onDelete: Cascade)
+
+  @@id([attributeId, skuId])
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(125)
+
+  products Product[]
+
+  parentCategoryId Int?
+  parentCategory   Category?  @relation("Category", fields: [parentCategoryId], references: [id], onDelete: Cascade)
+  subCategories    Category[] @relation("Category")
+
+  @@map("categories")
+}
+
+model Review {
+  name    String
+  content String  @db.Text
+  rating  Decimal @db.Decimal(2, 1)
+
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([productId, orderId])
+  @@map("reviews")
+}
+
+model Address {
+  id             Int     @id @default(autoincrement())
+  contactName    String?
+  contactPhone   String? @db.VarChar(30)
+  addressPhone   String  @db.VarChar(30)
+  name           String
+  address        String
+  postalCode     String  @db.VarChar(50)
+  city           String
+  district       String
+  province       String
+  latitude       String  @db.VarChar(20)
+  longitude      String  @db.VarChar(20)
+  isMainLocation Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  storeId Int?
+  store   Store? @relation(fields: [storeId], references: [id])
+  userId  Int?
+  user    User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model OrderHistory {
+  id      Int    @id @default(autoincrement())
+  content String @db.Text
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderDetail {
+  qty                    Int
+  pricePerProduct        Decimal @db.Decimal(10, 2)
+  weightPerProductInGram Int
+  orderId                String
+  order                  Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  skuId                  Int
+  sku                    SKU     @relation(fields: [skuId], references: [id], onDelete: Cascade)
+
+  @@id([skuId, orderId])
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  status      OrderStatus @default(NOT_PAID)
+  description String?     @db.Text
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  storeId Int?
+  store   Store?   @relation(fields: [storeId], references: [id])
+  invoice Invoice?
+  courier Courier?
+
+  orderDetails OrderDetail[]
+  histories    OrderHistory[]
+  reviews      Review[]
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  NOT_PAID
+  NEW_ORDER
+  READY_TO_DELIVER
+  ON_DELIVERY
+  SUCCESS
+  CANCELLED
+}
+
+// model Variant {
+//   id   Int    @id @default(autoincrement())
+//   name String @db.VarChar(125)
+
+//   parentId Int?
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   productId     Int
+//   product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+//   parentVariant Variant?      @relation("Variant", fields: [parentId], references: [id], onDelete: Cascade)
+//   subVariants   Variant[]     @relation("Variant")
+//   orderDetails  OrderDetail[]
+//   CartItem      CartItem[]
+
+//   @@unique([name, productId])
+//   @@map("product_variants")
+// }
